@@ -2,7 +2,8 @@
   "name": "javascriptutilities",
   "version": "1.0.0",
   "description": "A collection of utility functions for JS",
-  "main": "index.js",
+  "main": "tsoutput/index",
+  "types": "tsoutput/index",
   "scripts": {
     "test": "jest --coverage"
   },
