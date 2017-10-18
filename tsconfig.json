@@ -4,7 +4,7 @@
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
     "alwaysStrict": true,
-    "outDir": "tsoutput",
+    "outDir": "dist",
     "declaration": true,
     "module": "commonjs",
     "noUnusedLocals": true,
