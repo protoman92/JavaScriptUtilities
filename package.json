@@ -1,6 +1,6 @@
 {
   "name": "javascriptutilities",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A collection of utility functions for JS",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",

@@ -30,7 +30,7 @@ declare module 'rxjs/Observable' {
   }
 }
 
-Observable.error = function(message: string) {
+Observable.error = function<T>(message: string): Observable<T> {
   return Observable.throw(new Error(message));
 };
 

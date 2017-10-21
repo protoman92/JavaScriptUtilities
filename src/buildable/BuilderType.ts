@@ -1,6 +1,6 @@
 import BuildableType from './BuildableType';
 
-interface BuilderType<Buildable extends BuildableType<any>> {
+export default interface BuilderType<Buildable extends BuildableType<any>> {
 
   /**
    * Copy properties from one buildable to another.
@@ -15,5 +15,3 @@ interface BuilderType<Buildable extends BuildableType<any>> {
    */
   build(): Buildable;
 }
-
-export default BuilderType;

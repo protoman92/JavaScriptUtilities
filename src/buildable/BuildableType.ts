@@ -1,6 +1,6 @@
 import BuilderType from './BuilderType';
 
-interface BuildableType<Builder extends BuilderType<any>> {
+export default interface BuildableType<Builder extends BuilderType<any>> {
   
   /**
    * Create a new builder instance.
@@ -14,5 +14,3 @@ interface BuildableType<Builder extends BuilderType<any>> {
    */
   cloneBuilder(): Builder;
 }
-
-export default BuildableType;
