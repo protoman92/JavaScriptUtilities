@@ -1,5 +1,5 @@
-import { Nullable } from './typealias';
+import { JSObject, Nullable } from './typealias';
 import * as Types from './util';
 
-export { Nullable };
+export { JSObject, Nullable };
 export { Types };
