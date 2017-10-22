@@ -59,6 +59,25 @@ describe('Maybe should be implemented correctly', () => {
     expect(fMappedMB1.isNothing()).toBeTruthy();
     expect(fMappedMB2.value).toBe(1);
   });
+
+  it('Maybe flatMap nullable should be correct', () => {
+    /// Setup
+    let MockObject = class { id?: string; };
+
+    let mockObject1 = new MockObject();
+    mockObject1.id = undefined;
+
+    let mockObject2 = new MockObject();
+    mockObject2.id = '123';
+
+    /// When
+    let mb1 = Maybe.some(mockObject1).flatMap(value => value.id);
+    let mb2 = Maybe.some(mockObject2).flatMap(value => value.id);
+
+    /// Then
+    expect(mb1.isNothing()).toBeTruthy();
+    expect(mb2.value).toBe('123');
+  });
 });
 
 describe('Try should be implemented correctly', () => {

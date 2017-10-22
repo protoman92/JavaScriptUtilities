@@ -24,7 +24,7 @@ declare module 'rxjs/Observable' {
 
 Observable.prototype.logNext = function(transform: (value: any) => any) {
   return this.doOnNext((value) => {
-    if (transform != undefined) {
+    if (transform !== undefined) {
       console.log(transform(value));
     } else {
       console.log(value);
@@ -34,7 +34,7 @@ Observable.prototype.logNext = function(transform: (value: any) => any) {
 
 Observable.prototype.logError = function(transform: (error: Error) => any) {
   return this.doOnError((error) => {
-    if (transform != undefined) {
+    if (transform !== undefined) {
       console.log(transform(error));
     } else {
       console.log(error);

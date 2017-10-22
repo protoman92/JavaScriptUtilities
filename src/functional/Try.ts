@@ -54,11 +54,19 @@ export abstract class Try<T> implements
   }
 
   public isSuccess(): boolean {
-    return this.asMaybe().isSome();
+    return this.isSome();
   }
 
   public isFailure(): boolean {
     return !this.isSuccess();
+  }
+
+  public isSome(): boolean {
+    return this.asMaybe().isSome();
+  }
+
+  public isNothing(): boolean {
+    return !this.isNothing();
   }
 
   public getOrElse(fallback: T): T {

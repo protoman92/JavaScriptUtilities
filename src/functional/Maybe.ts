@@ -19,6 +19,18 @@ export interface MaybeType<T> extends MaybeConvertibleType<T> {
   value: Nullable<T>;
 
   /**
+   * Check if there is some value.
+   * @returns boolean A boolean value.
+   */
+  isSome(): boolean;
+
+  /**
+   * Check if there is no value available.
+   * @returns boolean A boolean value.
+   */
+  isNothing(): boolean;
+
+  /**
    * Get the current value or throw an error if it is not available.
    * @returns T A T instance.
    */
@@ -39,7 +51,7 @@ export abstract class Maybe<T> implements
   MonadType<T> 
 {
   public static some<T>(value?: T): Maybe<T> {
-    if (value != undefined) {
+    if (value !== undefined) {
       return new Some(value);
     } else {
       return Maybe.nothing();
@@ -118,8 +130,6 @@ class Some<T> extends Maybe<T> {
 
       if (Types.isInstance<MaybeConvertibleType<R>>(result, 'asMaybe')) {
         return result.asMaybe();
-      } else if (result == undefined) {
-        return Maybe.nothing();
       } else {
         return Maybe.some(result);
       }
