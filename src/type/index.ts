@@ -1,5 +1,5 @@
 import { Nullable } from './typealias';
-import * as TypeUtil from './util';
+import * as Types from './util';
 
 export { Nullable };
-export { TypeUtil };
+export { Types };

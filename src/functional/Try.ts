@@ -1,7 +1,7 @@
 import FunctorType from './FunctorType';
 import MonadType from './MonadType';
 import { MaybeConvertibleType, MaybeType, Maybe } from './Maybe';
-import { Nullable, TypeUtil } from './../type';
+import { Nullable, Types } from './../type';
 
 export type TryMap<T,R> = (value: T) => R; 
 export type TryFlatMap<T,R> = (value: T) => TryConvertibleType<R>; 
@@ -147,7 +147,7 @@ class Success<T> extends Try<T> {
     try {
       let result = f(this.success);
 
-      if (TypeUtil.isInstance<TryConvertibleType<R>>(result, 'asTry')) {
+      if (Types.isInstance<TryConvertibleType<R>>(result, 'asTry')) {
         return result.asTry();
       } else {
         return Maybe.some(result).asTry();
