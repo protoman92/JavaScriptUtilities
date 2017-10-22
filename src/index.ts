@@ -14,7 +14,7 @@ import {
 } from './functional';
 
 import { Numbers } from './number';
-import { Nullable, Types } from './type';
+import { JSObject, Nullable, Types } from './type';
 import { Strings } from './string';
 
 import './rx';
@@ -35,5 +35,5 @@ export {
 };
 
 export { Numbers };
-export { Nullable, Types };
+export { JSObject, Nullable, Types };
 export { Strings };
