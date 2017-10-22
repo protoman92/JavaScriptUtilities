@@ -1,4 +1,5 @@
 import { BuildableType, BuilderType } from './buildable';
+import { Booleans } from './boolean';
 import { Collections } from './collection';
 
 import {
@@ -14,11 +15,12 @@ import {
 
 import { Numbers } from './number';
 import { Nullable, Types } from './type';
+import { Strings } from './string';
 
 import './rx';
 
-/* Buildable */
 export { BuildableType, BuilderType };
+export { Booleans };
 export { Collections };
 
 export {
@@ -34,3 +36,4 @@ export {
 
 export { Numbers };
 export { Nullable, Types };
+export { Strings };
