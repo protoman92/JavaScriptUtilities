@@ -4,7 +4,8 @@ import {
   MaybeFlatMap,
   Try,
   TryMap,
-  TryFlatMap
+  TryFlatMap,
+  Nullable
 } from './../src';
 
 describe('Maybe should be implemented correctly', () => {
@@ -117,6 +118,25 @@ describe('Try should be implemented correctly', () => {
     /// Then
     expect(t1.isFailure()).toBeTruthy();
     expect(t2.value).toBe(1);
+  });
+
+  it('Try flatMap with nullable should be correct', () => {
+    /// Setup
+    let t1 = Try.success<number>(1);
+
+    let f: (value: number) => Nullable<number> = value => {
+      if (value % 2 === 0) {
+        return value;
+      } else {
+        return undefined;
+      }
+    };
+
+    /// When
+    let flatMappedT1 = t1.flatMap(f);
+
+    /// Then
+    expect(flatMappedT1.isFailure()).toBeTruthy();
   });
 
   it('Try zipAll with error should be correct', () => {

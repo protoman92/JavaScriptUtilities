@@ -1,6 +1,7 @@
 import FunctorType from './FunctorType';
 import MonadType from './MonadType';
 import { MaybeConvertibleType, MaybeType, Maybe } from './Maybe';
+import { Nullable, TypeUtil } from './../type';
 
 export type TryMap<T,R> = (value: T) => R; 
 export type TryFlatMap<T,R> = (value: T) => TryConvertibleType<R>; 
@@ -64,9 +65,9 @@ export abstract class Try<T> implements
     return this.asMaybe().getOrElse(fallback);
   }
 
-  abstract get value(): T | undefined;
+  abstract get value(): Nullable<T>;
 
-  abstract get error(): Error | undefined;
+  abstract get error(): Nullable<Error>;
 
   abstract asMaybe(): Maybe<T>;
 
@@ -74,17 +75,17 @@ export abstract class Try<T> implements
 
   public abstract map<R>(f: (value: T) => R): Try<R>;
 
-  public abstract flatMap<R>(f: (value: T) => TryConvertibleType<R>): Try<R>;
+  public abstract flatMap<R>(f: (value: T) => TryConvertibleType<R> | Nullable<R>): Try<R>;
 }
 
 class Failure<T> extends Try<T> {
   private failure: Error;
 
-  public get value(): T | undefined {
+  public get value(): Nullable<T> {
     return undefined;
   }
 
-  public get error(): Error | undefined {
+  public get error(): Nullable<Error> {
     return this.failure;
   }
 
@@ -113,11 +114,11 @@ class Failure<T> extends Try<T> {
 class Success<T> extends Try<T> {
   private success: T;
 
-  public get value(): T | undefined {
+  public get value(): Nullable<T> {
     return this.success;
   }
 
-  public get error(): Error | undefined {
+  public get error(): Nullable<Error> {
     return undefined;
   }
 
@@ -142,9 +143,15 @@ class Success<T> extends Try<T> {
     }
   }
 
-  public flatMap<R>(f: (value: T) => TryConvertibleType<R>): Try<R> {
+  public flatMap<R>(f: (value: T) => TryConvertibleType<R> | Nullable<R>): Try<R> {
     try {
-      return f(this.success).asTry();
+      let result = f(this.success);
+
+      if (TypeUtil.isInstance<TryConvertibleType<R>>(result, 'asTry')) {
+        return result.asTry();
+      } else {
+        return Maybe.some(result).asTry();
+      }
     } catch (e) {
       return Try.failure<R>(e);
     }

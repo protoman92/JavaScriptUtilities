@@ -1,6 +1,7 @@
 import FunctorType from './FunctorType';
 import MonadType from './MonadType';
 import { TryConvertibleType, Try } from './Try';
+import { Nullable, TypeUtil } from './../type';
 
 export type MaybeMap<T,R> = (value: T) => R;
 export type MaybeFlatMap<T,R> = (value: T) => MaybeConvertibleType<R>;
@@ -15,7 +16,7 @@ export interface MaybeConvertibleType<T> {
 }
 
 export interface MaybeType<T> extends MaybeConvertibleType<T> {
-  value: T | undefined;
+  value: Nullable<T>;
 
   /**
    * Get the current value or throw an error if it is not available.
@@ -37,8 +38,12 @@ export abstract class Maybe<T> implements
   FunctorType<T>, 
   MonadType<T> 
 {
-  public static some<T>(value: T): Maybe<T> {
-    return new Some(value);
+  public static some<T>(value?: T): Maybe<T> {
+    if (value != undefined) {
+      return new Some(value);
+    } else {
+      return Maybe.nothing();
+    }
   }
 
   public static nothing<T>(): Maybe<T> {
@@ -64,7 +69,7 @@ export abstract class Maybe<T> implements
 
   public abstract asTry(): Try<T>;
 
-  public abstract get value(): T | undefined;
+  public abstract get value(): Nullable<T>;
 
   public abstract getOrThrow(): T;
 
@@ -72,13 +77,13 @@ export abstract class Maybe<T> implements
 
   public abstract map<R>(f: (value: T) => R): Maybe<R>;
 
-  public abstract flatMap<R>(f: (value: T) => MaybeConvertibleType<R>): Maybe<R>;
+  public abstract flatMap<R>(f: (value: T) => MaybeConvertibleType<R> | Nullable<R>): Maybe<R>;
 }
 
 class Some<T> extends Maybe<T> {
   private some: T;
 
-  public get value(): T | undefined {
+  public get value(): Nullable<T> {
     return this.some;
   }
 
@@ -107,9 +112,17 @@ class Some<T> extends Maybe<T> {
     }
   }
 
-  public flatMap<R>(f: (value: T) => MaybeConvertibleType<R>): Maybe<R> {
+  public flatMap<R>(f: (value: T) => MaybeConvertibleType<R> | Nullable<R>): Maybe<R> {
     try {
-      return f(this.some).asMaybe();
+      let result = f(this.some);
+
+      if (TypeUtil.isInstance<MaybeConvertibleType<R>>(result, 'asMaybe')) {
+        return result.asMaybe();
+      } else if (result == undefined) {
+        return Maybe.nothing();
+      } else {
+        return Maybe.some(result);
+      }
     } catch (e) {
       return Maybe.nothing();
     }
@@ -121,7 +134,7 @@ class Nothing<T> extends Maybe<T> {
     return 'Value not available';
   }
 
-  public get value(): T | undefined {
+  public get value(): Nullable<T> {
     return undefined;
   }
 

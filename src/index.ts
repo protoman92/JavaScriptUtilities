@@ -11,10 +11,13 @@ import {
   TryFlatMap
 } from './functional';
 
+import { Nullable, TypeUtil } from './type';
+
 import './rx';
 
 /* Buildable */
 export { BuildableType, BuilderType };
+
 export {
   Maybe,
   MaybeConvertibleType,
@@ -25,3 +28,5 @@ export {
   TryMap,
   TryFlatMap
 };
+
+export { Nullable, TypeUtil };
