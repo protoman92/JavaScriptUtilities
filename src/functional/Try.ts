@@ -6,6 +6,10 @@ import { Nullable, Types } from './../type';
 export type TryMap<T,R> = (value: T) => R; 
 export type TryFlatMap<T,R> = (value: T) => TryConvertibleType<R>; 
 
+function isTryConvertible<T>(object: any): object is TryConvertibleType<T> {
+  return Types.isInstance<TryConvertibleType<T>>(object, 'asTry');
+}
+
 export interface TryConvertibleType<T> extends MaybeConvertibleType<T> {
   
   /**
@@ -35,8 +39,12 @@ export abstract class Try<T> implements
     }
   }
 
-  static success<T>(value: T): Try<T> {
-    return new Success(value);
+  static success<T>(value: TryConvertibleType<T> | T): Try<T> {
+    if (isTryConvertible(value)) {
+      return new Success(value).flatMap(value => value);
+    } else {
+      return new Success(value);
+    }
   }
 
   static failure<T>(error: Error | string): Try<T> {
@@ -155,7 +163,7 @@ class Success<T> extends Try<T> {
     try {
       let result = f(this.success);
 
-      if (Types.isInstance<TryConvertibleType<R>>(result, 'asTry')) {
+      if (isTryConvertible(result)) {
         return result.asTry();
       } else {
         return Maybe.some(result).asTry();

@@ -78,6 +78,12 @@ describe('Maybe should be implemented correctly', () => {
     expect(mb1.isNothing()).toBeTruthy();
     expect(mb2.value).toBe('123');
   });
+
+  it('Maybe some with Maybe instance should be correct', () => {
+    /// Setup & When & Then
+    expect(Maybe.some(Try.failure('Error1')).isNothing()).toBeTruthy();
+    expect(Maybe.some(Maybe.some(1)).value).toBe(1);
+  });
 });
 
 describe('Try should be implemented correctly', () => {
@@ -156,6 +162,14 @@ describe('Try should be implemented correctly', () => {
 
     /// Then
     expect(flatMappedT1.isFailure()).toBeTruthy();
+  });
+
+  it('Try success with Try instance should be correct', () => {
+    /// Setup & When & Then
+    expect(Try.success(Try.failure('Error1')).isFailure()).toBeTruthy();
+    expect(Try.success(Maybe.nothing()).isFailure()).toBeTruthy();
+    expect(Try.success(Try.success(1)).value).toBe(1);
+    expect(Try.success(Maybe.some(1)).value).toBe(1);
   });
 
   it('Try zipAll with error should be correct', () => {
