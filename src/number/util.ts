@@ -5,7 +5,7 @@ import { Nullable } from './../type';
  * @param  {number} number A number value.
  * @returns boolean A boolean value.
  */
-export function isOdd(number: number): boolean {
+export function isEven(number: number): boolean {
   return number % 2 === 0;
 }
 
@@ -14,8 +14,8 @@ export function isOdd(number: number): boolean {
  * @param  {number} number A number value.
  * @returns boolean A boolean value.
  */
-export function isEven(number: number): boolean {
-  return !isOdd(number);
+export function isOdd(number: number): boolean {
+  return !isEven(number);
 }
 
 /**
