@@ -1,7 +1,7 @@
 import FunctorType from './FunctorType';
 import MonadType from './MonadType';
 import { MaybeConvertibleType, MaybeType, Maybe } from './Maybe';
-import { Nullable, Types } from './../type';
+import { Nullable, TryResult, Types } from './../type';
 
 export type TryMap<T,R> = (value: T) => R; 
 export type TryFlatMap<T,R> = (value: T) => TryConvertibleType<R>; 
@@ -39,7 +39,7 @@ export abstract class Try<T> implements
     }
   }
 
-  static success<T>(value: TryConvertibleType<T> | T): Try<T> {
+  static success<T>(value: TryResult<T>): Try<T> {
     if (isTryConvertible(value)) {
       return new Success(value).flatMap(value => value);
     } else {
