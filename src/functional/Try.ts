@@ -57,12 +57,38 @@ export abstract class Try<T> implements
 
   protected constructor() {}
 
+  public get value(): Nullable<T> {
+    try {
+      return this.getOrThrow();
+    } catch {
+      return undefined;
+    }
+  }
+  
+  public get error(): Nullable<Error> {
+    try {
+      this.getOrThrow();
+      return undefined;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  public asMaybe = (): Maybe<T> => {
+    try {
+      let value = this.getOrThrow();
+      return Maybe.some(value);
+    } catch {
+      return Maybe.nothing<T>();
+    }
+  }
+
   public asTry = (): Try<T> => {
     return this;
   }
 
   public isSome = (): boolean => {
-    return this.asMaybe().isSome();
+    return this.isSuccess();
   }
 
   public isNothing = (): boolean => {
@@ -70,28 +96,50 @@ export abstract class Try<T> implements
   }
 
   public isSuccess = (): boolean => {
-    return this.isSome();
+    try {
+      this.getOrThrow();
+      return true;
+    } catch {
+      return false;
+    }
   }
   
   public isFailure = (): boolean => {
-    return this.isNothing();
+    return !this.isSuccess();
   }
 
   public getOrElse = (fallback: T): T => {
-    return this.asMaybe().getOrElse(fallback);
+    try {
+      return this.getOrThrow();
+    } catch {
+      return fallback;
+    }
   }
 
-  abstract get value(): Nullable<T>;
+  public map = (f: (value: T) => any): Try<any> => {
+    try {
+      let value = this.getOrThrow();
+      return Try.success(f(value));
+    } catch (e) {
+      return Try.failure(e);
+    }
+  }
 
-  abstract get error(): Nullable<Error>;
+  public flatMap = (f: (value: T) => TryConvertibleType<any> | Nullable<any>): Try<any> => {
+    try {
+      let value = f(this.getOrThrow());
 
-  abstract asMaybe(): Maybe<T>;
+      if (isTryConvertible(value)) {
+        return value.asTry();
+      } else {
+        return Maybe.some(value).asTry();
+      }
+    } catch (e) {
+      return Try.failure(e);
+    }
+  }
 
   abstract getOrThrow(): T;
-
-  public abstract map<R>(f: (value: T) => R): Try<R>;
-
-  public abstract flatMap<R>(f: (value: T) => TryConvertibleType<R> | Nullable<R>): Try<R>;
 }
 
 class Failure<T> extends Try<T> {
@@ -110,20 +158,8 @@ class Failure<T> extends Try<T> {
     this.failure = failure;
   }
 
-  public asMaybe(): Maybe<T> {
-    return Maybe.nothing();
-  }
-
   public getOrThrow(): T {
     throw this.error;
-  }
-
-  public map<R>(): Try<R> {
-    return Try.failure(this.failure);
-  }
-
-  public flatMap<R>(): Try<R> {
-    return Try.failure(this.failure);
   }
 }
 
@@ -143,33 +179,7 @@ class Success<T> extends Try<T> {
     this.success = success;
   }
 
-  public asMaybe(): Maybe<T> {
-    return Maybe.some(this.success);
-  }
-
   public getOrThrow(): T {
     return this.success;
-  }
-
-  public map<R>(f: (value: T) => R): Try<R> {
-    try {
-      return Try.success(f(this.success));
-    } catch (e) {
-      return Try.failure(e);
-    }
-  }
-
-  public flatMap<R>(f: (value: T) => TryConvertibleType<R> | Nullable<R>): Try<R> {
-    try {
-      let result = f(this.success);
-
-      if (isTryConvertible(result)) {
-        return result.asTry();
-      } else {
-        return Maybe.some(result).asTry();
-      }
-    } catch (e) {
-      return Try.failure<R>(e);
-    }
   }
 }

@@ -68,8 +68,24 @@ export abstract class Maybe<T> implements
     return new Nothing();
   }
 
+  public get value(): Nullable<T> {
+    try {
+      return this.getOrThrow();
+    } catch {
+      return undefined;
+    }
+  }
+
   public asMaybe = (): Maybe<T> => {
     return this;
+  }
+
+  public asTry = (): Try<T> => {
+    try {
+      return Try.success(this.getOrThrow());
+    } catch (e) {
+      return Try.failure(e);
+    }
   }
 
   public isSome = (): boolean => {
@@ -85,17 +101,38 @@ export abstract class Maybe<T> implements
     return !this.isSome();
   }
 
-  public abstract asTry(): Try<T>;
+  public getOrElse = (fallback: T): T => {
+    try {
+      return this.getOrThrow();
+    } catch {
+      return fallback;
+    }
+  }
 
-  public abstract get value(): Nullable<T>;
+  public map = (f: (value: T) => any): Maybe<any> => {
+    try {
+      let value = this.getOrThrow();
+      return Maybe.some(f(value));
+    } catch {
+      return Maybe.nothing();
+    }
+  }
+  
+  public flatMap = (f: (value: T) => MaybeConvertibleType<any> | Nullable<any>): Maybe<any> => {
+    try {
+      let value = f(this.getOrThrow());
+
+      if (isMaybeConvertible(value)) {
+        return value.asMaybe();
+      } else {
+        return Maybe.some(value);
+      }
+    } catch (e) {
+      return Maybe.nothing();
+    }
+  }
 
   public abstract getOrThrow(): T;
-
-  public abstract getOrElse(fallback: T): T;
-
-  public abstract map<R>(f: (value: T) => R): Maybe<R>;
-
-  public abstract flatMap<R>(f: (value: T) => MaybeConvertibleType<R> | Nullable<R>): Maybe<R>;
 }
 
 class Some<T> extends Maybe<T> {
@@ -110,38 +147,8 @@ class Some<T> extends Maybe<T> {
     this.some = some;
   }
 
-  public asTry(): Try<T> {
-    return Try.success(this.some);
-  }
-
   public getOrThrow(): T {
     return this.some;
-  }
-
-  public getOrElse(): T {
-    return this.some;
-  }
-
-  public map<R>(f: (value: T) => R): Maybe<R> {
-    try {
-      return Maybe.some(f(this.some));
-    } catch (e) {
-      return Maybe.nothing();
-    }
-  }
-
-  public flatMap<R>(f: (value: T) => MaybeConvertibleType<R> | Nullable<R>): Maybe<R> {
-    try {
-      let result = f(this.some);
-
-      if (isMaybeConvertible(result)) {
-        return result.asMaybe();
-      } else {
-        return Maybe.some(result);
-      }
-    } catch (e) {
-      return Maybe.nothing();
-    }
   }
 }
 
@@ -158,23 +165,7 @@ class Nothing<T> extends Maybe<T> {
     super();
   }
 
-  public asTry(): Try<T> {
-    return Try.failure(Nothing.unavailableError);
-  }
-
   public getOrThrow(): T {
     throw new Error(Nothing.unavailableError);
-  }
-
-  public getOrElse(fallback: T): T {
-    return fallback;
-  }
-
-  public map<R>(): Maybe<R> {
-    return Maybe.nothing();
-  }  
-
-  public flatMap<R>(): Maybe<R> {
-    return Maybe.nothing();
   }
 }
