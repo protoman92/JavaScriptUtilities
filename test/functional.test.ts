@@ -9,7 +9,7 @@ import {
 } from './../src';
 
 describe('Maybe should be implemented correctly', () => {
-  it('Maybe getOrThrow and getOrElse should be correct', () => {
+  it('Maybe getOrThrow and getOrElse should work correctly', () => {
     /// Setup
     let mb1 = Maybe.nothing<number>();
     let mb2 = Maybe.some<number>(1);
@@ -25,7 +25,7 @@ describe('Maybe should be implemented correctly', () => {
     expect(mb2.getOrElse(2)).toBe(1);
   });
 
-  it('Maybe map should be correct', () => {
+  it('Maybe map should work correctly', () => {
     /// Setup
     let mb1 = Maybe.nothing<number>();
     let mb2 = Maybe.some<number>(1);
@@ -43,7 +43,7 @@ describe('Maybe should be implemented correctly', () => {
     expect(mappedMB2.value).toBe(1 * 2 * 3);
   });
 
-  it('Maybe flatMap should be correct', () => {
+  it('Maybe flatMap should work correctly', () => {
     /// Setup
     let mb1 = Maybe.nothing<number>();
     let mb2 = Maybe.some<number>(1);
@@ -60,7 +60,7 @@ describe('Maybe should be implemented correctly', () => {
     expect(fMappedMB2.value).toBe(1);
   });
 
-  it('Maybe flatMap nullable should be correct', () => {
+  it('Maybe flatMap nullable should work correctly', () => {
     /// Setup
     let MockObject = class { id?: string; };
 
@@ -79,7 +79,7 @@ describe('Maybe should be implemented correctly', () => {
     expect(mb2.value).toBe('123');
   });
 
-  it('Maybe some with Maybe instance should be correct', () => {
+  it('Maybe some with Maybe instance should work correctly', () => {
     /// Setup & When & Then
     expect(Maybe.some(Try.failure('Error1')).isNothing()).toBeTruthy();
     expect(Maybe.some(Maybe.some(1)).value).toBe(1);
@@ -87,7 +87,7 @@ describe('Maybe should be implemented correctly', () => {
 });
 
 describe('Try should be implemented correctly', () => {
-  it('Try getOrThrow should be correct', () => {
+  it('Try getOrThrow should work correctly', () => {
     /// Setup
     let t1 = Try.failure<number>('Error 1');
     let t2 = Try.success<number>(1);
@@ -105,7 +105,7 @@ describe('Try should be implemented correctly', () => {
     expect(t2.getOrElse(2)).toBe(1);
   });
 
-  it('Try map should be correct', () => {
+  it('Try map should work correctly', () => {
     /// Setup
     let t1 = Try.failure<number>('Error 1');
     let t2 = Try.success<number>(1);
@@ -128,7 +128,7 @@ describe('Try should be implemented correctly', () => {
     expect(mappedT2.value).toBe(6);
   });
 
-  it('Try flatMap should be correct', () => {
+  it('Try flatMap should work correctly', () => {
     /// Setup
     let t1 = Try.failure<number>('Error 1');
     let t2 = Try.success<number>(1);
@@ -145,7 +145,7 @@ describe('Try should be implemented correctly', () => {
     expect(t2.value).toBe(1);
   });
 
-  it('Try flatMap with nullable should be correct', () => {
+  it('Try flatMap with nullable should work correctly', () => {
     /// Setup
     let t1 = Try.success<number>(1);
 
@@ -164,15 +164,16 @@ describe('Try should be implemented correctly', () => {
     expect(flatMappedT1.isFailure()).toBeTruthy();
   });
 
-  it('Try success with Try instance should be correct', () => {
+  it('Try success with Try instance should work correctly', () => {
     /// Setup & When & Then
     expect(Try.success(Try.failure('Error1')).isFailure()).toBeTruthy();
     expect(Try.success(Maybe.nothing()).isFailure()).toBeTruthy();
     expect(Try.success(Try.success(1)).value).toBe(1);
     expect(Try.success(Maybe.some(1)).value).toBe(1);
+    expect(Try.success(Try.success(2)).isSuccess()).toBeTruthy();
   });
 
-  it('Try zipAll with error should be correct', () => {
+  it('Try zipAll with error should work correctly', () => {
     /// Setup
     let tries1 = [
       Try.success(1), 

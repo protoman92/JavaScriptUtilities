@@ -31,7 +31,7 @@ export abstract class Try<T> implements
    * @param  {()=>T} f Transform function.
    * @returns Try A Try instance.
    */
-  static evaluate<T>(f: () => T): Try<T> {
+  public static evaluate<T>(f: () => T): Try<T> {
     try {
       return Try.success(f());
     } catch (e) {
@@ -39,7 +39,7 @@ export abstract class Try<T> implements
     }
   }
 
-  static success<T>(value: TryResult<T>): Try<T> {
+  public static success<T>(value: TryResult<T>): Try<T> {
     if (isTryConvertible(value)) {
       return new Success(value).flatMap(value => value);
     } else {
@@ -47,7 +47,7 @@ export abstract class Try<T> implements
     }
   }
 
-  static failure<T>(error: Error | string): Try<T> {
+  public static failure<T>(error: Error | string): Try<T> {
     if (error instanceof Error) {
       return new Failure(error);
     } else {
@@ -57,27 +57,27 @@ export abstract class Try<T> implements
 
   protected constructor() {}
 
-  public asTry(): Try<T> {
+  public asTry = (): Try<T> => {
     return this;
   }
 
-  public isSuccess(): boolean {
-    return this.isSome();
-  }
-
-  public isFailure(): boolean {
-    return !this.isSuccess();
-  }
-
-  public isSome(): boolean {
+  public isSome = (): boolean => {
     return this.asMaybe().isSome();
   }
 
-  public isNothing(): boolean {
-    return !this.isNothing();
+  public isNothing = (): boolean => {
+    return !this.isSome();
   }
 
-  public getOrElse(fallback: T): T {
+  public isSuccess = (): boolean => {
+    return this.isSome();
+  }
+  
+  public isFailure = (): boolean => {
+    return this.isNothing();
+  }
+
+  public getOrElse = (fallback: T): T => {
     return this.asMaybe().getOrElse(fallback);
   }
 
@@ -155,7 +155,7 @@ class Success<T> extends Try<T> {
     try {
       return Try.success(f(this.success));
     } catch (e) {
-      return Try.failure<R>(e);
+      return Try.failure(e);
     }
   }
 

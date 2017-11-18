@@ -1,7 +1,7 @@
 import { Collections, Numbers } from './../src';
 
 describe('Number utilities should work', () => {
-  it('Number range should be correct', () => {
+  it('Number range should work correctly', () => {
     /// Setup
     let times = 1000;
     let current = 0;
@@ -39,6 +39,6 @@ describe('Number utilities should work', () => {
       .map(() => Numbers.randomBetween(lower, upper));
 
     /// Then
-    expect(Collections.all(randomized, value => value >= 10 && value <= 15)).toBeTruthy();
+    expect(randomized.every(value => value >= 10 && value <= 15)).toBeTruthy();
   });
 });

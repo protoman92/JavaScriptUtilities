@@ -68,11 +68,11 @@ export abstract class Maybe<T> implements
     return new Nothing();
   }
 
-  public asMaybe(): Maybe<T> {
+  public asMaybe = (): Maybe<T> => {
     return this;
   }
 
-  public isSome(): boolean {
+  public isSome = (): boolean => {
     try {
       this.getOrThrow();
       return true;
@@ -81,7 +81,7 @@ export abstract class Maybe<T> implements
     }
   }
 
-  public isNothing(): boolean {
+  public isNothing = (): boolean => {
     return !this.isSome();
   }
 

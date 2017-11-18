@@ -1,7 +1,7 @@
-import { Booleans, Collections } from './../src';
+import { Collections } from './../src';
 
 describe('Collection utils should work', () => {
-  it('Array first should be correct', () => {
+  it('Array first should work correctly', () => {
     /// Setup
     let a1: number[] = [];
     let a2 = [1, 2, 3];
@@ -15,19 +15,7 @@ describe('Collection utils should work', () => {
     expect(first2.value).toBe(2);
   });
 
-  it('Array all and any should be correct', () => {
-    /// Setup
-    let a1 = [false, false, true];
-    let a2 = [true, true, true];
-
-    /// When & Then
-    expect(Collections.all(a1, Booleans.isTrue)).toBeFalsy();
-    expect(Collections.all(a2, Booleans.isTrue)).toBeTruthy();
-    expect(Collections.any(a1, Booleans.isTrue)).toBeTruthy();
-    expect(Collections.any(a2, Booleans.isFalse)).toBeFalsy();
-  });
-
-  it('Array elementAt should be correct', () => {
+  it('Array elementAt should work correctly', () => {
     /// Setup & When & Then
     expect(Collections.elementAtIndex([], 0).isNothing()).toBeTruthy();
     expect(Collections.elementAtIndex([1, 2, 3], 4).isNothing).toBeTruthy();

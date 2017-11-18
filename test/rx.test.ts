@@ -5,7 +5,7 @@ import { Buildable, Builder } from './buildable.test';
 const timeout = 100;
 
 describe("Do should be implemented correctly", () => {
-  it('doOnNext and doOnCompleted should be correct', (done) => {
+  it('doOnNext and doOnCompleted should work correctly', (done) => {
     /// Setup
     let nextCount = 0;
     let completedCount = 0;
@@ -26,7 +26,7 @@ describe("Do should be implemented correctly", () => {
       .subscribe();
   }, timeout);
 
-  it('doOnError and catchJustReturn should be correct', (done) => {
+  it('doOnError and catchJustReturn should work correctly', (done) => {
     /// Setup
     let nextCount = 0;
     let errorCount = 0;
@@ -53,7 +53,7 @@ describe("Do should be implemented correctly", () => {
 });
 
 describe('Catch should be implemented correctly', () => {
-  it('Catch just return some value should be correct', (done) => {
+  it('Catch just return some value should work correctly', (done) => {
     /// Setup
     let message = 'Error!';
     let fallback = 1;
@@ -83,7 +83,7 @@ describe('Catch should be implemented correctly', () => {
 });
 
 describe('Type casting should be implemented correctly', () => {
-  it('cast should be correct', () => {
+  it('cast should work correctly', () => {
     /// Setup
     let buildable = new Builder().build();
     let nextCount = 0;
@@ -108,7 +108,7 @@ describe('Type casting should be implemented correctly', () => {
     }
   });
 
-  it('typeOf should be correct', (done) => {
+  it('typeOf should work correctly', (done) => {
     /// Setup
     let buildable = new Builder().build();
     let nextCount = 0;
@@ -134,7 +134,7 @@ describe('Type casting should be implemented correctly', () => {
 });
 
 describe('Iterables should be implemented correctly', () => {
-  it('flatMapIterable should be correct', (done) => {
+  it('flatMapIterable should work correctly', (done) => {
     /// Setup
     let array = [1, 2, 3, 4];
     let nextCount = 0;
