@@ -1,4 +1,3 @@
-
 /**
  * Check if a value is true.
  * @param  {boolean} value A boolean value.
@@ -21,4 +20,6 @@ export let isFalse = (value: boolean): boolean => {
  * Provide a random boolean.
  * @returns boolean A boolean value.
  */
-export let random = (): boolean => Math.random() > 0.5;
+export let random = (): boolean => {
+  return Math.random() > 0.5;
+};

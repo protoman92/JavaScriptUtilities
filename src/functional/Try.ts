@@ -116,7 +116,7 @@ export abstract class Try<T> implements
     }
   }
 
-  public map = (f: (value: T) => any): Try<any> => {
+  public map<R>(f: (value: T) => R): Try<R> {
     try {
       let value = this.getOrThrow();
       return Try.success(f(value));
@@ -125,7 +125,7 @@ export abstract class Try<T> implements
     }
   }
 
-  public flatMap = (f: (value: T) => TryConvertibleType<any> | Nullable<any>): Try<any> => {
+  public flatMap<R>(f: (value: T) => TryConvertibleType<R> | Nullable<R>): Try<R> {
     try {
       let value = f(this.getOrThrow());
 
