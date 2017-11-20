@@ -109,7 +109,7 @@ export abstract class Maybe<T> implements
     }
   }
 
-  public map<R>(f: (value: T) => any): Maybe<R> {
+  public map<R>(f: (value: T) => R): Maybe<R> {
     try {
       let value = this.getOrThrow();
       return Maybe.some(f(value));
