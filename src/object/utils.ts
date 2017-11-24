@@ -10,9 +10,7 @@ export function entries<T>(object: JSObject<T>): [string, T][] {
   var entries: [string, T][] = [];
 
   for (let key of keys) {
-    if (object.hasOwnProperty(key)) {
-      entries.push([key, object[key]]);
-    }
+    entries.push([key, object[key]]);
   }
 
   return entries;
