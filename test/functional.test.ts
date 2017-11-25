@@ -71,8 +71,8 @@ describe('Maybe should be implemented correctly', () => {
     mockObject2.id = '123';
 
     /// When
-    let mb1 = Maybe.some(mockObject1).flatMap(value => value.id);
-    let mb2 = Maybe.some(mockObject2).flatMap(value => value.id);
+    let mb1 = Maybe.some(mockObject1).flatMap(value => Maybe.some(value.id));
+    let mb2 = Maybe.some(mockObject2).flatMap(value => Maybe.some(value.id));
 
     /// Then
     expect(mb1.isNothing()).toBeTruthy();
@@ -158,7 +158,7 @@ describe('Try should be implemented correctly', () => {
     };
 
     /// When
-    let flatMappedT1 = t1.flatMap(f);
+    let flatMappedT1 = t1.flatMap(v => Maybe.some(f(v)));
 
     /// Then
     expect(flatMappedT1.isFailure()).toBeTruthy();

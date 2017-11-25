@@ -125,15 +125,9 @@ export abstract class Try<T> implements
     }
   }
 
-  public flatMap<R>(f: (value: T) => TryConvertibleType<R> | Nullable<R>): Try<R> {
+  public flatMap<R>(f: (value: T) => TryConvertibleType<R>): Try<R> {
     try {
-      let value = f(this.getOrThrow());
-
-      if (isTryConvertible(value)) {
-        return value.asTry();
-      } else {
-        return Maybe.some(value).asTry();
-      }
+      return f(this.getOrThrow()).asTry();
     } catch (e) {
       return Try.failure(e);
     }

@@ -118,16 +118,10 @@ export abstract class Maybe<T> implements
     }
   }
   
-  public flatMap<R>(f: (value: T) => MaybeConvertibleType<R> | Nullable<R>): Maybe<R> {
+  public flatMap<R>(f: (value: T) => MaybeConvertibleType<R>): Maybe<R> {
     try {
-      let value = f(this.getOrThrow());
-
-      if (isMaybeConvertible(value)) {
-        return value.asMaybe();
-      } else {
-        return Maybe.some(value);
-      }
-    } catch (e) {
+      return f(this.getOrThrow()).asMaybe();
+    } catch {
       return Maybe.nothing();
     }
   }
