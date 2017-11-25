@@ -1,6 +1,7 @@
 import { BuildableType, BuilderType } from './buildable';
 import { Booleans } from './boolean';
 import { Collections } from './collection';
+import { EquatableType } from './comparable';
 
 import {
   Maybe, 
@@ -20,22 +21,26 @@ import { Strings } from './string';
 
 import './rx';
 
-export { BuildableType, BuilderType };
-export { Booleans };
-export { Collections };
-
 export {
+  BuildableType, 
+  BuilderType,
+  Booleans,
+  Collections,
+  EquatableType,
+  JSObject, 
   Maybe,
   MaybeConvertibleType,
   MaybeMap,
   MaybeFlatMap,
+  Nullable,
+  Numbers,
+  Objects,
+  ReactiveResult,
+  Strings,
   Try,
   TryConvertibleType,
   TryMap,
-  TryFlatMap
+  TryFlatMap,
+  TryResult, 
+  Types,
 };
-
-export { Numbers };
-export { Objects };
-export { JSObject, Nullable, ReactiveResult, TryResult, Types };
-export { Strings };
