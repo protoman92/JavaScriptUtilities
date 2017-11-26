@@ -1,3 +1,4 @@
+import { EquatableType } from './../comparable';
 import { Maybe } from './../functional';
 import { Nullable } from './../type';
 import { Numbers } from './../number';
@@ -66,4 +67,17 @@ export function randomElement<T>(array: T[]): Maybe<T> {
     let index = Numbers.randomBetween(0, array.length - 1);
     return elementAtIndex(array, index);
   }
+}
+
+/**
+ * Check whether an Array of Equatable contains a specific element.
+ * @template T EquatableType.
+ * @param {T[]} array An Array of T.
+ * @param {T} element A T element.
+ * @returns {boolean} A boolean value.
+ */
+export function containsEquatable<T extends EquatableType>(
+  array: T[], element: T
+): boolean {
+  return array.some(v => v.equals(element));
 }

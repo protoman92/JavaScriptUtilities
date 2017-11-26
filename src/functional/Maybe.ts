@@ -88,6 +88,14 @@ export abstract class Maybe<T> implements
     }
   }
 
+  public asTryWithError = (error: Error | string): Try<T> => {
+    if (this.value !== undefined) {
+      return Try.success(this.value);
+    } else {
+      return Try.failure(error);
+    }
+  }
+
   public isSome = (): boolean => {
     try {
       this.getOrThrow();

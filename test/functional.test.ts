@@ -84,6 +84,20 @@ describe('Maybe should be implemented correctly', () => {
     expect(Maybe.some(Try.failure('Error1')).isNothing()).toBeTruthy();
     expect(Maybe.some(Maybe.some(1)).value).toBe(1);
   });
+
+  it('Maybe\'s asTryWithError should work correctly', () => {
+    /// Setup
+    let mb1 = Maybe.nothing<number>();
+    let mb2 = Maybe.some(1);
+
+    /// When
+    let t1 = mb1.asTryWithError('Error 1');
+    let t2 = mb2.asTryWithError('Error 2');
+
+    /// Then
+    expect(Maybe.some(t1.error).map(v => v.message).value).toBe('Error 1');
+    expect(t2.value).toBe(1);
+  });
 });
 
 describe('Try should be implemented correctly', () => {
