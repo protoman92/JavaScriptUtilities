@@ -28,7 +28,7 @@ export function first<T>(
   array: T[], 
   selector: Nullable<(value: T) => boolean> = undefined
 ): Maybe<T> {
-  if (selector !== undefined) {
+  if (selector !== undefined && selector !== null) {
     for (let item of array) {
       if (selector(item)) {
         return Maybe.some(item);

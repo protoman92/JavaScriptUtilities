@@ -12,8 +12,8 @@ export function isInstance<T>(
   object: Nullable<any>, 
   ...members: string[]
 ): object is T {
-  if (object !== undefined) {
-    return members.every(v => object[v] !== undefined);
+  if (object !== undefined && object !== null) {
+    return members.every(v => object[v] !== undefined && object[v] !== null);
   } else {
     return false;
   }

@@ -37,7 +37,7 @@ export class Builder implements BuilderType<Buildable> {
   }
 
   withBuildable(buildable?: Buildable): this {
-    if (buildable !== undefined) {
+    if (buildable !== undefined && buildable !== null) {
       return this
         .withA(buildable.a)
         .withB(buildable.b)

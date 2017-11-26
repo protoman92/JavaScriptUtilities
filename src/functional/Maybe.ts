@@ -57,7 +57,7 @@ export abstract class Maybe<T> implements
   public static some<T>(value: MaybeConvertibleType<T> | Nullable<T>): Maybe<T> {
     if (isMaybeConvertible(value)) {
       return new Some(value).flatMap(value => value);
-    } else if (value !== undefined) {
+    } else if (value !== undefined && value !== null) {
       return new Some(value);
     } else {
       return Maybe.nothing();
@@ -89,7 +89,7 @@ export abstract class Maybe<T> implements
   }
 
   public asTryWithError = (error: Error | string): Try<T> => {
-    if (this.value !== undefined) {
+    if (this.value !== undefined && this.value !== null) {
       return Try.success(this.value);
     } else {
       return Try.failure(error);

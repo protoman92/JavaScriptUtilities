@@ -24,3 +24,12 @@ export function entries<T>(object: JSObject<T>): [string, Nullable<T>][] {
 export function toMap<T>(object: JSObject<T>): Map<string,Nullable<T>> {
   return new Map(entries(object));
 }
+
+/**
+ * Check if an object is not undefined and not null.
+ * @param {Nullable<any>} object A nullable object.
+ * @returns {boolean} A boolean value.
+ */
+export function isDefinedAndNotNull(object: Nullable<any>): boolean {
+  return object !== undefined && object !== null;
+}

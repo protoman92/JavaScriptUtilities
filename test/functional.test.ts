@@ -13,7 +13,7 @@ describe('Maybe should be implemented correctly', () => {
     /// Setup
     let mb1 = Maybe.nothing<number>();
     let mb2 = Maybe.some<number>(1);
-
+    
     /// When & Then
     try {
       mb1.getOrThrow();
