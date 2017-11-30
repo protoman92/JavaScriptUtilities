@@ -1,6 +1,8 @@
+import './rx';
 import { BuildableType, BuilderType } from './buildable';
 import { Booleans } from './boolean';
 import { Collections } from './collection';
+import { Dates } from './date';
 import { EquatableType } from './comparable';
 
 import {
@@ -19,13 +21,12 @@ import { Objects } from './object';
 import { JSObject, Nullable, ReactiveResult, TryResult, Types } from './type';
 import { Strings } from './string';
 
-import './rx';
-
 export {
   BuildableType, 
   BuilderType,
   Booleans,
   Collections,
+  Dates,
   EquatableType,
   JSObject, 
   Maybe,

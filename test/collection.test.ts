@@ -1,4 +1,4 @@
-import { Collections } from './../src';
+import { Collections, Maybe, Numbers, Try, TryResult } from './../src';
 
 describe('Collection utils should work', () => {
   it('Array first should work correctly', () => {
@@ -20,5 +20,22 @@ describe('Collection utils should work', () => {
     expect(Collections.elementAtIndex([], 0).isNothing()).toBeTruthy();
     expect(Collections.elementAtIndex([1, 2, 3], 4).isNothing).toBeTruthy();
     expect(Collections.elementAtIndex([1, 2, 3, 4], 3).value).toBe(4);
+  });
+
+  it('Array flatMap should work correctly', () => {
+    /// Setup
+    let array1: TryResult<number>[] = [
+      Maybe.some(1), 
+      Maybe.nothing(), 
+      Try.failure('Error!'),
+      ...(Numbers.range(2, 10)),
+      Try.success(10)
+    ];
+
+    /// When
+    let array2 = Collections.flatMap(array1);
+
+    /// Then
+    expect(array2).toEqual(Numbers.range(1, 11));
   });
 });

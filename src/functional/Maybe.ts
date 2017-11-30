@@ -6,10 +6,6 @@ import { Nullable, Types } from './../type';
 export type MaybeMap<T,R> = (value: T) => R;
 export type MaybeFlatMap<T,R> = (value: T) => MaybeConvertibleType<R>;
 
-function isMaybeConvertible<T>(object: any): object is MaybeConvertibleType<T> {
-  return Types.isInstance<MaybeConvertibleType<T>>(object, 'asMaybe');
-}
-
 export interface MaybeConvertibleType<T> {
 
   /**
@@ -54,8 +50,17 @@ export abstract class Maybe<T> implements
   FunctorType<T>, 
   MonadType<T> 
 {
-  public static some<T>(value: MaybeConvertibleType<T> | Nullable<T>): Maybe<T> {
-    if (isMaybeConvertible(value)) {
+  /**
+   * Check if an object is convertible to a Maybe instance.
+   * @param {*} object Any object.
+   * @returns {object is MaybeConvertibleType<T>} A boolean value.
+   */
+  public static isMaybeConvertible<T>(object: any): object is MaybeConvertibleType<T> {
+    return Types.isInstance<MaybeConvertibleType<T>>(object, 'asMaybe');
+  }
+
+  public static some<T>(value: Nullable<T> | MaybeConvertibleType<T>): Maybe<T> {
+    if (Maybe.isMaybeConvertible(value)) {
       return new Some(value).flatMap(value => value);
     } else if (value !== undefined && value !== null) {
       return new Some(value);

@@ -1,6 +1,6 @@
 import { EquatableType } from './../comparable';
-import { Maybe } from './../functional';
-import { Nullable } from './../type';
+import { Maybe, Try } from './../functional';
+import { Nullable, TryResult } from './../type';
 import { Numbers } from './../number';
 
 /**
@@ -80,4 +80,24 @@ export function containsEquatable<T extends EquatableType>(
   array: T[], element: T
 ): boolean {
   return array.some(v => v.equals(element));
+}
+
+/**
+ * If an Array consists of TryResult instances, unwrap each element and filter
+ * out undefine/error items.
+ * @param {TryResult<T>[]} array An Array of TryResult.
+ * @returns {[T]} An Array of T.
+ */
+export function flatMap<T>(array: TryResult<T>[]): T[] {
+  var newArray: T[] = [];
+
+  for (let result of array) {
+    try {
+      newArray.push(Try.success(result).getOrThrow());
+    } catch {
+      continue;
+    }
+  }
+
+  return newArray;
 }

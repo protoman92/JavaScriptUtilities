@@ -6,10 +6,6 @@ import { Nullable, TryResult, Types } from './../type';
 export type TryMap<T,R> = (value: T) => R; 
 export type TryFlatMap<T,R> = (value: T) => TryConvertibleType<R>; 
 
-function isTryConvertible<T>(object: any): object is TryConvertibleType<T> {
-  return Types.isInstance<TryConvertibleType<T>>(object, 'asTry');
-}
-
 export interface TryConvertibleType<T> extends MaybeConvertibleType<T> {
   
   /**
@@ -26,6 +22,15 @@ export abstract class Try<T> implements
   MonadType<T> 
 {
   /**
+   * Check if an object is convertible to a Try instance.
+   * @param {*} object Any object.
+   * @returns {object is TryConvertibleType<T>} A boolean value.
+   */
+  public static isTryConvertible<T>(object: any): object is TryConvertibleType<T> {
+    return Types.isInstance<TryConvertibleType<T>>(object, 'asTry');
+  }
+
+  /**
    * Evaluate a function that can potentially throw an error and wrap the result
    * in a Try.
    * @param  {()=>T} f Transform function.
@@ -40,8 +45,10 @@ export abstract class Try<T> implements
   }
 
   public static success<T>(value: TryResult<T>): Try<T> {
-    if (isTryConvertible(value)) {
-      return new Success(value).flatMap(value => value);
+    if (Try.isTryConvertible(value)) {
+      return new Success(value).flatMap(v => v);
+    } else if (Maybe.isMaybeConvertible(value)) {
+      return new Success(value).flatMap(v => v.asMaybe());
     } else {
       return new Success(value);
     }
