@@ -27,7 +27,7 @@ export abstract class Try<T> implements
    * @returns {object is TryConvertibleType<T>} A boolean value.
    */
   public static isTryConvertible<T>(object: any): object is TryConvertibleType<T> {
-    return Types.isInstance<TryConvertibleType<T>>(object, 'asTry');
+    return Types.isInstance<TryConvertibleType<T>>(object, ['asTry']);
   }
 
   /**
@@ -123,6 +123,14 @@ export abstract class Try<T> implements
     }
   }
 
+  /**
+   * Get a fallback Try if the current Try is failure.
+   * @returns {Try<T>} A Try instance.
+   */
+  public successOrElse = (fallback: Try<T>): Try<T> => {
+    return this.isSuccess() ? this : fallback;
+  }
+
   public map<R>(f: (value: T) => R): Try<R> {
     try {
       let value = this.getOrThrow();
@@ -138,6 +146,45 @@ export abstract class Try<T> implements
     } catch (e) {
       return Try.failure(e);
     }
+  }
+
+  /**
+   * Cast the inner value to type R.
+   * @param {new () => R} typeFn Constructor function for R.
+   * @returns {Try<R>} A Try instance.
+   */
+  public cast<R extends T>(typeFn: new () => R): Try<R> {
+    return this.map(v => Types.cast(v, typeFn));
+  }
+
+  /**
+   * Cast the inner value to type R by checking a list of member properties.
+   * @param {string[]} members An Array of member properties to check.
+   * @returns {Try<R>} A Try instance.
+   */
+  public castWithProperties<R>(members: string[]): Try<R> {
+    return this.flatMap(v => {
+      if (Types.isInstance<R>(v, members)) {
+        return Try.success(v);
+      } else {
+        return Try.failure<R>(`Failed to cast ${v} to type with members ${members}`);
+      }
+    });
+  }
+
+  /**
+   * Filter the inner value using some selector, and return a failure Try if
+   * the value fails to pass the predicate.
+   * @returns {Try<T>} A Try instance.
+   */
+  public filter = (selector: (v: T) => boolean, error: Error | string): Try<T> => {
+    return this.flatMap(v => {
+      if (selector(v)) {
+        return Try.success(v);
+      } else {
+        return Try.failure(error);
+      }
+    });
   }
 
   abstract getOrThrow(): T;

@@ -1,7 +1,8 @@
 import {
-  Maybe,  
+  Maybe,
   MaybeMap,
   MaybeFlatMap,
+  Numbers,
   Try,
   TryMap,
   TryFlatMap,
@@ -216,5 +217,49 @@ describe('Try should be implemented correctly', () => {
     }
 
     expect(zippedTries2.value).toBe(6);
+  });
+});
+
+describe('Common functionalities', () => {
+  it('Maybe/Try cast should work correctly', () => {
+    /// Setup
+    let t1 = Try.success<any>(1);
+    let t2 = Try.success<any>({ '1': 1, '2': 2 });
+    let m1 = Maybe.some<any>(1);
+    let m2 = Maybe.nothing();
+    
+    /// When
+    let t1c = t1.cast(Number);
+    let t2c = t2.cast(Array);
+    let m1c = m1.cast(Number);
+    let m2c = m2.cast(Array);
+
+    /// Then
+    expect(t1c.value).toBe(1);
+    expect(m1c.value).toBe(1);
+    expect(t2c.isFailure()).toBeTruthy();
+    expect(m2c.isNothing()).toBeTruthy();
+  });
+
+  it('Maybe/Try filter should work correctly', () => {
+    /// Setup
+    let t1 = Try.success(1);
+    let t2 = Try.success(2);
+    let m1 = Maybe.some(3);
+    let m2 = Maybe.nothing();
+    let isEven = Numbers.isEven;
+    let isOdd = Numbers.isOdd;
+
+    /// When
+    let t1f = t1.filter(isEven, 'Error!');
+    let t2f = t2.filter(isOdd, 'Error!');
+    let m1f = m1.filter(isOdd);
+    let m2f = m2.filter(isEven);
+
+    /// Then
+    expect(t1f.isFailure()).toBeTruthy();
+    expect(t2f.isFailure()).toBeTruthy();
+    expect(m1f.value).toBe(3);
+    expect(m2f.isNothing()).toBeTruthy();
   });
 });

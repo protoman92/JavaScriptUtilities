@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
 import './../src';
-import { Buildable, Builder } from './buildable.test';
 
 const timeout = 100;
 
@@ -13,7 +12,6 @@ describe("Do should be implemented correctly", () => {
 
     /// When
     Observable.range(0, times)
-      .typeOf(Number)
       .doOnNext(() => nextCount += 1)
       .doOnCompleted(() => {
         completedCount += 1;
@@ -63,7 +61,6 @@ describe('Catch should be implemented correctly', () => {
     try {
       Observable.error(message)
         .catchJustReturnValue(fallback)
-        .cast(Number)
         .doOnNext((value) => {
           nextCount += 1;
 
@@ -82,56 +79,56 @@ describe('Catch should be implemented correctly', () => {
   }, timeout);
 });
 
-describe('Type casting should be implemented correctly', () => {
-  it('cast should work correctly', () => {
-    /// Setup
-    let buildable = new Builder().build();
-    let nextCount = 0;
-    let errorCount = 0;
+// describe('Type casting should be implemented correctly', () => {
+//   it('cast should work correctly', () => {
+//     /// Setup
+//     let buildable = new Builder().build();
+//     let nextCount = 0;
+//     let errorCount = 0;
 
-    /// When
-    try {
-      Observable.of(buildable)
-        .cast(Buildable)
-        .doOnNext(() => nextCount += 1)
-        .cast(String)
-        .cast(Number)
-        .cast(Builder)
-        .doOnNext(fail)
-        .doOnError(() => errorCount += 1)
-        .doOnCompleted(fail)
-        .subscribe();
-    } catch (e) {
-      /// Then
-      expect(nextCount).toBe(1);
-      expect(errorCount).toBe(1);
-    }
-  });
+//     /// When
+//     try {
+//       Observable.of(buildable)
+//         .cast(Buildable)
+//         .doOnNext(() => nextCount += 1)
+//         .cast(string)
+//         .cast(Number)
+//         .cast(Builder)
+//         .doOnNext(fail)
+//         .doOnError(() => errorCount += 1)
+//         .doOnCompleted(fail)
+//         .subscribe();
+//     } catch (e) {
+//       /// Then
+//       expect(nextCount).toBe(1);
+//       expect(errorCount).toBe(1);
+//     }
+//   });
 
-  it('typeOf should work correctly', (done) => {
-    /// Setup
-    let buildable = new Builder().build();
-    let nextCount = 0;
-    let errorCount = 0;
+//   it('typeOf should work correctly', (done) => {
+//     /// Setup
+//     let buildable = new Builder().build();
+//     let nextCount = 0;
+//     let errorCount = 0;
 
-    /// When
-    Observable.of(buildable)
-      .typeOf(Buildable)
-      .doOnNext(() => nextCount += 1)
-      .typeOf(Builder)
-      .doOnNext(fail)
-      .doOnError(() => errorCount += 1)
-      .isEmpty()
-      .doOnNext(value => expect(value).toBeTruthy())
-      .doOnCompleted(() => {
-        /// Then
-        expect(nextCount).toBe(1);
-        expect(errorCount).toBe(0);
-        done();
-      })
-      .subscribe();
-  }, timeout);
-});
+//     /// When
+//     Observable.of(buildable)
+//       .typeOf(Buildable)
+//       .doOnNext(() => nextCount += 1)
+//       .typeOf(Builder)
+//       .doOnNext(fail)
+//       .doOnError(() => errorCount += 1)
+//       .isEmpty()
+//       .doOnNext(value => expect(value).toBeTruthy())
+//       .doOnCompleted(() => {
+//         /// Then
+//         expect(nextCount).toBe(1);
+//         expect(errorCount).toBe(0);
+//         done();
+//       })
+//       .subscribe();
+//   }, timeout);
+// });
 
 describe('Iterables should be implemented correctly', () => {
   it('flatMapIterable should work correctly', (done) => {

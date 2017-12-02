@@ -56,7 +56,7 @@ export abstract class Maybe<T> implements
    * @returns {object is MaybeConvertibleType<T>} A boolean value.
    */
   public static isMaybeConvertible<T>(object: any): object is MaybeConvertibleType<T> {
-    return Types.isInstance<MaybeConvertibleType<T>>(object, 'asMaybe');
+    return Types.isInstance<MaybeConvertibleType<T>>(object, ['asMaybe']);
   }
 
   public static some<T>(value: Nullable<T> | MaybeConvertibleType<T>): Maybe<T> {
@@ -122,6 +122,14 @@ export abstract class Maybe<T> implements
     }
   }
 
+  /**
+   * Get a fallback Maybe if the current Maybe is failure.
+   * @returns {Maybe<T>} A Maybe instance.
+   */
+  public someOrElse = (fallback: Maybe<T>): Maybe<T> => {
+    return this.isSome() ? this : fallback;
+  }
+
   public map<R>(f: (value: T) => R): Maybe<R> {
     try {
       let value = this.getOrThrow();
@@ -137,6 +145,33 @@ export abstract class Maybe<T> implements
     } catch {
       return Maybe.nothing();
     }
+  }
+
+  /**
+   * Cast the inner value to type R.
+   * @param {new () => R} typeFn Constructor function for R.
+   * @returns {Maybe<R>} A Maybe instance.
+   */
+  public cast<R extends T>(typeFn: new () => R): Maybe<R> {
+    return this.asTry().cast(typeFn).asMaybe();
+  }
+
+  /**
+   * Cast the inner value to type R by checking a list of member properties.
+   * @param {string[]} members An Array of member properties to check.
+   * @returns {Maybe<R>} A Maybe instance.
+   */
+  public castWithProperties<R>(members: string[]): Maybe<R> {
+    return this.asTry().castWithProperties<R>(members).asMaybe();
+  }
+
+  /**
+   * Filter the inner value using some selector, and return a failure Maybe if
+   * the value fails to pass the predicate.
+   * @returns {Maybe<T>} A Maybe instance.
+   */
+  public filter = (selector: (v: T) => boolean): Maybe<T> => {
+    return this.asTry().filter(selector, Nothing.unavailableError).asMaybe();
   }
 
   public abstract getOrThrow(): T;
@@ -160,7 +195,7 @@ class Some<T> extends Maybe<T> {
 }
 
 class Nothing<T> extends Maybe<T> {
-  private static get unavailableError(): string {
+  static get unavailableError(): string {
     return 'Value not available';
   }
 
