@@ -1,7 +1,7 @@
 import FunctorType from './FunctorType';
 import MonadType from './MonadType';
 import { TryConvertibleType, Try } from './Try';
-import { Nullable, Types } from './../type';
+import { Nullable, Return, Types } from './../type';
 
 export type MaybeMap<T,R> = (value: T) => R;
 export type MaybeFlatMap<T,R> = (value: T) => MaybeConvertibleType<R>;
@@ -124,10 +124,19 @@ export abstract class Maybe<T> implements
 
   /**
    * Get a fallback Maybe if the current Maybe is failure.
+   * @param {Return<MaybeConvertibleType<T>>} fallback A Return instance.
    * @returns {Maybe<T>} A Maybe instance.
    */
-  public someOrElse = (fallback: Maybe<T>): Maybe<T> => {
-    return this.isSome() ? this : fallback;
+  public someOrElse(fallback: Return<MaybeConvertibleType<T>>): Maybe<T> {
+    if (this.isSome()) {
+      return this;
+    } else {
+      if (fallback instanceof Function) {
+        return fallback().asMaybe();
+      } else {
+        return fallback.asMaybe();
+      }
+    }
   }
 
   public map<R>(f: (value: T) => R): Maybe<R> {

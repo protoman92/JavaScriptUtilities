@@ -99,6 +99,20 @@ describe('Maybe should be implemented correctly', () => {
     expect(Maybe.some(t1.error).map(v => v.message).value).toBe('Error 1');
     expect(t2.value).toBe(1);
   });
+
+  it('Maybe someOrElse should work correctly', () => {
+    /// Setup
+    let m1 = Maybe.some(1);
+    let m2 = Maybe.nothing();
+
+    /// When
+    let m1s = m1.someOrElse(Try.success(2));
+    let m2s = m2.someOrElse(() => Try.success(2));
+
+    /// Then
+    expect(m1s.value).toBe(1);
+    expect(m2s.value).toBe(2);
+  });
 });
 
 describe('Try should be implemented correctly', () => {
@@ -217,6 +231,20 @@ describe('Try should be implemented correctly', () => {
     }
 
     expect(zippedTries2.value).toBe(6);
+  });
+
+  it('Try successOrElse should work correctly', () => {
+    /// Setup
+    let t1 = Try.success(1);
+    let t2 = Try.failure('Error!');
+
+    /// When
+    let t1s = t1.successOrElse(Try.success(2));
+    let t2s = t2.successOrElse(() => Try.success(2));
+
+    /// Then
+    expect(t1s.value).toBe(1);
+    expect(t2s.value).toBe(2);
   });
 });
 
