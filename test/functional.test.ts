@@ -92,8 +92,8 @@ describe('Maybe should be implemented correctly', () => {
     let mb2 = Maybe.some(1);
 
     /// When
-    let t1 = mb1.asTryWithError('Error 1');
-    let t2 = mb2.asTryWithError('Error 2');
+    let t1 = mb1.asTry('Error 1');
+    let t2 = mb2.asTry('Error 2');
 
     /// Then
     expect(Maybe.some(t1.error).map(v => v.message).value).toBe('Error 1');

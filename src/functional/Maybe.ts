@@ -85,19 +85,13 @@ export abstract class Maybe<T> implements
     return this;
   }
 
-  public asTry = (): Try<T> => {
-    try {
-      return Try.success(this.getOrThrow());
-    } catch (e) {
-      return Try.failure(e);
-    }
-  }
-
-  public asTryWithError = (error: Error | string): Try<T> => {
+  public asTry = (error: Nullable<Error | string> = undefined): Try<T> => {
     if (this.value !== undefined && this.value !== null) {
       return Try.success(this.value);
-    } else {
+    } else if (error !== undefined && error !== null) {
       return Try.failure(error);
+    } else {
+      return this.asTry(Nothing.unavailableError);
     }
   }
 
