@@ -93,7 +93,7 @@ export function flatMap<T>(array: TryResult<T>[]): T[] {
 
   for (let result of array) {
     try {
-      newArray.push(Try.success(result).getOrThrow());
+      newArray.push(Try.unwrap(result, '').getOrThrow());
     } catch {
       continue;
     }

@@ -72,18 +72,18 @@ describe('Maybe should be implemented correctly', () => {
     mockObject2.id = '123';
 
     /// When
-    let mb1 = Maybe.some(mockObject1).flatMap(value => Maybe.some(value.id));
-    let mb2 = Maybe.some(mockObject2).flatMap(value => Maybe.some(value.id));
+    let mb1 = Maybe.unwrap(mockObject1).flatMap(value => Maybe.unwrap(value.id));
+    let mb2 = Maybe.unwrap(mockObject2).flatMap(value => Maybe.unwrap(value.id));
 
     /// Then
     expect(mb1.isNothing()).toBeTruthy();
     expect(mb2.value).toBe('123');
   });
 
-  it('Maybe some with Maybe instance should work correctly', () => {
+  it('Maybe unwrap with Maybe instance should work correctly', () => {
     /// Setup & When & Then
-    expect(Maybe.some(Try.failure('Error1')).isNothing()).toBeTruthy();
-    expect(Maybe.some(Maybe.some(1)).value).toBe(1);
+    expect(Maybe.unwrap(Try.failure('Error1')).isNothing()).toBeTruthy();
+    expect(Maybe.unwrap(Maybe.some(1)).value).toBe(1);
   });
 
   it('Maybe\'s asTryWithError should work correctly', () => {
@@ -96,7 +96,7 @@ describe('Maybe should be implemented correctly', () => {
     let t2 = mb2.asTry('Error 2');
 
     /// Then
-    expect(Maybe.some(t1.error).map(v => v.message).value).toBe('Error 1');
+    expect(Maybe.unwrap(t1.error).map(v => v.message).value).toBe('Error 1');
     expect(t2.value).toBe(1);
   });
 
@@ -193,13 +193,13 @@ describe('Try should be implemented correctly', () => {
     expect(flatMappedT1.isFailure()).toBeTruthy();
   });
 
-  it('Try success with Try instance should work correctly', () => {
+  it('Try unwrap with Try instance should work correctly', () => {
     /// Setup & When & Then
-    expect(Try.success(Try.failure('Error1')).isFailure()).toBeTruthy();
-    expect(Try.success(Maybe.nothing()).isFailure()).toBeTruthy();
-    expect(Try.success(Try.success(1)).value).toBe(1);
-    expect(Try.success(Maybe.some(1)).value).toBe(1);
-    expect(Try.success(Try.success(2)).isSuccess()).toBeTruthy();
+    expect(Try.unwrap(Try.failure('Error1')).isFailure()).toBeTruthy();
+    expect(Try.unwrap(Maybe.nothing()).isFailure()).toBeTruthy();
+    expect(Try.unwrap(Try.success(1)).value).toBe(1);
+    expect(Try.unwrap(Maybe.some(1)).value).toBe(1);
+    expect(Try.unwrap(Try.success(2)).isSuccess()).toBeTruthy();
   });
 
   it('Try zipAll with error should work correctly', () => {

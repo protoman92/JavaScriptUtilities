@@ -59,14 +59,24 @@ export abstract class Maybe<T> implements
     return Types.isInstance<MaybeConvertibleType<T>>(object, ['asMaybe']);
   }
 
-  public static some<T>(value: Nullable<T> | MaybeConvertibleType<T>): Maybe<T> {
+  /**
+   * Unwrap an object of ambiguous types in order to get its inner value.
+   * @param {(Nullable<T> | MaybeConvertibleType<T>)} value An object of
+   * ambiguous types.
+   * @returns {Maybe<T>} A Maybe instance.
+   */
+  public static unwrap<T>(value: Nullable<T> | MaybeConvertibleType<T>): Maybe<T> {
     if (Maybe.isMaybeConvertible(value)) {
-      return new Some(value).flatMap(value => value);
+      return Maybe.some(value).flatMap(value => value);
     } else if (value !== undefined && value !== null) {
-      return new Some(value);
+      return Maybe.some(value);
     } else {
       return Maybe.nothing();
     }
+  }
+
+  public static some<T>(value: T): Maybe<T> {
+    return new Some(value);
   }
 
   public static nothing<T>(): Maybe<T> {

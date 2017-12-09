@@ -44,16 +44,33 @@ export abstract class Try<T> implements
     }
   }
 
-  public static success<T>(value: TryResult<T>): Try<T> {
+  /**
+   * Unwrap an object of ambiguous types in order to get its inner value.
+   * @param {TryResult<T>} value A TryResult instance.
+   * @param {Error | string} error Error in case the value is invalid.
+   * @returns {Try<T>} A Try instance.
+   */
+  public static unwrap<T>(
+    value: TryResult<T>, 
+    error: Nullable<Error | string> = undefined,
+  ): Try<T> {
     if (Try.isTryConvertible(value)) {
-      return new Success(value).flatMap(v => v);
+      return Try.success(value).flatMap(v => v);
     } else if (Maybe.isMaybeConvertible(value)) {
-      return new Success(value).flatMap(v => v.asMaybe());
+      return Try.success(value).flatMap(v => v.asMaybe().asTry(error));
     } else if (value !== undefined && value !== null) {
-      return new Success(value);
+      return Try.success(value);
     } else {
-      return new Failure(new Error(`Value not found`));
+      if (error !== undefined && error !== null) {
+        return Try.failure(error);
+      } else {
+        return Try.failure('Value not available');
+      }
     }
+  }
+
+  public static success<T>(value: T): Try<T> {
+    return new Success(value);
   }
 
   public static failure<T>(error: Error | string): Try<T> {
