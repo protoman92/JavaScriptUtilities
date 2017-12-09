@@ -49,8 +49,10 @@ export abstract class Try<T> implements
       return new Success(value).flatMap(v => v);
     } else if (Maybe.isMaybeConvertible(value)) {
       return new Success(value).flatMap(v => v.asMaybe());
-    } else {
+    } else if (value !== undefined && value !== null) {
       return new Success(value);
+    } else {
+      return new Failure(new Error(`Value not found`));
     }
   }
 
