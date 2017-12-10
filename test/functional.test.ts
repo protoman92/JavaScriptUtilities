@@ -246,6 +246,21 @@ describe('Try should be implemented correctly', () => {
     expect(t1s.value).toBe(1);
     expect(t2s.value).toBe(2);
   });
+
+  it('Try mapError should work correctly', () => {
+    /// Setup
+    let t1 = Try.success(1);
+    let t2 = Try.failure('Error 1');
+
+    /// When
+    let t1f = t1.mapError(() => 'Error 2');
+    let t2f = t2.mapError(() => 'Error 2');
+
+    /// Then
+    expect(t1f.value).toBe(1);
+    expect(t2f.isFailure()).toBeTruthy();
+    expect(Try.unwrap(t2f.error).getOrThrow().message).toBe('Error 2');
+  });
 });
 
 describe('Common functionalities', () => {

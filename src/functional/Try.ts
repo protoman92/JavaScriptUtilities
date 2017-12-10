@@ -168,6 +168,23 @@ export abstract class Try<T> implements
     }
   }
 
+  /**
+   * Map an error to another error if available.
+   * @param {((e: Error) => Error | string)} f Transform function.
+   * @returns {Try<T>} A Try instance.
+   */
+  public mapError(f: (e: Error) => Error | string): Try<T> {
+    if (this.error !== undefined && this.error !== null) {
+      try {
+        return Try.failure(f(this.error));
+      } catch (e) {
+        return Try.failure(e);
+      }
+    } else {
+      return this;
+    }
+  }
+
   public flatMap<R>(f: (value: T) => TryConvertibleType<R>): Try<R> {
     try {
       return f(this.getOrThrow()).asTry();
