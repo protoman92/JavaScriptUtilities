@@ -7,7 +7,7 @@ import { Numbers } from './../number';
  * Get the element at an index in an Array.
  * @param  {T[]} array The Array to get the element from.
  * @param  {number} index A number value.
- * @returns Maybe A Maybe instance.
+ * @returns Try A Try instance.
  */
 export function elementAtIndex<T>(array: T[], index: number): Try<T> {
   if (array.length <= index || index < 0) {
@@ -22,7 +22,7 @@ export function elementAtIndex<T>(array: T[], index: number): Try<T> {
  * @param  {T[]} array The Array to get the element from.
  * @param  {Nullable<(value:T} selector An optional selector, which, if defined,
  * determines whether an item passes its check before being returned.
- * @returns Maybe A Maybe instance.
+ * @returns Try A Try instance.
  */
 export function first<T>(
   array: T[], selector: Nullable<(value: T) => boolean> = undefined,
@@ -45,7 +45,7 @@ export function first<T>(
  * @param  {T[]} array The Array to get the element from.
  * @param  {Nullable<(value:T} selector An optional selector, which, if defined,
  * determines whether an item passes its check before being returned.
- * @returns Maybe A Maybe instance.
+ * @returns Try A Try instance.
  */
 export function last<T>(
   array: T[], selector: Nullable<(value: T) => boolean> = undefined,
