@@ -38,4 +38,32 @@ describe('Collection utils should work', () => {
     /// Then
     expect(array2).toEqual(Numbers.range(1, 11));
   });
+
+  it('Zip two arrays should work correctly', () => {
+    /// Setup
+    let array1 = [1, 2, 3, 4, 5];
+    let array2 = [1, 2, 3];
+
+    /// When
+    let result = Collections.zip(array1, array2, (v1, v2) => v1 + v2);
+
+    /// Then
+    expect(result.value).toEqual([2, 4, 6]);
+  });
+
+  it('Zip all arrays should work correctly', () => {
+    /// Setup
+    let array1 = [1, 2, 3, 4, 5];
+    let array2 = [1, 2, 3];
+    let array3 = [1, 2, 3, 4, 5, 6, 7];
+    let selector: (v: number[]) => number = v => v.reduce((v1, v2) => v1 + v2);
+
+    /// When
+    let result1 = Collections.zipAll([array1, array2, array3], selector);
+    let result2 = Collections.zipVarargs(selector, array1, array2, array3);
+
+    /// Then
+    expect(result1.value).toEqual([3, 6, 9]);
+    expect(result1.value).toEqual(result2.value);
+  });
 });

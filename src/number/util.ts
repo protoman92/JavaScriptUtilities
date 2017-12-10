@@ -28,7 +28,7 @@ export let sum = (numbers: number[]): number => {
 };
 
 /**
- * Produce a range of numbers.
+ * Produce an inclusive range of numbers.
  * @param  {number} start The starting value.
  * @param  {number} end The ending value.
  * @param  {number} delta Value change magnitude.
