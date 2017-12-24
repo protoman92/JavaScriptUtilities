@@ -46,15 +46,20 @@ export abstract class Try<T> implements
 
   /**
    * Unwrap an object of ambiguous types in order to get its inner value.
-   * @param {TryResult<T>} value A TryResult instance.
+   * @param {Return<TryResult<T>>} value A TryResult instance.
    * @param {Error | string} error Error in case the value is invalid.
    * @returns {Try<T>} A Try instance.
    */
   public static unwrap<T>(
-    value: TryResult<T>, 
-    error: Nullable<Error | string> = undefined,
+    value: Return<TryResult<T>>, error: Nullable<Error | string> = undefined,
   ): Try<T> {
-    if (Try.isTryConvertible(value)) {
+    if (value instanceof Function) {
+      try {
+        return Try.unwrap(value(), error);
+      } catch (e) {
+        return Try.failure(e);
+      }
+    } else if (Try.isTryConvertible(value)) {
       return Try.success(value).flatMap(v => v);
     } else if (Maybe.isMaybeConvertible(value)) {
       return Try.success(value).flatMap(v => v.asMaybe().asTry(error));
@@ -134,11 +139,15 @@ export abstract class Try<T> implements
     return !this.isSuccess();
   }
 
-  public getOrElse = (fallback: T): T => {
+  public getOrElse = (fallback: Return<T>): T => {
     try {
       return this.getOrThrow();
     } catch {
-      return fallback;
+      if (fallback instanceof Function) {
+        return fallback();
+      } else {
+        return fallback;
+      }
     }
   }
 

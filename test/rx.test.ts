@@ -79,57 +79,6 @@ describe('Catch should be implemented correctly', () => {
   }, timeout);
 });
 
-// describe('Type casting should be implemented correctly', () => {
-//   it('cast should work correctly', () => {
-//     /// Setup
-//     let buildable = new Builder().build();
-//     let nextCount = 0;
-//     let errorCount = 0;
-
-//     /// When
-//     try {
-//       Observable.of(buildable)
-//         .cast(Buildable)
-//         .doOnNext(() => nextCount += 1)
-//         .cast(string)
-//         .cast(Number)
-//         .cast(Builder)
-//         .doOnNext(fail)
-//         .doOnError(() => errorCount += 1)
-//         .doOnCompleted(fail)
-//         .subscribe();
-//     } catch (e) {
-//       /// Then
-//       expect(nextCount).toBe(1);
-//       expect(errorCount).toBe(1);
-//     }
-//   });
-
-//   it('typeOf should work correctly', (done) => {
-//     /// Setup
-//     let buildable = new Builder().build();
-//     let nextCount = 0;
-//     let errorCount = 0;
-
-//     /// When
-//     Observable.of(buildable)
-//       .typeOf(Buildable)
-//       .doOnNext(() => nextCount += 1)
-//       .typeOf(Builder)
-//       .doOnNext(fail)
-//       .doOnError(() => errorCount += 1)
-//       .isEmpty()
-//       .doOnNext(value => expect(value).toBeTruthy())
-//       .doOnCompleted(() => {
-//         /// Then
-//         expect(nextCount).toBe(1);
-//         expect(errorCount).toBe(0);
-//         done();
-//       })
-//       .subscribe();
-//   }, timeout);
-// });
-
 describe('Iterables should be implemented correctly', () => {
   it('flatMapIterable should work correctly', (done) => {
     /// Setup
@@ -152,4 +101,33 @@ describe('Iterables should be implemented correctly', () => {
       })
       .subscribe();
   }, timeout);
+});
+
+describe('flatMap and map non nil should be implemented correctly', () => {
+  it('Map non nil or empty should be implemented correctly', done => {
+    /// Setup & When & Then
+    Observable.of<any>(1)
+      .flatMap(v => Observable.merge(
+        Observable.of(v).mapNonNilOrEmpty(v1 => (<string>v1).length),
+        Observable.of(v).mapNonNilOrEmpty(() => { throw Error('Failed!'); }),
+      ))
+      .isEmpty()
+      .doOnNext(v => expect(v).toBeTruthy())
+      .doOnCompleted(() => done())
+      .subscribe();
+  }, timeout);
+
+  it('Map non nil or else should be implemented correctly', done => {
+    /// Setup & When & Then
+    Observable.of<any>(1)
+      .flatMap(v => Observable.merge(
+        Observable.of(v).mapNonNilOrElse(v1 => (<string>v1).length, () => 2),
+        Observable.of(v).mapNonNilOrElse(() => { throw Error('Failed!'); }, 2),
+      ))
+      .doOnNext(v => expect(v).toBe(2))
+      .isEmpty()
+      .doOnNext(v => expect(v).toBeFalsy())
+      .doOnCompleted(() => done())
+      .subscribe();
+  });
 });
