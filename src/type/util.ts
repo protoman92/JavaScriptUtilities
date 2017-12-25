@@ -12,9 +12,11 @@ export function isInstance<T>(
   object: Nullable<any>, members: string[],
 ): object is T {
   if (object !== undefined && object !== null && members.length > 0) {
+    let keys = Object.keys(object);
+
     /// If the member is null, it is still valid because it technically still
     /// exists as part of the object.
-    return members.every(v => object[v] !== undefined);
+    return members.every(v => keys.indexOf(v) >= 0);
   } else {
     return false;
   }

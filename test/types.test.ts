@@ -1,15 +1,19 @@
-import { Types } from './../src';
+import { Nullable, Types } from './../src';
 
 interface TestInterface {
   func1: () => boolean;
   func2: () => number;
   func3: () => string;
+  value1: Nullable<string>;
+  value2: Nullable<string>;
 }
 
 class TestInterfaceImpl implements TestInterface {
   func1 = (): boolean => true;
   func2 = (): number => 1;
   func3 = (): string => '123';
+  value1 = undefined;
+  value2 = null;
 }
 
 describe('Types should be implemented correctly', () => {
@@ -43,6 +47,14 @@ describe('Types should be implemented correctly', () => {
       fail();
     } else {
       console.log('Passed this test too!');
+    }
+
+    /// When & Then 4
+    if (Types.isInstance<TestInterface>(impl, ['value1', 'value2'])) {
+      expect(impl.value1).toBeUndefined();
+      expect(impl.value2).toBeNull();
+    } else {
+      fail();
     }
   });
 });
