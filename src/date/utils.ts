@@ -19,3 +19,20 @@ export let random = (start: Date | number, end: Date | number): Date => {
   let endTime = getNumericalTime(end);
   return new Date(Numbers.randomBetween(startTime, endTime));
 };
+
+/**
+ * Parse a date string into a Date.
+ * @param {string} date A string value.
+ * @returns {Date} A Date instance.
+ */
+export let parse = (date: string): Date => {
+  let result: any = Date.parse(date);
+
+  if (result instanceof Date) {
+    return result;
+  } else if (typeof(result) === 'number') {
+    return new Date(result);
+  } else {
+    return new Date();
+  }
+}
