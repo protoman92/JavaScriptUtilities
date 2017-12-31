@@ -1,12 +1,12 @@
 {
   "name": "javascriptutilities",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "A collection of utility functions for JS",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "typings": "./dist/src/index.d.ts",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "tsc && jest"
   },
   "jest": {
     "transform": {

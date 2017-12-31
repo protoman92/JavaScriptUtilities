@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import './../src';
 
 const timeout = 100;
@@ -129,5 +129,27 @@ describe('flatMap and map non nil should be implemented correctly', () => {
       .doOnNext(v => expect(v).toBeFalsy())
       .doOnCompleted(() => done())
       .subscribe();
+  });
+});
+
+describe('Subscription\'s utilities should be implemented correctly', () => {
+  it('Subscription\'s disposed(by) should be implemented correctly', () => {
+    /// Setup
+    let disposedCount = 0;
+
+    let obs1 = new Observable<number>(obs => {
+      obs.next(1);
+      obs.complete();
+      return () => disposedCount += 1;
+    });
+
+    let subscription = new Subscription();
+
+    /// When
+    obs1.subscribe().toBeDisposedBy(subscription);
+    subscription.unsubscribe();
+
+    /// Then
+    expect(disposedCount).toBe(1);
   });
 });
