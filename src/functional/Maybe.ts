@@ -10,7 +10,7 @@ export interface MaybeConvertibleType<T> {
 
   /**
    * Convert the current object to a Maybe instance.
-   * @returns Maybe A Maybe instance.
+   * @returns {Maybe} A Maybe instance.
    */
   asMaybe(): Maybe<T>;
 }
@@ -20,7 +20,7 @@ export interface MaybeType<T> extends MaybeConvertibleType<T> {
 
   /**
    * Check if there is some value.
-   * @returns boolean A boolean value.
+   * @returns {boolean} A boolean value.
    */
   isSome(): boolean;
 
@@ -32,14 +32,14 @@ export interface MaybeType<T> extends MaybeConvertibleType<T> {
 
   /**
    * Get the current value or throw an error if it is not available.
-   * @returns T A T instance.
+   * @returns {T} A T instance.
    */
   getOrThrow(): T;
 
   /**
    * Get the current value or return a fallback if it is not available.
    * @param  {T} fallback A T instance.
-   * @returns T A T instance.
+   * @returns {T} A T instance.
    */
   getOrElse(fallback: T): T;
 }

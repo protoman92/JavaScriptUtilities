@@ -5,22 +5,22 @@ declare module 'rxjs/Observable' {
     
     /**
      * Side effect: perform some action when an element is emitted.
-     * @param  {(element:T)=>void} perform Perform function.
-     * @returns Observable An Observable instance.
+     * @param {(element: T) => void} perform Perform function.
+     * @returns {Observable<T>} An Observable instance.
      */
     doOnNext(perform: (element: T) => void): Observable<T>;
 
     /**
      * Side effect: perform some action when an error is emitted.
-     * @param  {(error:Error)=>void} perform Perform function. 
-     * @returns Observable An Observable instance.
+     * @param  {(error: Error) => void} perform Perform function. 
+     * @returns {Observable<T>} An Observable instance.
      */
     doOnError(selector: (error: Error) => void): Observable<T>;
 
     /**
      * Side effect: perform some action when the stream completes.
-     * @param  {()=>void} perform Perform function.
-     * @returns Observable An Observable instance.
+     * @param  {() => void} perform Perform function.
+     * @returns {Observable<T>} An Observable instance.
      */
     doOnCompleted(perform: () => void): Observable<T>;
   }

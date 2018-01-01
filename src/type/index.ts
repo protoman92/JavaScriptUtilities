@@ -1,4 +1,20 @@
-import { JSObject, Nullable, ReactiveResult, Return, TryResult } from './typealias';
+import {
+  Indeterminate,
+  JSObject,
+  Nullable,
+  ReactiveResult,
+  Return,
+  TryResult,
+} from './typealias';
+
 import * as Types from './util';
 
-export { JSObject, Nullable, ReactiveResult, Return, TryResult, Types };
+export {
+  Indeterminate,
+  JSObject,
+  Nullable,
+  ReactiveResult,
+  Return,
+  TryResult,
+  Types,
+};

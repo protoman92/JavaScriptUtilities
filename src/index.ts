@@ -18,7 +18,17 @@ import {
 
 import { Numbers } from './number';
 import { Objects } from './object';
-import { JSObject, Nullable, ReactiveResult, Return, TryResult, Types } from './type';
+
+import {
+  Indeterminate,
+  JSObject,
+  Nullable,
+  ReactiveResult,
+  Return,
+  TryResult,
+  Types,
+} from './type';
+
 import { Strings } from './string';
 
 export {
@@ -28,6 +38,7 @@ export {
   Collections,
   Dates,
   EquatableType,
+  Indeterminate,
   JSObject, 
   Maybe,
   MaybeConvertibleType,

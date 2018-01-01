@@ -33,8 +33,8 @@ export abstract class Try<T> implements
   /**
    * Evaluate a function that can potentially throw an error and wrap the result
    * in a Try.
-   * @param  {()=>T} f Transform function.
-   * @returns Try A Try instance.
+   * @param {() => T} f Transform function.
+   * @returns {Try} A Try instance.
    */
   public static evaluate<T>(f: () => T): Try<T> {
     try {

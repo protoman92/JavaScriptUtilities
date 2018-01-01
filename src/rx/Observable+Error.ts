@@ -6,15 +6,15 @@ declare module 'rxjs/Observable' {
     /**
      * Catch the emitted Error and transform it to some other value, then emit
      * that value.
-     * @param  {(error:Error)=>R} transform Transform function.
-     * @returns Observable An Observable instance.
+     * @param {(error: Error) => R} transform Transform function.
+     * @returns {Observable<R>} An Observable instance.
      */
     catchJustReturn<R>(transform: (error: Error) => R): Observable<R>;
 
     /**
      * Catch the emitted Error and simply emit some other value.
-     * @param  {R} value A R instance.
-     * @returns Observable An Observable instance.
+     * @param {R} value A R instance.
+     * @returns {Observable<R>} An Observable instance.
      */
     catchJustReturnValue<R>(value: R): Observable<R>;
   }
@@ -23,8 +23,8 @@ declare module 'rxjs/Observable' {
     
     /**
      * Emit an error with some message.
-     * @param  {string} message A string value.
-     * @returns Observable An Observable instance.
+     * @param {string} message A string value.
+     * @returns {Observable<T>} An Observable instance.
      */
     export function error<T>(message: string): Observable<T>;
   }
