@@ -50,7 +50,7 @@ export function first<T>(
 export function last<T>(
   array: T[], selector: Nullable<(value: T) => boolean> = undefined,
 ): Try<T> {
-  return first(array.reverse(), selector);
+  return first(array.map(v => v).reverse(), selector);
 }
 
 /**

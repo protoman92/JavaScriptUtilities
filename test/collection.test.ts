@@ -15,6 +15,21 @@ describe('Collection utils should work', () => {
     expect(first2.value).toBe(2);
   });
 
+  it('Array last should work correctly', () => {
+    /// Setup
+    let a1: number[] = [];
+    let a2 = [1, 2, 3, 4, 5];
+
+    /// When
+    let first1 = Collections.last(a1);
+    let first2 = Collections.last(a2, (value) => value % 2 === 0);
+
+    /// Then
+    expect(first1.isNothing()).toBeTruthy();
+    expect(first2.value).toBe(4);
+    expect(a2).toEqual([1, 2, 3, 4, 5]);
+  });
+
   it('Array elementAt should work correctly', () => {
     /// Setup & When & Then
     expect(Collections.elementAtIndex([], 0).isNothing()).toBeTruthy();
