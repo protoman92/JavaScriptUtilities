@@ -81,4 +81,32 @@ describe('Collection utils should work', () => {
     expect(result1.value).toEqual([3, 6, 9]);
     expect(result1.value).toEqual(result2.value);
   });
+
+  it('Getting index of item - should work', () => {
+    /// Setup
+    let a1 = [1, 2, 3, 4, 5, 6];
+    let a2 = [1, 2, 3, 4, 5, 6, 7];
+
+    /// When
+    let a1i = Collections.indexOf(a1, 6);
+    let a2i = Collections.indexOf(a2, 2, (v1, v2) => v1 - v2 === 1);
+
+    /// Then
+    expect(a1i.value).toBe(a1.length - 1);
+    expect(a2i.value).toBe(0);
+  });
+
+  it('Finding unique items in Array - should work', () => {
+    /// Setup
+    let a1 = [1, 1, 2, 2, 3, 4, 5, 5];
+    let a2 = [1, 2, 2, 3, 4, 5, 6, 6];
+
+    /// When
+    let a1u = Collections.unique(a1);
+    let a2u = Collections.unique(a2, (v1, v2) => v1 === v2);
+
+    /// Then
+    expect(a1u).toEqual([1, 2, 3, 4, 5]);
+    expect(a2u).toEqual([1, 2, 3, 4, 5, 6]);
+  });
 });

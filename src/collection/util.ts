@@ -153,3 +153,46 @@ export function zip<T,R,U>(a1: T[], a2: R[], selector: (v1: T, v2: R) => U): Try
     return Try.failure(e);
   }
 }
+
+/**
+ * Get the index of an element in an Array.
+ * @template T Generics parameter.
+ * @param {T[]} array An Array of T.
+ * @param {T} element A T instance.
+ * @param {(element: T, v: T) => boolean} [selector] Optional selector. The
+ * first argument is the element that was passed in, while the second is the
+ * current element at a particular index.
+ * @returns {Try<number>} A Try number instance.
+ */
+export function indexOf<T>(array: T[], element: T, selector?: (element: T, v: T) => boolean): Try<number> {
+  let errorFn = () => `No index found for ${element} in ${array}`;
+
+  if (selector !== undefined) {
+    for (let i = 0, length = array.length; i < length; i++) {
+      let e = elementAtIndex(array, i);
+
+      if (e.map(v => selector(element, v)).getOrElse(false)) {
+        return Try.success(i);
+      }
+    }
+
+    return Try.failure(errorFn());
+  } else {
+    return Try.success(array.indexOf(element)).filter(v => v >= 0, errorFn());
+  }
+}
+
+/**
+ * Filter out duplicate items.
+ * @template T Generics parameter.
+ * @param {T[]} array An Array of T.
+ * @param {(v1: T, v2: T) => boolean} [selector] Optional selector function.
+ * Return true to indicate that two items are equal so that one of them should
+ * be filtered out.
+ * @returns {T[]} Array of T.
+ */
+export function unique<T>(array: T[], selector?: (v1: T, v2: T) => boolean): T[] {
+  return array.filter((v, i, a) => {    
+    return indexOf(a, v, selector).map(v1 => v1 === i).getOrElse(true);
+  });
+}
