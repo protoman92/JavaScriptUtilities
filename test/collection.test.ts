@@ -96,6 +96,20 @@ describe('Collection utils should work', () => {
     expect(a2i.value).toBe(0);
   });
 
+  it('Checking Array contains - should work', () => {
+    /// Setup
+    let a1 = [1, 2, 3, 4, 5, 6];
+    let a2 = [1, 2, 3, 4, 5, 6, 7];
+
+    /// When
+    let a1c = Collections.contains(a1, 3);
+    let a2c = Collections.contains(a2, 5, (v1, v2) => v1 === v2);
+
+    /// Then
+    expect(a1c).toBeTruthy();
+    expect(a2c).toBeTruthy();
+  });
+
   it('Finding unique items in Array - should work', () => {
     /// Setup
     let a1 = [1, 1, 2, 2, 3, 4, 5, 5];

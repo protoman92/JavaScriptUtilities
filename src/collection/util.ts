@@ -74,9 +74,7 @@ export function randomElement<T>(array: T[]): Try<T> {
  * @param {T} element A T element.
  * @returns {boolean} A boolean value.
  */
-export function containsEquatable<T extends EquatableType>(
-  array: T[], element: T
-): boolean {
+export function containsEquatable<T extends EquatableType>(array: T[], element: T): boolean {
   return array.some(v => v.equals(element));
 }
 
@@ -180,6 +178,20 @@ export function indexOf<T>(array: T[], element: T, selector?: (element: T, v: T)
   } else {
     return Try.success(array.indexOf(element)).filter(v => v >= 0, errorFn());
   }
+}
+
+/**
+ * Check if an array contains an element.
+ * @template T Generics parameter.
+ * @param {T[]} array An Array of T.
+ * @param {T} element A T instance.
+ * @param {(element: T, v: T) => boolean} [selector] Optional selector. The
+ * first argument is the element that was passed in, while the second is the
+ * current element at a particular index.
+ * @returns {boolean} A boolean value.
+ */
+export function contains<T>(array: T[], element: T, selector?: (element: T, v: T) => boolean): boolean {
+  return indexOf(array, element, selector).isSuccess();
 }
 
 /**
