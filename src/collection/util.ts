@@ -208,3 +208,27 @@ export function unique<T>(array: T[], selector?: (v1: T, v2: T) => boolean): T[]
     return indexOf(a, v, selector).map(v1 => v1 === i).getOrElse(true);
   });
 }
+
+/**
+ * Split an Array into 2 Arrays based on some condition. The first Array of the
+ * tuple contains items that pass the conditional check, while the second are
+ * those that do not.
+ * @template T Generics parameter.
+ * @param {T[]} array An Array of T.
+ * @param {(v: T) => boolean} selector Selector function.
+ * @returns {[T[], T[]]} A tuple of T Arrays.
+ */
+export function split<T>(array: T[], selector: (v: T) => boolean): [T[], T[]] {
+  var array1: T[] = [];
+  var array2: T[] = [];
+
+  for (let item of array) {
+    if (selector(item)) {
+      array1.push(item);
+    } else {
+      array2.push(item);
+    }
+  }
+
+  return [array1, array2];
+}
