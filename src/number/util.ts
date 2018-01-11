@@ -24,9 +24,9 @@ export let sum = (numbers: number[]): number => {
 };
 
 /**
- * Produce an inclusive range of numbers.
+ * Produce a range of numbers, not including the end value.
  * @param {number} start The starting value.
- * @param {number} end The ending value.
+ * @param {number} end The exclusive ending value.
  * @param {number} delta Value change magnitude.
  * @returns {number} An Array of number.
  */
@@ -36,9 +36,20 @@ export let range = (start: number, end: number, delta: number = 1): number[] => 
 };
 
 /**
+ * Produce an inclusive range of numbers.
+ * @param {number} start The starting value.
+ * @param {number} end The ending value.
+ * @param {number} delta Value change magnitude.
+ * @returns {number} An Array of number.
+ */
+export let rangeInclusive = (start: number, end: number, delta: number = 1): number[] => {
+  return range(start, end + delta, delta);
+};
+
+/**
  * Get a random number between two numbers.
  * @param {Nullable<number>} lower An optional number that defaults to 0.
- * @param {number} upper A number value.
+ * @param {number} upper An exclusive number value.
  * @returns {number} A number value.
  */
 export let randomBetween = (lower: Nullable<number>, upper: number): number => {

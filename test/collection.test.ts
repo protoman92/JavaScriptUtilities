@@ -123,4 +123,18 @@ describe('Collection utils should work', () => {
     expect(a1u).toEqual([1, 2, 3, 4, 5]);
     expect(a2u).toEqual([1, 2, 3, 4, 5, 6]);
   });
+
+  it('Collection random element - should work', () => {
+    /// Setup
+    let array = [1, 2];
+    let randomized: number[] = [];
+
+    /// When
+    for (let _i in Numbers.range(1, 1000)) {
+      randomized.push(Collections.randomElement(array).getOrThrow());
+    }
+
+    /// Then
+    expect(Collections.unique(randomized).length).toBe(array.length);
+  });
 });

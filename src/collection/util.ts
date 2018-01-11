@@ -62,7 +62,7 @@ export function randomElement<T>(array: T[]): Try<T> {
   if (array.length === 0) {
     return Try.failure('Empty array');
   } else {
-    let index = Numbers.randomBetween(0, array.length - 1);
+    let index = Numbers.randomBetween(0, array.length);
     return elementAtIndex(array, index);
   }
 }
