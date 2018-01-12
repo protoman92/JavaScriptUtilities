@@ -1,7 +1,7 @@
 import FunctorType from './FunctorType';
 import MonadType from './MonadType';
 import { MaybeConvertibleType, MaybeType, Maybe } from './Maybe';
-import { Nullable, Return, TryResult, Types } from './../type';
+import { Indeterminate, Nullable, Return, TryResult, Types } from './../type';
 
 export type TryMap<T,R> = (value: T) => R; 
 export type TryFlatMap<T,R> = (value: T) => TryConvertibleType<R>; 
@@ -88,7 +88,7 @@ export abstract class Try<T> implements
 
   protected constructor() {}
 
-  public get value(): Nullable<T> {
+  public get value(): Indeterminate<T> {
     try {
       return this.getOrThrow();
     } catch {
@@ -96,7 +96,7 @@ export abstract class Try<T> implements
     }
   }
   
-  public get error(): Nullable<Error> {
+  public get error(): Indeterminate<Error> {
     try {
       this.getOrThrow();
       return undefined;
@@ -247,34 +247,18 @@ export abstract class Try<T> implements
 class Failure<T> extends Try<T> {
   private failure: Error;
 
-  public get value(): Nullable<T> {
-    return undefined;
-  }
-
-  public get error(): Nullable<Error> {
-    return this.failure;
-  }
-
   constructor(failure: Error) {
     super();
     this.failure = failure;
   }
 
   public getOrThrow(): T {
-    throw this.error;
+    throw this.failure;
   }
 }
 
 class Success<T> extends Try<T> {
   private success: T;
-
-  public get value(): Nullable<T> {
-    return this.success;
-  }
-
-  public get error(): Nullable<Error> {
-    return undefined;
-  }
 
   constructor(success: T) {
     super();

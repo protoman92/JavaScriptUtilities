@@ -1,4 +1,5 @@
 import './rx';
+import { IncompletableSubject } from './rx';
 import { BuildableType, BuilderType } from './buildable';
 import { Booleans } from './boolean';
 import { Collections } from './collection';
@@ -38,6 +39,7 @@ export {
   Collections,
   Dates,
   EquatableType,
+  IncompletableSubject,
   Indeterminate,
   JSObject, 
   Maybe,

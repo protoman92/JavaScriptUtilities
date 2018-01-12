@@ -1,7 +1,7 @@
 import FunctorType from './FunctorType';
 import MonadType from './MonadType';
 import { TryConvertibleType, Try } from './Try';
-import { Nullable, Return, Types } from './../type';
+import { Indeterminate, Nullable, Return, Types } from './../type';
 
 export type MaybeMap<T,R> = (value: T) => R;
 export type MaybeFlatMap<T,R> = (value: T) => MaybeConvertibleType<R>;
@@ -16,7 +16,7 @@ export interface MaybeConvertibleType<T> {
 }
 
 export interface MaybeType<T> extends MaybeConvertibleType<T> {
-  value: Nullable<T>;
+  value: Indeterminate<T>;
 
   /**
    * Check if there is some value.
@@ -83,7 +83,7 @@ export abstract class Maybe<T> implements
     return new Nothing();
   }
 
-  public get value(): Nullable<T> {
+  public get value(): Indeterminate<T> {
     try {
       return this.getOrThrow();
     } catch {
@@ -193,10 +193,6 @@ export abstract class Maybe<T> implements
 class Some<T> extends Maybe<T> {
   private some: T;
 
-  public get value(): Nullable<T> {
-    return this.some;
-  }
-
   constructor(some: T) {
     super();
     this.some = some;
@@ -210,10 +206,6 @@ class Some<T> extends Maybe<T> {
 class Nothing<T> extends Maybe<T> {
   static get unavailableError(): string {
     return 'Value not available';
-  }
-
-  public get value(): Nullable<T> {
-    return undefined;
   }
 
   constructor() {

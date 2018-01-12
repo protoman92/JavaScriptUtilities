@@ -1,5 +1,6 @@
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import './../src';
+import { IncompletableSubject } from './../src';
 
 const timeout = 100;
 
@@ -152,4 +153,22 @@ describe('Subscription\'s utilities should be implemented correctly', () => {
     /// Then
     expect(disposedCount).toBe(1);
   });
+});
+
+describe('IncompletableSubject should be implemented correctly', () => {
+  /// Setup
+  let subject = new Subject<number>();
+  let wrapper = new IncompletableSubject(subject);
+  let events: number[] = [];
+  wrapper.asObservable().doOnNext(v => events.push(v)).subscribe();
+
+  /// When
+  wrapper.next(1);
+  wrapper.next(2);
+  wrapper.error(new Error(''));
+  wrapper.complete();
+  wrapper.next(3);
+
+  /// Then
+  expect(events).toEqual([1, 2, 3]);
 });

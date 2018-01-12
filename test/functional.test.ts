@@ -86,7 +86,7 @@ describe('Maybe should be implemented correctly', () => {
     expect(Maybe.unwrap(Maybe.some(1)).value).toBe(1);
   });
 
-  it('Maybe\'s asTryWithError should work correctly', () => {
+  it('Maybe\'s asTry should work correctly', () => {
     /// Setup
     let mb1 = Maybe.nothing<number>();
     let mb2 = Maybe.some(1);
@@ -94,7 +94,7 @@ describe('Maybe should be implemented correctly', () => {
     /// When
     let t1 = mb1.asTry('Error 1');
     let t2 = mb2.asTry('Error 2');
-
+    
     /// Then
     expect(Maybe.unwrap(t1.error).map(v => v.message).value).toBe('Error 1');
     expect(t2.value).toBe(1);
