@@ -1,7 +1,7 @@
 import { Objects, JSObject } from './../src';
 
 describe('Object utils should be implemented correctly', () => {
-  it('Object entries should be correct', () => {
+  it('Object entries should work correctly', () => {
     /// Setup
     let object: JSObject<string> = {a: 'a', b: 'b', c: 'c', d: undefined};
 
@@ -17,6 +17,6 @@ describe('Object utils should be implemented correctly', () => {
     expect(map.keys()).toContain('a');
     expect(map.keys()).toContain('b');
     expect(map.keys()).toContain('c');
-    expect(map.keys()).toContain('d');
+    expect(map.keys()).not.toContain('d');
   });
 });

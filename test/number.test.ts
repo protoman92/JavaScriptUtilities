@@ -1,6 +1,6 @@
 import { Collections, Numbers } from './../src';
 
-describe('Number utilities should work', () => {
+describe('Number utilities should work correctly', () => {
   it('Number range should work correctly', () => {
     /// Setup
     let times = 1000;
@@ -27,7 +27,7 @@ describe('Number utilities should work', () => {
     }
   });
 
-  it('Number randomBetween should work', () => {
+  it('Number randomBetween should work correctly', () => {
     /// Setup
     let lower = 10;
     let upper = 15;

@@ -1,3 +1,5 @@
+import { Collections } from './../collection';
+import { Try } from './../functional';
 import { JSObject, Nullable } from './../type';
 
 /**
@@ -21,8 +23,12 @@ export function entries<T>(object: JSObject<T>): [string, Nullable<T>][] {
  * @param {JSObject<T>} object A JS-compatible object.
  * @returns {Map<string,T>} A Map instance.
  */
-export function toMap<T>(object: JSObject<T>): Map<string,Nullable<T>> {
-  return new Map(entries(object));
+export function toMap<T>(object: JSObject<T>): Map<string,T> {
+  let kvEntries = entries(object).map(v => {
+    return Try.unwrap(v[1]).map((v1): [string, T] => [v[0], v1]);
+  });
+
+  return new Map(Collections.flatMap(kvEntries));
 }
 
 /**

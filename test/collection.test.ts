@@ -1,6 +1,6 @@
 import { Collections, Maybe, Numbers, Try, TryResult } from './../src';
 
-describe('Collection utils should work', () => {
+describe('Collection utils should work correctly', () => {
   it('Array first should work correctly', () => {
     /// Setup
     let a1: number[] = [];
@@ -82,7 +82,7 @@ describe('Collection utils should work', () => {
     expect(result1.value).toEqual(result2.value);
   });
 
-  it('Getting index of item - should work', () => {
+  it('Getting index of item - should work correctly', () => {
     /// Setup
     let a1 = [1, 2, 3, 4, 5, 6];
     let a2 = [1, 2, 3, 4, 5, 6, 7];
@@ -96,7 +96,7 @@ describe('Collection utils should work', () => {
     expect(a2i.value).toBe(0);
   });
 
-  it('Checking Array contains - should work', () => {
+  it('Checking Array contains - should work correctly', () => {
     /// Setup
     let a1 = [1, 2, 3, 4, 5, 6];
     let a2 = [1, 2, 3, 4, 5, 6, 7];
@@ -110,7 +110,7 @@ describe('Collection utils should work', () => {
     expect(a2c).toBeTruthy();
   });
 
-  it('Finding unique items in Array - should work', () => {
+  it('Finding unique items in Array - should work correctly', () => {
     /// Setup
     let a1 = [1, 1, 2, 2, 3, 4, 5, 5];
     let a2 = [1, 2, 2, 3, 4, 5, 6, 6];
@@ -124,7 +124,7 @@ describe('Collection utils should work', () => {
     expect(a2u).toEqual([1, 2, 3, 4, 5, 6]);
   });
 
-  it('Collection random element - should work', () => {
+  it('Collection random element - should work correctly', () => {
     /// Setup
     let array = [1, 2];
     let randomized: number[] = [];
@@ -136,5 +136,30 @@ describe('Collection utils should work', () => {
 
     /// Then
     expect(Collections.unique(randomized).length).toBe(array.length);
+  });
+
+  it('Collection split/splitMap - should work correctly', () => {
+    /// Setup
+    let array = [1, 2, 3, 4, 5];
+
+    let selector: (v: number) => boolean = v => {
+      switch (v) {
+        case 1: throw new Error('1 received!');
+        case 2: return true;
+        case 3: return false;
+        case 4: return true;
+        case 5: return false;
+        default: throw new Error('Unexpected');
+      }
+    };
+
+    /// When
+    let split = Collections.split(array, selector);
+
+    /// Then
+    let split1 = split[0];
+    let split2 = split[1];
+    expect(split1).toEqual([2, 4]);
+    expect(split2).toEqual([1, 3, 5]);
   });
 });

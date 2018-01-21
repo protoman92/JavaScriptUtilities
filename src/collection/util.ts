@@ -210,6 +210,34 @@ export function unique<T>(array: T[], selector?: (v1: T, v2: T) => boolean): T[]
 }
 
 /**
+ * Split an Array into two Arrays using a map function to map T to R.
+ * @template T Generics parameter.
+ * @template R Generics parameter.
+ * @param {T[]} array Array of T.
+ * @param {(v: T) => Nullable<R>} selector Selector function.
+ * @returns {[R[], T[]]} A tuple of R Array and T Array.
+ */
+export function splitMap<T,R>(array: T[], selector: (v: T) => Nullable<R>): [R[], T[]] {
+  var array1: R[] = [];
+  var array2: T[] = [];
+
+  for (let item of array) {
+    try {
+      let item1 = selector(item);
+
+      if (item1 !== undefined && item1 !== null) {
+        array1.push(item1);
+        continue;
+      }
+    } catch (e) {}
+    
+    array2.push(item);
+  }
+
+  return [array1, array2];
+}
+
+/**
  * Split an Array into 2 Arrays based on some condition. The first Array of the
  * tuple contains items that pass the conditional check, while the second are
  * those that do not.
@@ -219,16 +247,6 @@ export function unique<T>(array: T[], selector?: (v1: T, v2: T) => boolean): T[]
  * @returns {[T[], T[]]} A tuple of T Arrays.
  */
 export function split<T>(array: T[], selector: (v: T) => boolean): [T[], T[]] {
-  var array1: T[] = [];
-  var array2: T[] = [];
-
-  for (let item of array) {
-    if (selector(item)) {
-      array1.push(item);
-    } else {
-      array2.push(item);
-    }
-  }
-
-  return [array1, array2];
+  let selector1: (v: T) => Nullable<T> = (v: T) => selector(v) ? v : undefined;
+  return splitMap<T,T>(array, selector1);
 }
