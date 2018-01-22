@@ -3,7 +3,7 @@ import { Objects, JSObject } from './../src';
 describe('Object utils should be implemented correctly', () => {
   it('Object entries should work correctly', () => {
     /// Setup
-    let object: JSObject<string> = {a: 'a', b: 'b', c: 'c'};
+    let object: JSObject<string> = {a: 'a', b: 'b', c: 'c', d: undefined};
 
     /// When
     let entries = Objects.entries(object);
