@@ -8,9 +8,7 @@ import { Nullable } from './../type';
  * @param {...string[]} members Varargs of member keys to check existence.
  * @returns {object is T} A boolean value.
  */
-export function isInstance<T>(
-  object: Nullable<any>, members: string[],
-): object is T {
+export function isInstance<T>(object: Nullable<any>, ...members: string[]): object is T {
   if (object !== undefined && object !== null && members.length > 0) {
     let keys = Object.keys(object);
 

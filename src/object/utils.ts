@@ -1,5 +1,3 @@
-import { Collections } from './../collection';
-import { Try } from './../functional';
 import { JSObject, Nullable } from './../type';
 
 /**
@@ -7,12 +5,16 @@ import { JSObject, Nullable } from './../type';
  * @param {JSObject<T>} object A JS-compatible object.
  * @returns {[string, T][]} An Array of tuples.
  */
-export function entries<T>(object: JSObject<T>): [string, Nullable<T>][] {
+export function entries<T>(object: JSObject<T>): [string, T][] {
   let keys = Object.keys(object);
-  var entries: [string, Nullable<T>][] = [];
+  var entries: [string, T][] = [];
 
   for (let key of keys) {
-    entries.push([key, object[key]]);
+    let value = object[key];
+
+    if (value !== undefined && value !== null) {
+      entries.push([key, value]);
+    }
   }
 
   return entries;
@@ -24,11 +26,7 @@ export function entries<T>(object: JSObject<T>): [string, Nullable<T>][] {
  * @returns {Map<string,T>} A Map instance.
  */
 export function toMap<T>(object: JSObject<T>): Map<string,T> {
-  let kvEntries = entries(object).map(v => {
-    return Try.unwrap(v[1]).map((v1): [string, T] => [v[0], v1]);
-  });
-
-  return new Map(Collections.flatMap(kvEntries));
+  return new Map(entries(object));
 }
 
 /**

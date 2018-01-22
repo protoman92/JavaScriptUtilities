@@ -27,7 +27,7 @@ export abstract class Try<T> implements
    * @returns {object is TryConvertibleType<T>} A boolean value.
    */
   public static isTryConvertible<T>(object: any): object is TryConvertibleType<T> {
-    return Types.isInstance<TryConvertibleType<T>>(object, ['asTry']);
+    return Types.isInstance<TryConvertibleType<T>>(object, 'asTry');
   }
 
   /**
@@ -213,12 +213,12 @@ export abstract class Try<T> implements
 
   /**
    * Cast the inner value to type R by checking a list of member properties.
-   * @param {string[]} members An Array of member properties to check.
+   * @param {...string[]} members Varargs of member properties to check.
    * @returns {Try<R>} A Try instance.
    */
-  public castWithProperties<R>(members: string[]): Try<R> {
+  public castWithProperties<R>(...members: string[]): Try<R> {
     return this.flatMap(v => {
-      if (Types.isInstance<R>(v, members)) {
+      if (Types.isInstance<R>(v, ...members)) {
         return Try.success(v);
       } else {
         return Try.failure<R>(`Failed to cast ${v} to type with members ${members}`);

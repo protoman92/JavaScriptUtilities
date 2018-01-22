@@ -56,7 +56,7 @@ export abstract class Maybe<T> implements
    * @returns {object is MaybeConvertibleType<T>} A boolean value.
    */
   public static isMaybeConvertible<T>(object: any): object is MaybeConvertibleType<T> {
-    return Types.isInstance<MaybeConvertibleType<T>>(object, ['asMaybe']);
+    return Types.isInstance<MaybeConvertibleType<T>>(object, 'asMaybe');
   }
 
   /**
@@ -171,11 +171,11 @@ export abstract class Maybe<T> implements
 
   /**
    * Cast the inner value to type R by checking a list of member properties.
-   * @param {string[]} members An Array of member properties to check.
+   * @param {...string[]} members Varargs of member properties to check.
    * @returns {Maybe<R>} A Maybe instance.
    */
-  public castWithProperties<R>(members: string[]): Maybe<R> {
-    return this.asTry().castWithProperties<R>(members).asMaybe();
+  public castWithProperties<R>(...members: string[]): Maybe<R> {
+    return this.asTry().castWithProperties<R>(...members).asMaybe();
   }
 
   /**
