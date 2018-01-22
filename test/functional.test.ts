@@ -295,7 +295,7 @@ describe('Common functionalities', () => {
 
     /// When
     let t1f = t1.filter(isEven, 'Error!');
-    let t2f = t2.filter(isOdd, 'Error!');
+    let t2f = t2.filter(isOdd, () => 'Error!');
     let m1f = m1.filter(isOdd);
     let m2f = m2.filter(isEven);
 

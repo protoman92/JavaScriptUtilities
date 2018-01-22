@@ -1,7 +1,7 @@
 import FunctorType from './FunctorType';
 import MonadType from './MonadType';
 import { MaybeConvertibleType, MaybeType, Maybe } from './Maybe';
-import { Indeterminate, Nullable, Return, TryResult, Types } from './../type';
+import { Indeterminate, Nullable, Return, Throwable, TryResult, Types } from './../type';
 
 export type TryMap<T,R> = (value: T) => R; 
 export type TryFlatMap<T,R> = (value: T) => TryConvertibleType<R>; 
@@ -47,12 +47,10 @@ export abstract class Try<T> implements
   /**
    * Unwrap an object of ambiguous types in order to get its inner value.
    * @param {Return<TryResult<T>>} value A TryResult instance.
-   * @param {Error | string} error Error in case the value is invalid.
+   * @param {Throwable} error A Throwable instance.
    * @returns {Try<T>} A Try instance.
    */
-  public static unwrap<T>(
-    value: Return<TryResult<T>>, error: Nullable<Error | string> = undefined,
-  ): Try<T> {
+  public static unwrap<T>(value: Return<TryResult<T>>, error: Nullable<Throwable> = undefined): Try<T> {
     if (value instanceof Function) {
       try {
         return Try.unwrap(value(), error);
@@ -78,7 +76,7 @@ export abstract class Try<T> implements
     return new Success(value);
   }
 
-  public static failure<T>(error: Error | string): Try<T> {
+  public static failure<T>(error: Throwable): Try<T> {
     if (error instanceof Error) {
       return new Failure(error);
     } else {
@@ -179,10 +177,10 @@ export abstract class Try<T> implements
 
   /**
    * Map an error to another error if available.
-   * @param {((e: Error) => Error | string)} f Transform function.
+   * @param {((e: Error) => Throwable)} f Transform function.
    * @returns {Try<T>} A Try instance.
    */
-  public mapError(f: (e: Error) => Error | string): Try<T> {
+  public mapError(f: (e: Error) => Throwable): Try<T> {
     if (this.error !== undefined && this.error !== null) {
       try {
         return Try.failure(f(this.error));
@@ -227,16 +225,23 @@ export abstract class Try<T> implements
   }
 
   /**
+   * 
    * Filter the inner value using some selector, and return a failure Try if
    * the value fails to pass the predicate.
+   * @param {(v: T) => boolean} selector Selector function.
+   * @param {(Throwable | ((v: T) => Throwable))} error Error (selector).
    * @returns {Try<T>} A Try instance.
    */
-  public filter = (selector: (v: T) => boolean, error: Error | string): Try<T> => {
+  public filter = (selector: (v: T) => boolean, error: Throwable | ((v: T) => Throwable)): Try<T> => {
     return this.flatMap(v => {
       if (selector(v)) {
         return Try.success(v);
       } else {
-        return Try.failure(error);
+        if (error instanceof Function) {
+          return Try.failure(error(v));
+        } else {
+          return Try.failure(error);
+        }
       }
     });
   }

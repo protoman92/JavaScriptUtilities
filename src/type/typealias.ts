@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { MaybeConvertibleType, TryConvertibleType } from './../functional';
 
 /// Represent a indexable key-value JS object.
+export type Throwable = Error | string;
 export type Indeterminate<T> = T | undefined;
 export type Nullable<T> = Indeterminate<T> | null;
 export type JSObject<T> = { [key: string] : Nullable<T> };

@@ -4,6 +4,7 @@ import {
   Nullable,
   ReactiveResult,
   Return,
+  Throwable,
   TryResult,
 } from './typealias';
 
@@ -15,6 +16,7 @@ export {
   Nullable,
   ReactiveResult,
   Return,
+  Throwable,
   TryResult,
   Types,
 };

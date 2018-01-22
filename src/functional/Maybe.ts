@@ -181,6 +181,7 @@ export abstract class Maybe<T> implements
   /**
    * Filter the inner value using some selector, and return a failure Maybe if
    * the value fails to pass the predicate.
+   * @param {(v: T) => boolean} selector Selector function.
    * @returns {Maybe<T>} A Maybe instance.
    */
   public filter = (selector: (v: T) => boolean): Maybe<T> => {
