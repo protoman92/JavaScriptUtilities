@@ -315,13 +315,13 @@ describe('Common functionalities', () => {
     };
 
     let t1 = Try.success(1);
-    let t2 = Try.failure<string>('');
+    let t2 = Try.failure<string>('Failure!');
     let m1 = Maybe.some(3);
     let m2 = Maybe.nothing();
 
     /// When
-    let t1sf = t1.doOnNext(doOnNext).logNext();
-    let t2sf = t2.doOnNext(doOnNext).logNext();
+    let t1sf = t1.doOnNext(doOnNext).logNext().logError();
+    let t2sf = t2.doOnNext(doOnNext).logNext().logError();
     let m1sf = m1.doOnNext(doOnNext).logNext();
     let m2sf = m2.doOnNext(doOnNext).logNext();
 

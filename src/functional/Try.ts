@@ -302,9 +302,7 @@ export abstract class Try<T> implements
   }
 
   public logNext<R>(selector?: (v: T) => R): Try<T> {
-    return this.doOnNext(v => {
-      console.log(selector !== undefined ? selector(v) : v);
-    });
+    return this.doOnNext(v => console.log(selector !== undefined ? selector(v) : v));
   }
 
   public logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Try<T> {
@@ -324,7 +322,7 @@ export abstract class Try<T> implements
   }
 
   public logError<R>(selector?: (e: Error) => R): Try<T> {
-    return this.doOnError(e => selector !== undefined ? selector(e) : e);
+    return this.doOnError(e => console.log(selector !== undefined ? selector(e) : e));
   }
 
   public logErrorPrefix<R>(prefix: string, selector?: (e: Error) => R): Try<T> {
