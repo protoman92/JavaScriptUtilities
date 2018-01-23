@@ -305,4 +305,31 @@ describe('Common functionalities', () => {
     expect(m1f.value).toBe(3);
     expect(m2f.isNothing()).toBeTruthy();
   });
+
+  it('Maybe/Try doOnNext/logNext/logError should work correctly', () => {
+    /// Setup
+    var sideEffects: any[] = [];
+
+    let doOnNext = (v: any): void => {
+      sideEffects.push(v);
+    };
+
+    let t1 = Try.success(1);
+    let t2 = Try.failure<string>('');
+    let m1 = Maybe.some(3);
+    let m2 = Maybe.nothing();
+
+    /// When
+    let t1sf = t1.doOnNext(doOnNext).logNext();
+    let t2sf = t2.doOnNext(doOnNext).logNext();
+    let m1sf = m1.doOnNext(doOnNext).logNext();
+    let m2sf = m2.doOnNext(doOnNext).logNext();
+
+    /// Then
+    expect(sideEffects).toEqual([1, 3]);
+
+    [[t1, t1sf], [t2, t2sf], [m1, m1sf], [m2, m2sf]].forEach(v => {
+      expect(JSON.stringify(v[0])).toEqual(JSON.stringify(v[1]));
+    });
+  });
 });

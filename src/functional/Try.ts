@@ -1,6 +1,6 @@
 import FunctorType from './FunctorType';
 import MonadType from './MonadType';
-import { MaybeConvertibleType, MaybeType, Maybe } from './Maybe';
+import { MaybeConvertibleType, Maybe } from './Maybe';
 import { Indeterminate, Nullable, Return, Throwable, TryResult, Types } from './../type';
 
 export type TryMap<T,R> = (value: T) => R; 
@@ -15,11 +15,58 @@ export interface TryConvertibleType<T> extends MaybeConvertibleType<T> {
   asTry(): Try<T>;
 }
 
-export abstract class Try<T> implements 
+export interface TryType<T> {
+  /**
+   * Perform some side effect on the wrapped value.
+   * @param {(v: T) => void} selector Selector function.
+   * @returns {Try<T>} A Try instance.
+   */
+  doOnNext(selector: (v: T) => void): Try<T>;
+
+  /**
+   * Log the wrapped value.
+   * @param {(v: T) => R} [selector] Selector function.
+   * @returns {Try<T>} A Maybe instance.
+   */
+  logNext<R>(selector?: (v: T) => R): Try<T>;
+
+  /**
+   * Log the wrapped value with some prefix.
+   * @param {string} prefix A string value.
+   * @param {(v: T) => R} [selector] Selector function.
+   * @returns {Try<T>} A Try instance.
+   */
+  logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Try<T>;
+
+  /**
+   * Perform some side effects on the wrapped error.
+   * @param {(e: Error) => void} selector Selector function.
+   * @returns {Try<T>} A Try instance.
+   */
+  doOnError(selector: (e: Error) => void): Try<T>;
+
+  /**
+   * Log the wrapped error.
+   * @param {(e: Error) => R} [selector] Selector function.
+   * @returns {Try<T>} A Try instance.
+   */
+  logError<R>(selector?: (e: Error) => R): Try<T>;
+
+  /**
+   * Log the wrapped error with some prefix.
+   * @param {string} prefix A string value.
+   * @param {(e: Error) => R} [selector] Selector function.
+   * @returns {Try<T>} A Try instance.
+   */
+  logErrorPrefix<R>(prefix: string, selector?: (e: Error) => R): Try<T>;
+}
+
+export abstract class Try<T> implements
+  MaybeConvertibleType<T>,
   TryConvertibleType<T>,
-  MaybeType<T>,
-  FunctorType<T>, 
-  MonadType<T> 
+  TryType<T>,
+  FunctorType<T>,
+  MonadType<T>
 {
   /**
    * Check if an object is convertible to a Try instance.
@@ -244,6 +291,38 @@ export abstract class Try<T> implements
         }
       }
     });
+  }
+
+  public doOnNext = (selector: (v: T) => void): Try<T> => {
+    return this.asMaybe().doOnNext(selector).asTry();
+  }
+
+  public logNext<R>(selector?: (v: T) => R): Try<T> {
+    return this.asMaybe().logNext(selector).asTry();
+  }
+
+  public logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Try<T> {
+    return this.asMaybe().logNextPrefix(prefix, selector).asTry();
+  }
+
+  public doOnError = (selector: (e: Error) => void): Try<T> => {
+    try {
+      this.getOrThrow();  
+    } catch (e) {
+      try {
+        selector(e);
+      } catch (e) {}
+    }
+
+    return this.map(v => v);
+  }
+
+  public logError<R>(selector?: (e: Error) => R): Try<T> {
+    return this.doOnError(e => selector !== undefined ? selector(e) : e);
+  }
+
+  public logErrorPrefix<R>(prefix: string, selector?: (e: Error) => R): Try<T> {
+    return this.logError(e => `${prefix}${selector !== undefined ? selector(e) : e}`);
   }
 
   abstract getOrThrow(): T;

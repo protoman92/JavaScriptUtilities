@@ -15,7 +15,7 @@ export interface MaybeConvertibleType<T> {
   asMaybe(): Maybe<T>;
 }
 
-export interface MaybeType<T> extends MaybeConvertibleType<T> {
+export interface MaybeType<T> {
   value: Indeterminate<T>;
 
   /**
@@ -42,10 +42,33 @@ export interface MaybeType<T> extends MaybeConvertibleType<T> {
    * @returns {T} A T instance.
    */
   getOrElse(fallback: T): T;
+
+  /**
+   * Perform some side effect on the wrapped value.
+   * @param {(v: T) => void} selector Selector function.
+   * @returns {Maybe<T>} A Maybe instance.
+   */
+  doOnNext(selector: (v: T) => void): Maybe<T>;
+
+  /**
+   * Log the wrapped value.
+   * @param {(v: T) => R} [selector] Selector function.
+   * @returns {Maybe<T>} A Maybe instance.
+   */
+  logNext<R>(selector?: (v: T) => R): Maybe<T>;
+
+  /**
+   * Log the wrapped value with some prefix.
+   * @param {string} prefix A string value.
+   * @param {(v: T) => R} [selector] Selector function.
+   * @returns {Maybe<T>} A Maybe instance.
+   */
+  logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Maybe<T>;
 }
 
 export abstract class Maybe<T> implements 
-  MaybeType<T>, 
+  MaybeType<T>,
+  MaybeConvertibleType<T>,
   TryConvertibleType<T>,
   FunctorType<T>, 
   MonadType<T> 
@@ -186,6 +209,24 @@ export abstract class Maybe<T> implements
    */
   public filter = (selector: (v: T) => boolean): Maybe<T> => {
     return this.asTry().filter(selector, Nothing.unavailableError).asMaybe();
+  }
+
+  public doOnNext = (selector: (v: T) => void): Maybe<T> => {
+    try {
+      selector(this.getOrThrow());
+    } catch (e) {}
+
+    return this.map(v => v);
+  }
+
+  public logNext<R>(selector?: (v: T) => R): Maybe<T> {
+    return this.doOnNext(v => {
+      console.log(selector !== undefined ? selector(v) : v);
+    });
+  }
+
+  public logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Maybe<T> {
+    return this.logNext(v => `${prefix}${selector !== undefined ? selector(v) : v}`);
   }
 
   public abstract getOrThrow(): T;
