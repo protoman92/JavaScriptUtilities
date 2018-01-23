@@ -294,15 +294,21 @@ export abstract class Try<T> implements
   }
 
   public doOnNext = (selector: (v: T) => void): Try<T> => {
-    return this.asMaybe().doOnNext(selector).asTry();
+    try {
+      selector(this.getOrThrow());
+    } catch (e) {}
+
+    return this.map(v => v);
   }
 
   public logNext<R>(selector?: (v: T) => R): Try<T> {
-    return this.asMaybe().logNext(selector).asTry();
+    return this.doOnNext(v => {
+      console.log(selector !== undefined ? selector(v) : v);
+    });
   }
 
   public logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Try<T> {
-    return this.asMaybe().logNextPrefix(prefix, selector).asTry();
+    return this.logNext(v => `${prefix}${selector !== undefined ? selector(v) : v}`);
   }
 
   public doOnError = (selector: (e: Error) => void): Try<T> => {

@@ -212,21 +212,15 @@ export abstract class Maybe<T> implements
   }
 
   public doOnNext = (selector: (v: T) => void): Maybe<T> => {
-    try {
-      selector(this.getOrThrow());
-    } catch (e) {}
-
-    return this.map(v => v);
+    return this.asTry().doOnNext(selector).asMaybe();
   }
 
   public logNext<R>(selector?: (v: T) => R): Maybe<T> {
-    return this.doOnNext(v => {
-      console.log(selector !== undefined ? selector(v) : v);
-    });
+    return this.asTry().logNext(selector).asMaybe();
   }
 
   public logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Maybe<T> {
-    return this.logNext(v => `${prefix}${selector !== undefined ? selector(v) : v}`);
+    return this.asTry().logNextPrefix(prefix, selector).asMaybe();
   }
 
   public abstract getOrThrow(): T;
