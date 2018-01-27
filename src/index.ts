@@ -1,5 +1,5 @@
 import './rx';
-import { IncompletableSubject } from './rx';
+import { IncompletableSubject, MappableObserver } from './rx';
 import { BuildableType, BuilderType } from './buildable';
 import { Booleans } from './boolean';
 import { Collections } from './collection';
@@ -42,6 +42,7 @@ export {
   IncompletableSubject,
   Indeterminate,
   JSObject, 
+  MappableObserver,
   Maybe,
   MaybeConvertibleType,
   MaybeMap,

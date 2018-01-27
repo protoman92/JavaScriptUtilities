@@ -1,6 +1,13 @@
-import { Observable, Subject, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  ReplaySubject,
+  Subject,
+  Subscription,
+} from 'rxjs';
+
 import './../src';
-import { IncompletableSubject } from './../src';
+import { IncompletableSubject, Nullable, Numbers } from './../src';
 
 const timeout = 100;
 
@@ -171,4 +178,37 @@ describe('IncompletableSubject should be implemented correctly', () => {
 
   /// Then
   expect(events).toEqual([1, 2, 3]);
+});
+
+describe('MappableObserver should be implemented correctly', () => {
+  let testObserver = (subject: Subject<Nullable<number>>): void => {
+    /// Setup
+    let times = 10;
+    let range = Numbers.range(0, times);
+    var elements: number[] = [];
+
+    let testObserver = subject
+      .mapObserver<string>(v => Number.parseInt(v))
+      .mapObserver<number>(v => '' + v)
+      .mapObserver<number>(v => v * 2);
+
+    subject
+      .mapNonNilOrEmpty(v => v)
+      .doOnNext(v => elements.push(v))
+      .subscribe();
+
+    /// When
+    for (let i of range) {
+      testObserver.next(i);
+    }
+
+    /// Then
+    expect(elements).toEqual(range.map(v => v * 2));
+  };
+
+  it('Mappable observer wrapper - should work correctly', () => {
+    testObserver(new BehaviorSubject<Nullable<number>>(undefined));
+    testObserver(new ReplaySubject<Nullable<number>>());
+    testObserver(new Subject<Nullable<number>>());
+  });
 });
