@@ -45,8 +45,6 @@ describe('Types should be implemented correctly', () => {
     /// When & Then 4
     if (Types.isInstance<TestInterface>(impl, 'func4')) {
       fail();
-    } else {
-      console.log('Passed this test too!');
     }
 
     /// When & Then 4

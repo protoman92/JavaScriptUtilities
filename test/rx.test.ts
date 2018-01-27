@@ -166,18 +166,19 @@ describe('IncompletableSubject should be implemented correctly', () => {
   /// Setup
   let subject = new Subject<number>();
   let wrapper = new IncompletableSubject(subject);
+  let mappableWrapper = wrapper.mapObserver<number>(v => v * 2);
   let events: number[] = [];
   wrapper.asObservable().doOnNext(v => events.push(v)).subscribe();
 
   /// When
-  wrapper.next(1);
-  wrapper.next(2);
-  wrapper.error(new Error(''));
-  wrapper.complete();
-  wrapper.next(3);
+  mappableWrapper.next(1);
+  mappableWrapper.next(2);
+  mappableWrapper.error(new Error(''));
+  mappableWrapper.complete();
+  mappableWrapper.next(3);
 
   /// Then
-  expect(events).toEqual([1, 2, 3]);
+  expect(events).toEqual([2, 4, 6]);
 });
 
 describe('MappableObserver should be implemented correctly', () => {
