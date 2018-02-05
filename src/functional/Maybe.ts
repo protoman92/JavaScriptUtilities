@@ -3,8 +3,8 @@ import MonadType from './MonadType';
 import { TryConvertibleType, Try } from './Try';
 import { Indeterminate, Nullable, Return, Types } from './../type';
 
-export type MaybeMap<T,R> = (value: T) => R;
-export type MaybeFlatMap<T,R> = (value: T) => MaybeConvertibleType<R>;
+export type MaybeMap<T, R> = (value: T) => R;
+export type MaybeFlatMap<T, R> = (value: T) => MaybeConvertibleType<R>;
 
 export interface MaybeConvertibleType<T> {
 
@@ -66,13 +66,12 @@ export interface MaybeType<T> {
   logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Maybe<T>;
 }
 
-export abstract class Maybe<T> implements 
+export abstract class Maybe<T> implements
   MaybeType<T>,
   MaybeConvertibleType<T>,
   TryConvertibleType<T>,
-  FunctorType<T>, 
-  MonadType<T> 
-{
+  FunctorType<T>,
+  MonadType<T> {
   /**
    * Check if an object is convertible to a Maybe instance.
    * @param {*} object Any object.
@@ -90,7 +89,7 @@ export abstract class Maybe<T> implements
    */
   public static unwrap<T>(value: Nullable<T> | MaybeConvertibleType<T>): Maybe<T> {
     if (Maybe.isMaybeConvertible(value)) {
-      return Maybe.some(value).flatMap(value => value);
+      return Maybe.some(value).flatMap(v => v);
     } else if (value !== undefined && value !== null) {
       return Maybe.some(value);
     } else {
@@ -174,7 +173,7 @@ export abstract class Maybe<T> implements
       return Maybe.nothing();
     }
   }
-  
+
   public flatMap<R>(f: (value: T) => MaybeConvertibleType<R>): Maybe<R> {
     try {
       return f(this.getOrThrow()).asMaybe();

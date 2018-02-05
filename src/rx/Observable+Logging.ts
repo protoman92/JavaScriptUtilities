@@ -2,11 +2,10 @@ import { Observable } from 'rxjs';
 
 declare module 'rxjs/Observable' {
   interface Observable<T> {
-    
     /**
      * Log the next emission.
-     * @param {(value: T) => R} [transform] Optional transform function to 
-     * convert the emission to another type. If this is omitted, simply log the 
+     * @param {(value: T) => R} [transform] Optional transform function to
+     * convert the emission to another type. If this is omitted, simply log the
      * emission.
      * @returns {Observable<T>} An Observable instance.
      */
@@ -24,14 +23,14 @@ declare module 'rxjs/Observable' {
     /**
      * Log the next emission with a specified prefix.
      * @param {string} prefix A string value.
-     * @param {(value: T) => R} [transform] Optional transform function to 
-     * convert the emission to another type. If this is omitted, simply log the 
+     * @param {(value: T) => R} [transform] Optional transform function to
+     * convert the emission to another type. If this is omitted, simply log the
      * emission.
      * @returns {Observable<T>} An Observable instance.
      */
     logNextPrefix<R>(prefix: string, transform?: (value: T) => R): Observable<T>;
 
-    /** 
+    /**
      * Log the emitted Error with a specified prefix.
      * @param {string} prefix A string value.
      * @param {(error: Error) => R} [transform] Optional transform function to
@@ -54,8 +53,8 @@ Observable.prototype.logNext = function(transform: (value: any) => any) {
 };
 
 Observable.prototype.logNextPrefix = function(
-  prefix: string, 
-  transform: (v: any) => any
+  prefix: string,
+  transform: (v: any) => any,
 ) {
   return this.doOnNext(v => {
     if (transform !== undefined && transform !== null) {
@@ -77,7 +76,7 @@ Observable.prototype.logError = function(transform: (error: Error) => any) {
 };
 
 Observable.prototype.logErrorPrefix = function(
-  prefix: string, 
+  prefix: string,
   transform: (error: Error) => any
 ) {
   return this.doOnError(e => {

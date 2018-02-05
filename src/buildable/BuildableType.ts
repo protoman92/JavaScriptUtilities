@@ -1,7 +1,6 @@
 import BuilderType from './BuilderType';
 
 export default interface BuildableType<Builder extends BuilderType<any>> {
-  
   /**
    * Create a new builder instance.
    * @returns {Builder} A new builder instance.

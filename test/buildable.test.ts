@@ -56,9 +56,9 @@ describe('Test buildable', () => {
   it('Clone builder should clone an object without mutations', () => {
     // Setup
     let obj1 = new Buildable();
-    obj1.a = "a";
-    obj1.b = "b";
-    obj1.c = "c";
+    obj1.a = 'a';
+    obj1.b = 'b';
+    obj1.c = 'c';
 
     // When
     let obj2 = obj1.cloneBuilder().build();

@@ -3,11 +3,11 @@ import MonadType from './MonadType';
 import { MaybeConvertibleType, Maybe } from './Maybe';
 import { Indeterminate, Nullable, Return, Throwable, TryResult, Types } from './../type';
 
-export type TryMap<T,R> = (value: T) => R; 
-export type TryFlatMap<T,R> = (value: T) => TryConvertibleType<R>; 
+export type TryMap<T, R> = (value: T) => R;
+export type TryFlatMap<T, R> = (value: T) => TryConvertibleType<R>;
 
 export interface TryConvertibleType<T> extends MaybeConvertibleType<T> {
-  
+
   /**
    * Convert the current object into a Try.
    * @returns Try A Try instance.
@@ -66,8 +66,7 @@ export abstract class Try<T> implements
   TryConvertibleType<T>,
   TryType<T>,
   FunctorType<T>,
-  MonadType<T>
-{
+  MonadType<T> {
   /**
    * Check if an object is convertible to a Try instance.
    * @param {*} object Any object.
@@ -78,14 +77,14 @@ export abstract class Try<T> implements
   }
 
   /**
-   * Evaluate a function that can potentially throw an error and wrap the result
-   * in a Try.
-   * @param {() => T} f Transform function.
-   * @returns {Try} A Try instance.
+   * Evaluate a function that returns a TryResult and catch errors if needed.
+   * @template T Generic parameter.
+   * @param {() => TryResult<T>} fn A Function instance.
+   * @returns {Try<T>} A Try instance.
    */
-  public static evaluate<T>(f: () => T): Try<T> {
+  public static evaluate<T>(fn: () => TryResult<T>): Try<T> {
     try {
-      return Try.success(f());
+      return Try.unwrap(fn());
     } catch (e) {
       return Try.failure(e);
     }
@@ -93,18 +92,12 @@ export abstract class Try<T> implements
 
   /**
    * Unwrap an object of ambiguous types in order to get its inner value.
-   * @param {Return<TryResult<T>>} value A TryResult instance.
+   * @param {TryResult<T>} value A TryResult instance.
    * @param {Throwable} error A Throwable instance.
    * @returns {Try<T>} A Try instance.
    */
-  public static unwrap<T>(value: Return<TryResult<T>>, error: Nullable<Throwable> = undefined): Try<T> {
-    if (value instanceof Function) {
-      try {
-        return Try.unwrap(value(), error);
-      } catch (e) {
-        return Try.failure(e);
-      }
-    } else if (Try.isTryConvertible(value)) {
+  public static unwrap<T>(value: TryResult<T>, error: Nullable<Throwable> = undefined): Try<T> {
+    if (Try.isTryConvertible(value)) {
       return Try.success(value).flatMap(v => v);
     } else if (Maybe.isMaybeConvertible(value)) {
       return Try.success(value).flatMap(v => v.asMaybe().asTry(error));
@@ -140,7 +133,7 @@ export abstract class Try<T> implements
       return undefined;
     }
   }
-  
+
   public get error(): Indeterminate<Error> {
     try {
       this.getOrThrow();
@@ -179,7 +172,7 @@ export abstract class Try<T> implements
       return false;
     }
   }
-  
+
   public isFailure = (): boolean => {
     return !this.isSuccess();
   }
@@ -272,7 +265,6 @@ export abstract class Try<T> implements
   }
 
   /**
-   * 
    * Filter the inner value using some selector, and return a failure Try if
    * the value fails to pass the predicate.
    * @param {(v: T) => boolean} selector Selector function.
@@ -311,7 +303,7 @@ export abstract class Try<T> implements
 
   public doOnError = (selector: (e: Error) => void): Try<T> => {
     try {
-      this.getOrThrow();  
+      this.getOrThrow();
     } catch (e) {
       try {
         selector(e);

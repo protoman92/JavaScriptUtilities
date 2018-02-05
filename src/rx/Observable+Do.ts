@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 
 declare module 'rxjs/Observable' {
   export interface Observable<T> {
-    
     /**
      * Side effect: perform some action when an element is emitted.
      * @param {(element: T) => void} perform Perform function.
@@ -12,7 +11,7 @@ declare module 'rxjs/Observable' {
 
     /**
      * Side effect: perform some action when an error is emitted.
-     * @param  {(error: Error) => void} perform Perform function. 
+     * @param {(error: Error) => void} perform Perform function.
      * @returns {Observable<T>} An Observable instance.
      */
     doOnError(selector: (error: Error) => void): Observable<T>;

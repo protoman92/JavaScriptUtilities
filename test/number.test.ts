@@ -16,7 +16,7 @@ describe('Number utilities should work correctly', () => {
 
       /// When
       let ranged = Numbers.range(start, end, delta);
-      
+
       /// Then
       let first = Collections.first(ranged);
       let last = Collections.last(ranged);
@@ -32,7 +32,7 @@ describe('Number utilities should work correctly', () => {
     let lower = 10;
     let upper = 15;
     let times = 10000;
-    
+
     /// When
     let randomized = Numbers
       .range(0, times)

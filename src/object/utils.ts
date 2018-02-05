@@ -7,25 +7,25 @@ import { JSObject, Nullable } from './../type';
  */
 export function entries<T>(object: JSObject<T>): [string, T][] {
   let keys = Object.keys(object);
-  var entries: [string, T][] = [];
+  let entryArray: [string, T][] = [];
 
   for (let key of keys) {
     let value = object[key];
 
     if (value !== undefined && value !== null) {
-      entries.push([key, value]);
+      entryArray.push([key, value]);
     }
   }
 
-  return entries;
+  return entryArray;
 }
 
 /**
  * Convert a JS-compatible object to a Map.
  * @param {JSObject<T>} object A JS-compatible object.
- * @returns {Map<string,T>} A Map instance.
+ * @returns {Map<string, T>} A Map instance.
  */
-export function toMap<T>(object: JSObject<T>): Map<string,T> {
+export function toMap<T>(object: JSObject<T>): Map<string, T> {
   return new Map(entries(object));
 }
 

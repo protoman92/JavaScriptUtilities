@@ -6,7 +6,7 @@ import {
   Try,
   TryMap,
   TryFlatMap,
-  Nullable
+  Nullable,
 } from './../src';
 
 describe('Maybe should be implemented correctly', () => {
@@ -14,7 +14,7 @@ describe('Maybe should be implemented correctly', () => {
     /// Setup
     let mb1 = Maybe.nothing<number>();
     let mb2 = Maybe.some<number>(1);
-    
+
     /// When & Then
     try {
       mb1.getOrThrow();
@@ -31,8 +31,8 @@ describe('Maybe should be implemented correctly', () => {
     let mb1 = Maybe.nothing<number>();
     let mb2 = Maybe.some<number>(1);
 
-    let f1: MaybeMap<number,number> = (value: number) => value * 2;
-    let f2: MaybeMap<number,number> = (value: number) => value * 3;
+    let f1: MaybeMap<number, number> = (value: number) => value * 2;
+    let f2: MaybeMap<number, number> = (value: number) => value * 3;
 
     /// When
     let mappedMB1 = mb1.map(f1).map(f2);
@@ -48,9 +48,8 @@ describe('Maybe should be implemented correctly', () => {
     /// Setup
     let mb1 = Maybe.nothing<number>();
     let mb2 = Maybe.some<number>(1);
-
-    let f1: MaybeFlatMap<number,string> = value => Try.success('' + value);
-    let f2: MaybeFlatMap<string,number> = value => Try.success(parseInt(value));
+    let f1: MaybeFlatMap<number, string> = value => Try.success('' + value);
+    let f2: MaybeFlatMap<string, number> = value => Try.success(Number.parseInt(value));
 
     /// When
     let fMappedMB1 = mb1.flatMap(f1).flatMap(f2);
@@ -63,12 +62,12 @@ describe('Maybe should be implemented correctly', () => {
 
   it('Maybe flatMap nullable should work correctly', () => {
     /// Setup
-    let MockObject = class { id?: string; };
+    let mockObject = class { id?: string; };
 
-    let mockObject1 = new MockObject();
+    let mockObject1 = new mockObject();
     mockObject1.id = undefined;
 
-    let mockObject2 = new MockObject();
+    let mockObject2 = new mockObject();
     mockObject2.id = '123';
 
     /// When
@@ -94,7 +93,7 @@ describe('Maybe should be implemented correctly', () => {
     /// When
     let t1 = mb1.asTry('Error 1');
     let t2 = mb2.asTry('Error 2');
-    
+
     /// Then
     expect(Maybe.unwrap(t1.error).map(v => v.message).value).toBe('Error 1');
     expect(t2.value).toBe(1);
@@ -139,8 +138,8 @@ describe('Try should be implemented correctly', () => {
     let t1 = Try.failure<number>('Error 1');
     let t2 = Try.success<number>(1);
 
-    let f1: TryMap<number,number> = value => value * 2;
-    let f2: TryMap<number,number> = value => value * 3;
+    let f1: TryMap<number, number> = value => value * 2;
+    let f2: TryMap<number, number> = value => value * 3;
 
     /// When
     let mappedT1 = t1.map(f1).map(f2);
@@ -161,9 +160,8 @@ describe('Try should be implemented correctly', () => {
     /// Setup
     let t1 = Try.failure<number>('Error 1');
     let t2 = Try.success<number>(1);
-
-    let f1: TryFlatMap<number,string> = (value) => Maybe.some('' + value);
-    let f2: TryFlatMap<string,number> = (value) => Maybe.some(parseInt(value));
+    let f1: TryFlatMap<number, string> = (value) => Maybe.some('' + value);
+    let f2: TryFlatMap<string, number> = (value) => Maybe.some(Number.parseInt(value));
 
     /// When
     t1.flatMap(f1).flatMap(f2);
@@ -205,21 +203,21 @@ describe('Try should be implemented correctly', () => {
   it('Try zipAll with error should work correctly', () => {
     /// Setup
     let tries1 = [
-      Try.success(1), 
-      Try.failure('Error 1'), 
-      Try.failure('Error 2')
+      Try.success(1),
+      Try.failure('Error 1'),
+      Try.failure('Error 2'),
     ];
 
     let tries2: [Try<number>] = [
-      Try.success<number>(1), 
-      Try.success<number>(2), 
-      Try.success<number>(3)
+      Try.success<number>(1),
+      Try.success<number>(2),
+      Try.success<number>(3),
     ];
 
     /// When
     let zippedTries1 = Try.zipAll(tries1, () => undefined);
 
-    let zippedTries2 = Try.zipAll(tries2, values => 
+    let zippedTries2 = Try.zipAll(tries2, values =>
       values.reduce((v1: number, v2: number) => v1 + v2, 0));
 
     /// Then
@@ -229,6 +227,7 @@ describe('Try should be implemented correctly', () => {
     } catch (e) {
       expect(e.message).toBe('Error 1');
     }
+    console.log('2124');
 
     expect(zippedTries2.value).toBe(6);
   });
@@ -261,6 +260,17 @@ describe('Try should be implemented correctly', () => {
     expect(t2f.isFailure()).toBeTruthy();
     expect(Try.unwrap(t2f.error).getOrThrow().message).toBe('Error 2');
   });
+
+  it('Try unwrap with function should work correctly', () => {
+    /// Setup
+    let fn: () => number = () => 123;
+
+    /// When
+    let tryFn = Try.unwrap(fn).getOrThrow();
+
+    /// Then
+    expect(tryFn()).toBe(123);
+  });
 });
 
 describe('Common functionalities', () => {
@@ -270,7 +280,7 @@ describe('Common functionalities', () => {
     let t2 = Try.success<any>({ '1': 1, '2': 2 });
     let m1 = Maybe.some<any>(1);
     let m2 = Maybe.nothing();
-    
+
     /// When
     let t1c = t1.cast(Number);
     let t2c = t2.cast(Array);
@@ -308,7 +318,7 @@ describe('Common functionalities', () => {
 
   it('Maybe/Try doOnNext/logNext/logError should work correctly', () => {
     /// Setup
-    var sideEffects: any[] = [];
+    let sideEffects: any[] = [];
 
     let doOnNext = (v: any): void => {
       sideEffects.push(v);

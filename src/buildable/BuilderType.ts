@@ -1,7 +1,6 @@
 import BuildableType from './BuildableType';
 
 export default interface BuilderType<Buildable extends BuildableType<any>> {
-
   /**
    * Copy properties from one buildable to another.
    * @param {Buildable} buildable A buildable instance.

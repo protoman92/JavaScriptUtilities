@@ -36,7 +36,7 @@ export function first<T>(
   } else if (array.length > 0) {
     return elementAtIndex(array, 0);
   }
-  
+
   return Try.failure('Empty array');
 }
 
@@ -85,7 +85,7 @@ export function containsEquatable<T extends EquatableType>(array: T[], element: 
  * @returns {[T]} An Array of T.
  */
 export function flatMap<T>(array: TryResult<T>[]): T[] {
-  var newArray: T[] = [];
+  let newArray: T[] = [];
 
   for (let result of array) {
     try {
@@ -100,13 +100,13 @@ export function flatMap<T>(array: TryResult<T>[]): T[] {
 
 /**
  * Zip an Array of T Arrays and combine them with a selector function.
- * @template T Generics parameter.
- * @template R Generics parameter.
+ * @template T Generic parameter.
+ * @template R Generic parameter.
  * @param {T[][]} arrays An Array of Arrays.
  * @param {(v: T[]) => R} selector Selector function.
  * @returns {Try<R[]>} A Try Array of R.
  */
-export function zipAll<T,R>(arrays: T[][], selector: (v: T[]) => R): Try<R[]> {
+export function zipAll<T, R>(arrays: T[][], selector: (v: T[]) => R): Try<R[]> {
   return first(arrays.sort((v1, v2) => v1.length - v2.length))
     .map(v => v.length)
     .map(v => Numbers.range(0, v))
@@ -115,31 +115,31 @@ export function zipAll<T,R>(arrays: T[][], selector: (v: T[]) => R): Try<R[]> {
 
 /**
  * Zip a varargs Array of T Arrays and combine them with a selector function.
- * @template T Generics parameter.
- * @template R Generics parameter.
- * @param {(v: T[]) => R} selector Selector function. 
+ * @template T Generic parameter.
+ * @template R Generic parameter.
+ * @param {(v: T[]) => R} selector Selector function.
  * @param {...T[][]} arrays A varargs of Arrays.
  * @returns {Try<R[]>} A Try Array of R.
  */
-export function zipVarargs<T,R>(selector: (v: T[]) => R, ...arrays: T[][]): Try<R[]> {
+export function zipVarargs<T, R>(selector: (v: T[]) => R, ...arrays: T[][]): Try<R[]> {
   return zipAll(arrays, selector);
 }
 
 /**
  * Zip two Arrays and combine each respective set of elements with a selector
  * function.
- * @template T Generics parameter.
- * @template R Generics parameter.
- * @template U Generics parameter.
+ * @template T Generic parameter.
+ * @template R Generic parameter.
+ * @template U Generic parameter.
  * @param {T[]} a1 An Array of T.
  * @param {R[]} a2 An Array of R.
  * @param {(v1: T, v2: R) => U} selector Selector function.
  * @returns {Try<U[]>} A Try of U Array.
  */
-export function zip<T,R,U>(a1: T[], a2: R[], selector: (v1: T, v2: R) => U): Try<U[]> {
+export function zip<T, R, U>(a1: T[], a2: R[], selector: (v1: T, v2: R) => U): Try<U[]> {
   let shorter = first([a1.length, a2.length].sort()).getOrElse(0);
   let indexRange = Numbers.range(0, shorter);
-  var result: U[] = [];
+  let result: U[] = [];
 
   try {
     for (let i of indexRange) {
@@ -154,7 +154,7 @@ export function zip<T,R,U>(a1: T[], a2: R[], selector: (v1: T, v2: R) => U): Try
 
 /**
  * Get the index of an element in an Array.
- * @template T Generics parameter.
+ * @template T Generic parameter.
  * @param {T[]} array An Array of T.
  * @param {T} element A T instance.
  * @param {(element: T, v: T) => boolean} [selector] Optional selector. The
@@ -182,7 +182,7 @@ export function indexOf<T>(array: T[], element: T, selector?: (element: T, v: T)
 
 /**
  * Check if an array contains an element.
- * @template T Generics parameter.
+ * @template T Generic parameter.
  * @param {T[]} array An Array of T.
  * @param {T} element A T instance.
  * @param {(element: T, v: T) => boolean} [selector] Optional selector. The
@@ -196,7 +196,7 @@ export function contains<T>(array: T[], element: T, selector?: (element: T, v: T
 
 /**
  * Filter out duplicate items.
- * @template T Generics parameter.
+ * @template T Generic parameter.
  * @param {T[]} array An Array of T.
  * @param {(v1: T, v2: T) => boolean} [selector] Optional selector function.
  * Return true to indicate that two items are equal so that one of them should
@@ -204,22 +204,22 @@ export function contains<T>(array: T[], element: T, selector?: (element: T, v: T
  * @returns {T[]} Array of T.
  */
 export function unique<T>(array: T[], selector?: (v1: T, v2: T) => boolean): T[] {
-  return array.filter((v, i, a) => {    
+  return array.filter((v, i, a) => {
     return indexOf(a, v, selector).map(v1 => v1 === i).getOrElse(true);
   });
 }
 
 /**
  * Split an Array into two Arrays using a map function to map T to R.
- * @template T Generics parameter.
- * @template R Generics parameter.
+ * @template T Generic parameter.
+ * @template R Generic parameter.
  * @param {T[]} array Array of T.
  * @param {(v: T) => Nullable<R>} selector Selector function.
  * @returns {[R[], T[]]} A tuple of R Array and T Array.
  */
-export function splitMap<T,R>(array: T[], selector: (v: T) => Nullable<R>): [R[], T[]] {
-  var array1: R[] = [];
-  var array2: T[] = [];
+export function splitMap<T, R>(array: T[], selector: (v: T) => Nullable<R>): [R[], T[]] {
+  let array1: R[] = [];
+  let array2: T[] = [];
 
   for (let item of array) {
     try {
@@ -230,7 +230,7 @@ export function splitMap<T,R>(array: T[], selector: (v: T) => Nullable<R>): [R[]
         continue;
       }
     } catch (e) {}
-    
+
     array2.push(item);
   }
 
@@ -241,12 +241,12 @@ export function splitMap<T,R>(array: T[], selector: (v: T) => Nullable<R>): [R[]
  * Split an Array into 2 Arrays based on some condition. The first Array of the
  * tuple contains items that pass the conditional check, while the second are
  * those that do not.
- * @template T Generics parameter.
+ * @template T Generic parameter.
  * @param {T[]} array An Array of T.
  * @param {(v: T) => boolean} selector Selector function.
  * @returns {[T[], T[]]} A tuple of T Arrays.
  */
 export function split<T>(array: T[], selector: (v: T) => boolean): [T[], T[]] {
   let selector1: (v: T) => Nullable<T> = (v: T) => selector(v) ? v : undefined;
-  return splitMap<T,T>(array, selector1);
+  return splitMap<T, T>(array, selector1);
 }

@@ -40,8 +40,8 @@ describe('Collection utils should work correctly', () => {
   it('Array flatMap should work correctly', () => {
     /// Setup
     let array1: TryResult<number>[] = [
-      Maybe.some(1), 
-      Maybe.nothing(), 
+      Maybe.some(1),
+      Maybe.nothing(),
       Try.failure('Error!'),
       ...(Numbers.range(2, 10)),
       Try.success(10)
@@ -130,7 +130,7 @@ describe('Collection utils should work correctly', () => {
     let randomized: number[] = [];
 
     /// When
-    for (let _i in Numbers.range(1, 1000)) {
+    for (let _i of Numbers.range(1, 1000)) {
       randomized.push(Collections.randomElement(array).getOrThrow());
     }
 

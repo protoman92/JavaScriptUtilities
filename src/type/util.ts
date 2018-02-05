@@ -28,7 +28,7 @@ export function isInstance<T>(object: Nullable<any>, ...members: string[]): obje
  * @param {new () => R} typeFn Constructor function for R.
  * @returns {R} A R object.
  */
-export function cast<T,R extends T>(object: T, typeFn: new () => R): R {
+export function cast<T, R extends T>(object: T, typeFn: new () => R): R {
   if ((typeof object).toLowerCase() === typeFn.name.toLowerCase()) {
     return <R>object;
   } else if (object instanceof typeFn) {

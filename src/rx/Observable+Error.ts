@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 
 declare module 'rxjs/Observable' {
   interface Observable<T> {
-    
     /**
      * Catch the emitted Error and transform it to some other value, then emit
      * that value.
@@ -20,7 +19,6 @@ declare module 'rxjs/Observable' {
   }
 
   namespace Observable {
-    
     /**
      * Emit an error with some message.
      * @param {string} message A string value.
@@ -35,7 +33,7 @@ Observable.error = function<T>(message: string): Observable<T> {
 };
 
 Observable.prototype.catchJustReturn = function(transform: (error: Error) => any) {
-  return this.catch((err: any,) => {
+  return this.catch((err: Error) => {
     return Observable.of(transform(err));
   });
 };

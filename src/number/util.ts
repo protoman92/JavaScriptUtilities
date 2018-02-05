@@ -2,17 +2,17 @@ import { Nullable } from './../type';
 
 /**
  * Check if a number is even.
- * @param {number} number A number value.
+ * @param {number} n A number value.
  * @returns {boolean} A boolean value.
  */
-export let isEven = (number: number): boolean => number % 2 === 0;
+export let isEven = (n: number): boolean => n % 2 === 0;
 
 /**
  * Check if a number is odd.
- * @param {number} number A number value.
+ * @param {number} n A number value.
  * @returns {boolean} A boolean value.
  */
-export let isOdd = (number: number): boolean => !isEven(number);
+export let isOdd = (n: number): boolean => !isEven(n);
 
 /**
  * Get the sum of some numbers.
@@ -32,7 +32,7 @@ export let sum = (numbers: number[]): number => {
  */
 export let range = (start: number, end: number, delta: number = 1): number[] => {
   let length = Math.floor((end - start) / delta);
-  return Array.from<number,number>({ length }, (_, k) => k * delta + start);
+  return Array.from<number, number>({ length }, (_, k) => k * delta + start);
 };
 
 /**

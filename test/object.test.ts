@@ -8,7 +8,7 @@ describe('Object utils should be implemented correctly', () => {
     /// When
     let entries = Objects.entries(object);
     let map = Objects.toMap(object);
-    
+
     /// Then
     expect(entries.some(v => v[0] === 'a')).toBeTruthy();
     expect(entries.some(v => v[0] === 'b')).toBeTruthy();

@@ -3,12 +3,12 @@ import { Observer } from 'rxjs';
 /**
  * Provides mapping functionalities for a base observer.
  * @extends {Observer<T>} Observer extension.
- * @template T Generics parameter.
+ * @template T Generic parameter.
  */
 export interface Type<T> extends Observer<T> {
   /**
    * Map further to get a R observer.
-   * @template R Generics parameter.
+   * @template R Generic parameter.
    * @param {(v: R) => T} selector Selector function.
    * @returns {Type<R>} A Type instance.
    */
@@ -17,11 +17,11 @@ export interface Type<T> extends Observer<T> {
 
 /**
  * Use this class to provide mapping functionalities for a base observer.
- * @implements {Type<T,R>} Type implementation.
- * @template T Generics parameter.
- * @template R Generics parameter.
+ * @implements {Type<T, R>} Type implementation.
+ * @template T Generic parameter.
+ * @template R Generic parameter.
  */
-export class Self<T,R> implements Type<T> {
+export class Self<T, R> implements Type<T> {
   private readonly observer: Observer<R>;
   private readonly mapper: (v: T) => R;
 
@@ -43,6 +43,6 @@ export class Self<T,R> implements Type<T> {
   public complete = (): void => this.observer.complete();
 
   public mapObserver<R1>(selector: (v: R1) => T): Type<R1> {
-    return new Self<R1,T>(this, selector);
+    return new Self<R1, T>(this, selector);
   }
 }

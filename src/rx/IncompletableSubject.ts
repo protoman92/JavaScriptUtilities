@@ -5,7 +5,7 @@ import * as MappableObserver from './MappableObserver';
  * Use this subject wrapper to ignore error and completed events.
  * @implements {Observer<T>} Observer implementation.
  * @implements {MappableObserver.Type<T>} Mappable observer implementation.
- * @template T Generics parameter.
+ * @template T Generic parameter.
  */
 export default class IncompletableSubject<T> implements Observer<T>, MappableObserver.Type<T> {
   private readonly subject: Subject<T>;
@@ -23,6 +23,6 @@ export default class IncompletableSubject<T> implements Observer<T>, MappableObs
   public asObservable = (): Observable<T> => this.subject;
 
   public mapObserver<R>(selector: (v: R) => T): MappableObserver.Type<R> {
-    return new MappableObserver.Self<R,T>(this, selector);
+    return new MappableObserver.Self<R, T>(this, selector);
   }
 }

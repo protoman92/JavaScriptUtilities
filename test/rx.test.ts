@@ -11,7 +11,7 @@ import { IncompletableSubject, Nullable, Numbers } from './../src';
 
 const timeout = 100;
 
-describe("Do should be implemented correctly", () => {
+describe('Do should be implemented correctly', () => {
   it('doOnNext and doOnCompleted should work correctly', (done) => {
     /// Setup
     let nextCount = 0;
@@ -186,9 +186,9 @@ describe('MappableObserver should be implemented correctly', () => {
     /// Setup
     let times = 10;
     let range = Numbers.range(0, times);
-    var elements: number[] = [];
+    let elements: number[] = [];
 
-    let testObserver = subject
+    let observer = subject
       .mapObserver<string>(v => Number.parseInt(v))
       .mapObserver<number>(v => '' + v)
       .mapObserver<number>(v => v * 2);
@@ -200,7 +200,7 @@ describe('MappableObserver should be implemented correctly', () => {
 
     /// When
     for (let i of range) {
-      testObserver.next(i);
+      observer.next(i);
     }
 
     /// Then

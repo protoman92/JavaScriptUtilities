@@ -29,16 +29,14 @@ declare module 'rxjs/Observable' {
      * @param {((v: any) => R) | R} fallback Fallback selector type.
      * @returns {Observable<R>} An Observable instance.
      */
-    mapNonNilOrElse<R>(
-      selector: (v: T) => TryResult<R>, fallback: ((v: any) => R) | R,
-    ): Observable<R>;
+    mapNonNilOrElse<R>(selector: (v: T) => TryResult<R>, fallback: ((v: any) => R) | R): Observable<R>;
   }
 }
 
-Observable.prototype.flatMapNonNilOrEmpty = 
+Observable.prototype.flatMapNonNilOrEmpty =
   function<R>(selector: (v: any) => TryResult<Observable<R>>): Observable<R> {
     return this.flatMap(v => {
-      let result = Try.unwrap(() => selector(v)).value;
+      let result = Try.evaluate(() => selector(v)).value;
 
       if (result !== undefined && result !== null) {
         return result;
@@ -48,17 +46,18 @@ Observable.prototype.flatMapNonNilOrEmpty =
     });
   };
 
-Observable.prototype.mapNonNilOrEmpty = 
+Observable.prototype.mapNonNilOrEmpty =
   function<R>(selector: (v: any) => TryResult<R>): Observable<R> {
     return this.flatMapNonNilOrEmpty(v => {
-      return Try.unwrap(() => selector(v)).map(v => Observable.of(v));
+      return Try.evaluate(() => selector(v)).map(v1 => Observable.of(v1));
     });
   };
 
 Observable.prototype.mapNonNilOrElse = function<R>(
-  selector: (v: any) => TryResult<R>, fallback: ((v: any) => R) | R,
+  selector: (v: any) => TryResult<R>,
+  fallback: ((v: any) => R) | R,
 ): Observable<R> {
-  return this.map(v => Try.unwrap(() => selector(v)).getOrElse(() => {
+  return this.map(v => Try.evaluate(() => selector(v)).getOrElse(() => {
     if (fallback instanceof Function) {
       return fallback(v);
     } else {
