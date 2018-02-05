@@ -208,7 +208,7 @@ describe('Try should be implemented correctly', () => {
       Try.failure('Error 2'),
     ];
 
-    let tries2: [Try<number>] = [
+    let tries2: Try<number>[] = [
       Try.success<number>(1),
       Try.success<number>(2),
       Try.success<number>(3),
