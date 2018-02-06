@@ -1,5 +1,5 @@
 import './rx';
-import { IncompletableSubject, MappableObserver } from './rx';
+import { IncompletableSubject, MappableObserver, Reactives } from './rx';
 import { BuildableType, BuilderType } from './buildable';
 import { Booleans } from './boolean';
 import { Collections } from './collection';
@@ -7,7 +7,7 @@ import { Dates } from './date';
 import { EquatableType } from './comparable';
 
 import {
-  Maybe, 
+  Maybe,
   MaybeConvertibleType,
   MaybeMap,
   MaybeFlatMap,
@@ -50,6 +50,7 @@ export {
   Nullable,
   Numbers,
   Objects,
+  Reactives,
   ReactiveResult,
   Return,
   Strings,
@@ -57,6 +58,6 @@ export {
   TryConvertibleType,
   TryMap,
   TryFlatMap,
-  TryResult, 
+  TryResult,
   Types,
 };

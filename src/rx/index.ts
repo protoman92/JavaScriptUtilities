@@ -5,6 +5,7 @@ import './Observable+Logging';
 import './Observable+Unwrap';
 import './Observer+Map';
 import './Subscription+Dispose';
+import * as Reactives from './utils';
 import IncompletableSubject from './IncompletableSubject';
 import * as MappableObserver from './MappableObserver';
-export { MappableObserver, IncompletableSubject };
+export { MappableObserver, IncompletableSubject, Reactives };

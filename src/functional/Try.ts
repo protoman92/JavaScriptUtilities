@@ -251,10 +251,10 @@ export abstract class Try<T> implements
 
   /**
    * Cast the inner value to type R by checking a list of member properties.
-   * @param {...string[]} members Varargs of member properties to check.
+   * @param {...(keyof R)[]} members Varargs of member properties to check.
    * @returns {Try<R>} A Try instance.
    */
-  public castWithProperties<R>(...members: string[]): Try<R> {
+  public castWithProperties<R>(...members: (keyof R)[]): Try<R> {
     return this.flatMap(v => {
       if (Types.isInstance<R>(v, ...members)) {
         return Try.success(v);

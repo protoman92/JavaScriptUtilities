@@ -193,10 +193,10 @@ export abstract class Maybe<T> implements
 
   /**
    * Cast the inner value to type R by checking a list of member properties.
-   * @param {...string[]} members Varargs of member properties to check.
+   * @param {...(keyof R)[]} members Varargs of member properties to check.
    * @returns {Maybe<R>} A Maybe instance.
    */
-  public castWithProperties<R>(...members: string[]): Maybe<R> {
+  public castWithProperties<R>(...members: (keyof R)[]): Maybe<R> {
     return this.asTry().castWithProperties<R>(...members).asMaybe();
   }
 

@@ -43,11 +43,6 @@ describe('Types should be implemented correctly', () => {
     }
 
     /// When & Then 4
-    if (Types.isInstance<TestInterface>(impl, 'func4')) {
-      fail();
-    }
-
-    /// When & Then 4
     if (Types.isInstance<TestInterface>(impl, 'value1', 'value2')) {
       expect(impl.value1).toBeUndefined();
       expect(impl.value2).toBeNull();

@@ -5,10 +5,10 @@ import { Nullable } from './../type';
  * inspecting conformance to an interface.
  * @template T Generic parameter.
  * @param {Nullable<any>} object A nullable object.
- * @param {...string[]} members Varargs of member keys to check existence.
+ * @param {...(keyof T)[]} members Varargs of member keys to check existence.
  * @returns {object is T} A boolean value.
  */
-export function isInstance<T>(object: Nullable<any>, ...members: string[]): object is T {
+export function isInstance<T>(object: Nullable<any>, ...members: (keyof T)[]): object is T {
   if (object !== undefined && object !== null && members.length > 0) {
     let keys = Object.keys(object);
 

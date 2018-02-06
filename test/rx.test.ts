@@ -7,9 +7,16 @@ import {
 } from 'rxjs';
 
 import './../src';
-import { IncompletableSubject, Nullable, Numbers } from './../src';
 
-const timeout = 100;
+import {
+  Collections,
+  IncompletableSubject,
+  Nullable,
+  Numbers,
+  Reactives,
+} from './../src';
+
+const timeout = 10000;
 
 describe('Do should be implemented correctly', () => {
   it('doOnNext and doOnCompleted should work correctly', (done) => {
@@ -212,4 +219,34 @@ describe('MappableObserver should be implemented correctly', () => {
     testObserver(new ReplaySubject<Nullable<number>>());
     testObserver(new Subject<Nullable<number>>());
   });
+});
+
+describe('ensureOrder should be implemented correctly', () => {
+  it('ensureOrder should be implemented correctly', done => {
+    /// Setup
+    let times = 10;
+    let valueTrigger = new Subject<number>();
+    let subscription = new Subscription();
+    let values: number[] = [];
+    let sortFn: (a: number, b: number) => boolean = (a, b) => (a - b) > 0;
+
+    Reactives.ensureOrder(valueTrigger, sortFn)
+      .doOnNext(v => values.push(v))
+      .subscribe()
+      .toBeDisposedBy(subscription);
+
+    /// When
+    Numbers.range(0, times).forEach(() => {
+      let randomValue = Numbers.randomBetween(0, 100000);
+      valueTrigger.next(randomValue);
+    });
+
+    /// Then
+    let sortedValues = values.sort((a, b) => sortFn(a, b) ? 1 : -1);
+    let equals = Collections.zip(values, sortedValues, (a, b) => a === b);
+    expect(values.length).toBeGreaterThan(0);
+    expect(values).toEqual(sortedValues);
+    expect(equals.getOrThrow().every(v => v)).toBeTruthy();
+    done();
+  }, timeout);
 });
