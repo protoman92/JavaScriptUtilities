@@ -1,10 +1,7 @@
-import './rx';
-import { IncompletableSubject, MappableObserver, Reactives } from './rx';
 import { BuildableType, BuilderType } from './buildable';
 import { Booleans } from './boolean';
 import { Collections } from './collection';
 import { Dates } from './date';
-import { EquatableType } from './comparable';
 
 import {
   Maybe,
@@ -33,16 +30,13 @@ import {
 import { Strings } from './string';
 
 export {
-  BuildableType, 
+  BuildableType,
   BuilderType,
   Booleans,
   Collections,
   Dates,
-  EquatableType,
-  IncompletableSubject,
   Indeterminate,
-  JSObject, 
-  MappableObserver,
+  JSObject,
   Maybe,
   MaybeConvertibleType,
   MaybeMap,
@@ -50,7 +44,6 @@ export {
   Nullable,
   Numbers,
   Objects,
-  Reactives,
   ReactiveResult,
   Return,
   Strings,

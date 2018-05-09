@@ -1,4 +1,3 @@
-import { EquatableType } from './../comparable';
 import { Try } from './../functional';
 import { Nullable, TryResult } from './../type';
 import { Numbers } from './../number';
@@ -24,9 +23,7 @@ export function elementAtIndex<T>(array: T[], index: number): Try<T> {
  * determines whether an item passes its check before being returned.
  * @returns {Try} A Try instance.
  */
-export function first<T>(
-  array: T[], selector: Nullable<(value: T) => boolean> = undefined,
-): Try<T> {
+export function first<T>(array: T[], selector: Nullable<(value: T) => boolean> = undefined): Try<T> {
   if (selector !== undefined && selector !== null) {
     for (let item of array) {
       if (selector(item)) {
@@ -47,9 +44,7 @@ export function first<T>(
  * determines whether an item passes its check before being returned.
  * @returns {Try} A Try instance.
  */
-export function last<T>(
-  array: T[], selector: Nullable<(value: T) => boolean> = undefined,
-): Try<T> {
+export function last<T>(array: T[], selector: Nullable<(value: T) => boolean> = undefined): Try<T> {
   return first(array.map(v => v).reverse(), selector);
 }
 
@@ -65,17 +60,6 @@ export function randomElement<T>(array: T[]): Try<T> {
     let index = Numbers.randomBetween(0, array.length);
     return elementAtIndex(array, index);
   }
-}
-
-/**
- * Check whether an Array of Equatable contains a specific element.
- * @template T EquatableType.
- * @param {T[]} array An Array of T.
- * @param {T} element A T element.
- * @returns {boolean} A boolean value.
- */
-export function containsEquatable<T extends EquatableType>(array: T[], element: T): boolean {
-  return array.some(v => v.equals(element));
 }
 
 /**
@@ -229,7 +213,7 @@ export function splitMap<T, R>(array: T[], selector: (v: T) => Nullable<R>): [R[
         array1.push(item1);
         continue;
       }
-    } catch (e) {}
+    } catch (e) { }
 
     array2.push(item);
   }

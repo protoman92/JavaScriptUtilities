@@ -124,7 +124,7 @@ export abstract class Try<T> implements
     }
   }
 
-  protected constructor() {}
+  protected constructor() { }
 
   public get value(): Indeterminate<T> {
     try {
@@ -143,7 +143,7 @@ export abstract class Try<T> implements
     }
   }
 
-  public asMaybe = (): Maybe<T> => {
+  public asMaybe(): Maybe<T> {
     try {
       let value = this.getOrThrow();
       return Maybe.some(value);
@@ -152,19 +152,19 @@ export abstract class Try<T> implements
     }
   }
 
-  public asTry = (): Try<T> => {
+  public asTry(): Try<T> {
     return this;
   }
 
-  public isSome = (): boolean => {
+  public isSome(): boolean {
     return this.isSuccess();
   }
 
-  public isNothing = (): boolean => {
+  public isNothing(): boolean {
     return !this.isSome();
   }
 
-  public isSuccess = (): boolean => {
+  public isSuccess(): boolean {
     try {
       this.getOrThrow();
       return true;
@@ -173,11 +173,11 @@ export abstract class Try<T> implements
     }
   }
 
-  public isFailure = (): boolean => {
+  public isFailure(): boolean {
     return !this.isSuccess();
   }
 
-  public getOrElse = (fallback: Return<T>): T => {
+  public getOrElse(fallback: Return<T>): T {
     try {
       return this.getOrThrow();
     } catch {
@@ -194,7 +194,7 @@ export abstract class Try<T> implements
    * @param {Return<TryConvertibleType<T>>} fallback A Return instance.
    * @returns {Try<T>} A Try instance.
    */
-  public successOrElse (fallback: Return<TryConvertibleType<T>>): Try<T> {
+  public successOrElse(fallback: Return<TryConvertibleType<T>>): Try<T> {
     if (this.isSuccess()) {
       return this;
     } else {
@@ -241,15 +241,6 @@ export abstract class Try<T> implements
   }
 
   /**
-   * Cast the inner value to type R.
-   * @param {new () => R} typeFn Constructor function for R.
-   * @returns {Try<R>} A Try instance.
-   */
-  public cast<R extends T>(typeFn: new () => R): Try<R> {
-    return this.map(v => Types.cast(v, typeFn));
-  }
-
-  /**
    * Cast the inner value to type R by checking a list of member properties.
    * @param {...(keyof R)[]} members Varargs of member properties to check.
    * @returns {Try<R>} A Try instance.
@@ -271,7 +262,7 @@ export abstract class Try<T> implements
    * @param {(Throwable | ((v: T) => Throwable))} error Error (selector).
    * @returns {Try<T>} A Try instance.
    */
-  public filter = (selector: (v: T) => boolean, error: Throwable | ((v: T) => Throwable)): Try<T> => {
+  public filter(selector: (v: T) => boolean, error: Throwable | ((v: T) => Throwable)): Try<T> {
     return this.flatMap(v => {
       if (selector(v)) {
         return Try.success(v);
@@ -285,10 +276,10 @@ export abstract class Try<T> implements
     });
   }
 
-  public doOnNext = (selector: (v: T) => void): Try<T> => {
+  public doOnNext(selector: (v: T) => void): Try<T> {
     try {
       selector(this.getOrThrow());
-    } catch (e) {}
+    } catch (e) { }
 
     return this.map(v => v);
   }
@@ -301,13 +292,13 @@ export abstract class Try<T> implements
     return this.logNext(v => `${prefix}${selector !== undefined ? selector(v) : v}`);
   }
 
-  public doOnError = (selector: (e: Error) => void): Try<T> => {
+  public doOnError(selector: (e: Error) => void): Try<T> {
     try {
       this.getOrThrow();
     } catch (e) {
       try {
         selector(e);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     return this.map(v => v);

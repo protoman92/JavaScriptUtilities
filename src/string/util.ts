@@ -6,7 +6,7 @@ import { Numbers } from './../number';
  * @param {number} length A number value.
  * @returns {string} A string value.
  */
-export let randomString = (length: number): string => {
+export function randomString(length: number): string {
   let seed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.split('');
 
   return Numbers
@@ -14,4 +14,4 @@ export let randomString = (length: number): string => {
     .map(() => Collections.randomElement(seed))
     .map(value => value.getOrElse(''))
     .join('');
-};
+}

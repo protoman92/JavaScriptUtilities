@@ -1,12 +1,12 @@
 import { Numbers } from './../number';
 
-let getNumericalTime = (time: Date | number): number => {
+function getNumericalTime(time: Date | number): number {
   if (time instanceof Date) {
     return time.getTime();
   } else {
     return time;
   }
-};
+}
 
 /**
  * Produce a random Date.
@@ -14,25 +14,25 @@ let getNumericalTime = (time: Date | number): number => {
  * @param {Date | number} end The end date/time.
  * @returns {Date} A Date instance.
  */
-export let random = (start: Date | number, end: Date | number): Date => {
+export function random(start: Date | number, end: Date | number): Date {
   let startTime = getNumericalTime(start);
   let endTime = getNumericalTime(end);
   return new Date(Numbers.randomBetween(startTime, endTime));
-};
+}
 
 /**
  * Parse a date string into a Date.
  * @param {string} date A string value.
  * @returns {Date} A Date instance.
  */
-export let parse = (date: string): Date => {
+export function parse(date: string): Date {
   let result: any = Date.parse(date);
 
   if (result instanceof Date) {
     return result;
-  } else if (typeof(result) === 'number') {
+  } else if (typeof (result) === 'number') {
     return new Date(result);
   } else {
     return new Date();
   }
-};
+}

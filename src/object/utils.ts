@@ -1,4 +1,4 @@
-import { JSObject, Nullable } from './../type';
+import { JSObject } from './../type';
 
 /**
  * Get all entries in a JS-compatible object.
@@ -27,13 +27,4 @@ export function entries<T>(object: JSObject<T>): [string, T][] {
  */
 export function toMap<T>(object: JSObject<T>): Map<string, T> {
   return new Map(entries(object));
-}
-
-/**
- * Check if an object is not undefined and not null.
- * @param {Nullable<any>} object A nullable object.
- * @returns {boolean} A boolean value.
- */
-export function isDefinedAndNotNull(object: Nullable<any>): boolean {
-  return object !== undefined && object !== null;
 }

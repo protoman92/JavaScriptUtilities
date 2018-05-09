@@ -113,11 +113,11 @@ export abstract class Maybe<T> implements
     }
   }
 
-  public asMaybe = (): Maybe<T> => {
+  public asMaybe(): Maybe<T> {
     return this;
   }
 
-  public asTry = (error: Nullable<Error | string> = undefined): Try<T> => {
+  public asTry(error: Nullable<Error | string> = undefined): Try<T> {
     if (this.value !== undefined && this.value !== null) {
       return Try.success(this.value);
     } else if (error !== undefined && error !== null) {
@@ -127,7 +127,7 @@ export abstract class Maybe<T> implements
     }
   }
 
-  public isSome = (): boolean => {
+  public isSome(): boolean {
     try {
       this.getOrThrow();
       return true;
@@ -136,11 +136,11 @@ export abstract class Maybe<T> implements
     }
   }
 
-  public isNothing = (): boolean => {
+  public isNothing(): boolean {
     return !this.isSome();
   }
 
-  public getOrElse = (fallback: T): T => {
+  public getOrElse(fallback: T): T {
     try {
       return this.getOrThrow();
     } catch {
@@ -183,15 +183,6 @@ export abstract class Maybe<T> implements
   }
 
   /**
-   * Cast the inner value to type R.
-   * @param {new () => R} typeFn Constructor function for R.
-   * @returns {Maybe<R>} A Maybe instance.
-   */
-  public cast<R extends T>(typeFn: new () => R): Maybe<R> {
-    return this.asTry().cast(typeFn).asMaybe();
-  }
-
-  /**
    * Cast the inner value to type R by checking a list of member properties.
    * @param {...(keyof R)[]} members Varargs of member properties to check.
    * @returns {Maybe<R>} A Maybe instance.
@@ -206,11 +197,11 @@ export abstract class Maybe<T> implements
    * @param {(v: T) => boolean} selector Selector function.
    * @returns {Maybe<T>} A Maybe instance.
    */
-  public filter = (selector: (v: T) => boolean): Maybe<T> => {
+  public filter(selector: (v: T) => boolean): Maybe<T> {
     return this.asTry().filter(selector, Nothing.unavailableError).asMaybe();
   }
 
-  public doOnNext = (selector: (v: T) => void): Maybe<T> => {
+  public doOnNext(selector: (v: T) => void): Maybe<T> {
     return this.asTry().doOnNext(selector).asMaybe();
   }
 
@@ -241,10 +232,6 @@ class Some<T> extends Maybe<T> {
 class Nothing<T> extends Maybe<T> {
   static get unavailableError(): string {
     return 'Value not available';
-  }
-
-  constructor() {
-    super();
   }
 
   public getOrThrow(): T {
