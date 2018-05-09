@@ -28,7 +28,7 @@
     "url": "git+https://github.com/protoman92/JavaScriptUtilities.git"
   },
   "author": "Hai Pham",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/protoman92/JavaScriptUtilities/issues"
   },
