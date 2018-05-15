@@ -206,6 +206,20 @@ export abstract class Try<T> implements
     }
   }
 
+  /**
+   * Catch a failure Try and return a fallback value or a function producing
+   * such a value.
+   * @param {Return<T>} fallback A Return instance.
+   * @returns {Maybe<T>} A Try instance.
+   */
+  public catchError(fallback: Return<T>): Try<T> {
+    if (fallback instanceof Function) {
+      return this.successOrElse(() => Try.evaluate(() => fallback()));
+    } else {
+      return this.successOrElse(() => Try.unwrap(fallback));
+    }
+  }
+
   public map<R>(f: (value: T) => R): Try<R> {
     try {
       let value = this.getOrThrow();

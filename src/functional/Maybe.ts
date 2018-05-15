@@ -97,6 +97,20 @@ export abstract class Maybe<T> implements
     }
   }
 
+  /**
+   * Evaluate a function that returns a Nullable and catch errors if needed.
+   * @template T Generic parameter.
+   * @param {() => Nullable<T>} fn A Function instance.
+   * @returns {Try<T>} A Maybe instance.
+   */
+  public static evaluate<T>(fn: () => Nullable<T>): Maybe<T> {
+    try {
+      return Maybe.unwrap(fn());
+    } catch (e) {
+      return Maybe.nothing();
+    }
+  }
+
   public static some<T>(value: T): Maybe<T> {
     return new Some(value);
   }
@@ -162,6 +176,20 @@ export abstract class Maybe<T> implements
       } else {
         return fallback.asMaybe();
       }
+    }
+  }
+
+  /**
+   * Catch a nothing Maybe and return a fallback value or a function producing
+   * such a value.
+   * @param {Return<T>} fallback A Return instance.
+   * @returns {Maybe<T>} A Maybe instance.
+   */
+  public catchNothing(fallback: Return<T>): Maybe<T> {
+    if (fallback instanceof Function) {
+      return this.someOrElse(() => Maybe.evaluate(() => fallback()));
+    } else {
+      return this.someOrElse(() => Maybe.unwrap(fallback));
     }
   }
 

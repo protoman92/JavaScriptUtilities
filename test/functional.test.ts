@@ -99,7 +99,7 @@ describe('Maybe should be implemented correctly', () => {
     expect(t2.value).toBe(1);
   });
 
-  it('Maybe someOrElse should work correctly', () => {
+  it('Maybe someOrElse and catchNothing should work correctly', () => {
     /// Setup
     let m1 = Maybe.some(1);
     let m2 = Maybe.nothing();
@@ -107,10 +107,18 @@ describe('Maybe should be implemented correctly', () => {
     /// When
     let m1s = m1.someOrElse(Try.success(2));
     let m2s = m2.someOrElse(() => Try.success(2));
+    let m3c = m1.catchNothing(() => 2);
+    let m4c = m2.catchNothing(2);
+    let m5c = m2.catchNothing(() => 2);
+    let m6c = m2.catchNothing(() => { throw Error(''); });
 
     /// Then
     expect(m1s.value).toBe(1);
     expect(m2s.value).toBe(2);
+    expect(m3c.value).toBe(1);
+    expect(m4c.value).toBe(2);
+    expect(m5c.value).toBe(2);
+    expect(m6c.isNothing()).toBeTruthy();
   });
 });
 
@@ -232,7 +240,7 @@ describe('Try should be implemented correctly', () => {
     expect(zippedTries2.value).toBe(6);
   });
 
-  it('Try successOrElse should work correctly', () => {
+  it('Try successOrElse and catchError should work correctly', () => {
     /// Setup
     let t1 = Try.success(1);
     let t2 = Try.failure('Error!');
@@ -240,10 +248,18 @@ describe('Try should be implemented correctly', () => {
     /// When
     let t1s = t1.successOrElse(Try.success(2));
     let t2s = t2.successOrElse(() => Try.success(2));
+    let t3c = t1.catchError(2);
+    let t4c = t2.catchError(() => 2);
+    let t5c = t2.catchError(2);
+    let t6c = t2.catchError(() => { throw Error('Error!'); });
 
     /// Then
     expect(t1s.value).toBe(1);
     expect(t2s.value).toBe(2);
+    expect(t3c.value).toBe(1);
+    expect(t4c.value).toBe(2);
+    expect(t5c.value).toBe(2);
+    expect(t6c.error!.message).toBe('Error!');
   });
 
   it('Try mapError should work correctly', () => {
