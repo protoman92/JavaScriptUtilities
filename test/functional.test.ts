@@ -208,6 +208,24 @@ describe('Try should be implemented correctly', () => {
     expect(Try.unwrap(Try.success(2)).isSuccess()).toBeTruthy();
   });
 
+  it('Try zip and zipWith should work correctly', () => {
+    /// Setup
+    let t1 = Try.success(1);
+    let t2 = Try.failure<number>('');
+
+    /// When
+    let t1z = t1.zipWith(t2, (v1, v2) => v1 + v2);
+    let t2z = t2.zipWithDefault(t2);
+    let t3z = Try.zip(t1, t2, (v1, v2) => v1 + v2);
+    let t4z = Try.zipDefault(t1, t2);
+
+    /// Then
+    expect(t1z.isFailure()).toBeTruthy();
+    expect(t2z.isFailure()).toBeTruthy();
+    expect(t3z.isFailure()).toBeTruthy();
+    expect(t4z.isFailure()).toBeTruthy();
+  });
+
   it('Try zipAll with error should work correctly', () => {
     /// Setup
     let tries1 = [
@@ -235,7 +253,6 @@ describe('Try should be implemented correctly', () => {
     } catch (e) {
       expect(e.message).toBe('Error 1');
     }
-    console.log('2124');
 
     expect(zippedTries2.value).toBe(6);
   });

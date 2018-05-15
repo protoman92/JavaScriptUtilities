@@ -124,6 +124,36 @@ export abstract class Try<T> implements
     }
   }
 
+  /**
+   * Zip two TryConvertibleType with a selector function.
+   * @template T Generics parameter.
+   * @template R Generics parameter.
+   * @template U Generics parameter.
+   * @param {TryConvertibleType<T>} try1 A TryConvertibleType instance.
+   * @param {TryConvertibleType<R>} try2 A TryConvertibleType instance.
+   * @param {(v1: T, v2: R) => U} selector A selector function.
+   * @returns {Try<U>} A TryConvertibleType instance.
+   */
+  public static zip<T, R, U>(
+    try1: TryConvertibleType<T>,
+    try2: TryConvertibleType<R>,
+    selector: (v1: T, v2: R) => U,
+  ): Try<U> {
+    return try1.asTry().zipWith(try2, selector);
+  }
+
+  /**
+   * Zip two TryConvertibleType with a default selector function.
+   * @template T Generics parameter.
+   * @template R Generics parameter.
+   * @param {TryConvertibleType<T>} try1 A TryConvertibleType instance.
+   * @param {TryConvertibleType<R>} try2 A TryConvertibleType instance.
+   * @returns {Try<[T, R]>} A Try instance.
+   */
+  public static zipDefault<T, R>(try1: TryConvertibleType<T>, try2: TryConvertibleType<R>): Try<[T, R]> {
+    return this.zip(try1, try2, (v1, v2): [T, R] => [v1, v2]);
+  }
+
   protected constructor() { }
 
   public get value(): Indeterminate<T> {
@@ -324,6 +354,28 @@ export abstract class Try<T> implements
 
   public logErrorPrefix<R>(prefix: string, selector?: (e: Error) => R): Try<T> {
     return this.logError(e => `${prefix}${selector !== undefined ? selector(e) : e}`);
+  }
+
+  /**
+   * Zip with another TryConvertibleType using a selector function.
+   * @template R Generics parameter.
+   * @template U Generics paremeter.
+   * @param {TryConvertibleType<R>} try2 A TryConvertibleType instance.
+   * @param {(v1: T, v2: R) => U} selector A selector function.
+   * @returns {Try<U>} A Try instance.
+   */
+  public zipWith<R, U>(try2: TryConvertibleType<R>, selector: (v1: T, v2: R) => U): Try<U> {
+    return this.flatMap(v1 => try2.asTry().map(v2 => selector(v1, v2)));
+  }
+
+  /**
+   * Zip with another TryConvertibleType using a default selector function.
+   * @template R Generics parameter.
+   * @param {TryConvertibleType<R>} try2 A TryConvertibleType instance.
+   * @returns {Try<[T, R]>} A Try instance.
+   */
+  public zipWithDefault<R>(try2: TryConvertibleType<R>): Try<[T, R]> {
+    return this.zipWith(try2, (v1, v2): [T, R] => [v1, v2]);
   }
 
   abstract getOrThrow(): T;
