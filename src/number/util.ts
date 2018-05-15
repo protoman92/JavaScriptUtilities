@@ -1,15 +1,6 @@
 import { Nullable } from './../type';
 
 /**
- * Get the sum of some numbers.
- * @param {number[]} numbers An array of number.
- * @returns {number} A number value.
- */
-export function sum(numbers: number[]): number {
-  return numbers.reduce((n1, n2) => n1 + n2, 0);
-}
-
-/**
  * Produce a range of numbers, not including the end value.
  * @param {number} start The starting value.
  * @param {number} end The exclusive ending value.
