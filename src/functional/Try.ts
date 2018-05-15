@@ -186,14 +186,6 @@ export abstract class Try<T> implements
     return this;
   }
 
-  public isSome(): boolean {
-    return this.isSuccess();
-  }
-
-  public isNothing(): boolean {
-    return !this.isSome();
-  }
-
   public isSuccess(): boolean {
     try {
       this.getOrThrow();

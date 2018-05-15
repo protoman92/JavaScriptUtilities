@@ -19,18 +19,6 @@ export interface MaybeType<T> {
   value: Indeterminate<T>;
 
   /**
-   * Check if there is some value.
-   * @returns {boolean} A boolean value.
-   */
-  isSome(): boolean;
-
-  /**
-   * Check if there is no value available.
-   * @returns boolean A boolean value.
-   */
-  isNothing(): boolean;
-
-  /**
    * Get the current value or throw an error if it is not available.
    * @returns {T} A T instance.
    */
@@ -141,6 +129,10 @@ export abstract class Maybe<T> implements
     }
   }
 
+  /**
+   * Check if there is some value.
+   * @returns {boolean} A boolean value.
+   */
   public isSome(): boolean {
     try {
       this.getOrThrow();
@@ -150,6 +142,10 @@ export abstract class Maybe<T> implements
     }
   }
 
+  /**
+   * Check if there is no value available.
+   * @returns boolean A boolean value.
+   */
   public isNothing(): boolean {
     return !this.isSome();
   }

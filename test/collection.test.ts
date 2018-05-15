@@ -11,7 +11,7 @@ describe('Collection utils should work correctly', () => {
     let first2 = Collections.first(a2, (value) => value % 2 === 0);
 
     /// Then
-    expect(first1.isNothing()).toBeTruthy();
+    expect(first1.isFailure()).toBeTruthy();
     expect(first2.value).toBe(2);
   });
 
@@ -25,15 +25,15 @@ describe('Collection utils should work correctly', () => {
     let first2 = Collections.last(a2, (value) => value % 2 === 0);
 
     /// Then
-    expect(first1.isNothing()).toBeTruthy();
+    expect(first1.isFailure()).toBeTruthy();
     expect(first2.value).toBe(4);
     expect(a2).toEqual([1, 2, 3, 4, 5]);
   });
 
   it('Array elementAt should work correctly', () => {
     /// Setup & When & Then
-    expect(Collections.elementAtIndex([], 0).isNothing()).toBeTruthy();
-    expect(Collections.elementAtIndex([1, 2, 3], 4).isNothing).toBeTruthy();
+    expect(Collections.elementAtIndex([], 0).isFailure()).toBeTruthy();
+    expect(Collections.elementAtIndex([1, 2, 3], 4).isFailure).toBeTruthy();
     expect(Collections.elementAtIndex([1, 2, 3, 4], 3).value).toBe(4);
   });
 
