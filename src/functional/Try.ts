@@ -213,17 +213,20 @@ export abstract class Try<T> implements
 
   /**
    * Get a fallback Try if the current Try is failure.
-   * @param {Return<TryConvertibleType<T>>} fallback A Return instance.
+   * @param {(TryConvertibleType<T> | ((e: Error) => TryConvertibleType<T>))} fallback
+   * A fallback strategy - either a direct value or a function that accepts the
+   * error and returns a value.
    * @returns {Try<T>} A Try instance.
    */
-  public successOrElse(fallback: Return<TryConvertibleType<T>>): Try<T> {
-    if (this.isSuccess()) {
+  public successOrElse(fallback: TryConvertibleType<T> | ((e: Error) => TryConvertibleType<T>)): Try<T> {
+    try {
+      this.getOrThrow();
       return this;
-    } else {
+    } catch (e) {
       if (fallback instanceof Function) {
-        return fallback().asTry();
+        return fallback(e).asTry();
       } else {
-        return fallback.asTry();
+        return Try.unwrap(fallback);
       }
     }
   }
@@ -231,12 +234,14 @@ export abstract class Try<T> implements
   /**
    * Catch a failure Try and return a fallback value or a function producing
    * such a value.
-   * @param {Return<T>} fallback A Return instance.
+   * @param {(TryConvertibleType<T> | ((e: Error) => Nullable<T>))} fallback
+   * A fallback strategy - either a direct value or a function that accepts the
+   * error and returns a value.
    * @returns {Maybe<T>} A Try instance.
    */
-  public catchError(fallback: Return<T>): Try<T> {
+  public catchError(fallback: Nullable<T> | ((e: Error) => Nullable<T>)): Try<T> {
     if (fallback instanceof Function) {
-      return this.successOrElse(() => Try.evaluate(() => fallback()));
+      return this.successOrElse(e => Try.evaluate(() => fallback(e)));
     } else {
       return this.successOrElse(() => Try.unwrap(fallback));
     }
