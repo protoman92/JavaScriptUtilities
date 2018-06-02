@@ -1,6 +1,6 @@
 {
   "name": "javascriptutilities",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "A collection of utility functions for JS",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
@@ -8,6 +8,7 @@
   "scripts": {
     "setup": "npm install",
     "build": "tsc",
+    "buildPublish": "tsc && npm publish",
     "test": "tsc && jest --coverage",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
@@ -34,7 +35,7 @@
   },
   "homepage": "https://github.com/protoman92/JavaScriptUtilities#readme",
   "dependencies": {
-    "typescript": "^2.5.3"
+    "typescript": "^2.9.1"
   },
   "devDependencies": {
     "@types/jest": "^21.1.4",

@@ -13,6 +13,8 @@ class TestInterfaceImpl implements TestInterface {
   func2 = (): number => 1;
   func3 = (): string => '123';
   value1 = undefined;
+
+  // tslint:disable-next-line:no-null-keyword
   value2 = null;
 }
 

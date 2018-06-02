@@ -10,3 +10,4 @@ script:
 after_success:
   - npm run coveralls
   - npm pack
+  - npm run buildPublish

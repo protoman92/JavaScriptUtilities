@@ -15,7 +15,7 @@ export function isInstance<T>(object: Nullable<any>, ...members: (keyof T)[]): o
     /// If the member is null, it is still valid because it technically still
     /// exists as part of the object.
     return members.every(v => {
-      return keys.indexOf(v) >= 0 || (object[v] !== undefined && object[v] !== null);
+      return (object[v] !== undefined && object[v] !== null) || keys.indexOf(String(v)) >= 0;
     });
   } else {
     return false;
