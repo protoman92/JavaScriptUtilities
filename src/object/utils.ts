@@ -1,20 +1,16 @@
-import { JSObject } from './../type';
+import { Nullable, JSObject } from './../type';
 
 /**
  * Get all entries in a JS-compatible object.
  * @param {JSObject<T>} object A JS-compatible object.
- * @returns {[string, T][]} An Array of tuples.
+ * @returns {[string, Nullable<T>][]} An Array of tuples.
  */
-export function entries<T>(object: JSObject<T>): [string, T][] {
+export function entries<T>(object: JSObject<T>): [string, Nullable<T>][] {
   let keys = Object.keys(object);
-  let entryArray: [string, T][] = [];
+  let entryArray: [string, Nullable<T>][] = [];
 
   for (let key of keys) {
-    let value = object[key];
-
-    if (value !== undefined && value !== null) {
-      entryArray.push([key, value]);
-    }
+    entryArray.push([key, object[key]]);
   }
 
   return entryArray;
@@ -23,8 +19,8 @@ export function entries<T>(object: JSObject<T>): [string, T][] {
 /**
  * Convert a JS-compatible object to a Map.
  * @param {JSObject<T>} object A JS-compatible object.
- * @returns {Map<string, T>} A Map instance.
+ * @returns {Map<string, Nullable<T>>} A Map instance.
  */
-export function toMap<T>(object: JSObject<T>): Map<string, T> {
+export function toMap<T>(object: JSObject<T>): Map<string, Nullable<T>> {
   return new Map(entries(object));
 }
