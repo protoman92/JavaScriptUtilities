@@ -19,4 +19,30 @@ describe('Object utils should be implemented correctly', () => {
     expect(map.keys()).toContain('c');
     expect(map.keys()).toContain('d');
   });
+
+  it('Deleting object keys unsafely - should delete keys for original object', () => {
+    /// Setup
+    let object = { id: 1, name: 2, age: 3 };
+
+    /// When
+    let resultingObject = Objects.deleteKeysUnsafely(object, 'id', 'name');
+
+    /// Then
+    expect(resultingObject.age).toEqual(object.age);
+    expect(object.id).toBeFalsy();
+    expect(object.name).toBeFalsy();
+  });
+
+  it('Deleting object keys safely - should not delete keys for original', () => {
+    /// Setup
+    let object = { id: 1, name: 2, age: 3 };
+
+    /// When
+    let resultingObject = Objects.deletingKeys(object, 'id', 'name');
+
+    /// Then
+    expect(resultingObject.age).toEqual(object.age);
+    expect(object.id).toBeTruthy();
+    expect(object.name).toBeTruthy();
+  });
 });

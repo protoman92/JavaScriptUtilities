@@ -6,6 +6,7 @@ export {
   JSObject,
   Nullable,
   NullableKV,
+  Omit,
   Return,
   Throwable,
   TryResult,
