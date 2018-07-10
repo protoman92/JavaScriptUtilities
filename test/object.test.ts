@@ -38,11 +38,25 @@ describe('Object utils should be implemented correctly', () => {
     let object = { id: 1, name: 2, age: 3 };
 
     /// When
-    let resultingObject = Objects.deletingKeys(object, 'id', 'name');
+    let resultingObject = Objects.deleteKeys(object, 'id', 'name');
 
     /// Then
     expect(resultingObject.age).toEqual(object.age);
     expect(object.id).toBeTruthy();
     expect(object.name).toBeTruthy();
+  });
+
+  it('Extracting object keys - should create object with extracted keys', () => {
+    /// Setup
+    let object = { id: 1, name: 2, age: 3 };
+
+    /// When
+    let resultingObject = Objects.extractKeys(object, 'name', 'age');
+
+    /// Then
+    expect(resultingObject.age).toEqual(object.age);
+    expect(resultingObject.name).toEqual(object.name);
+    expect((resultingObject as any).id).toBeUndefined();
+    expect(object.id).toBeDefined();
   });
 });

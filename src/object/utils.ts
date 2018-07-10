@@ -40,7 +40,7 @@ export function toMap<T>(object: JSObject<T>): Map<string, Nullable<T>> {
  * @param {...K[]} keys Keys of the object.
  * @returns {Omit<T, K>} The remainder of the object.
  */
-export function deleteKeysUnsafely<T, K extends keyof T>(object: T, ...keys: K[]): Omit<T, K> {
+export function deleteKeysUnsafely<T extends {}, K extends keyof T>(object: T, ...keys: K[]): Omit<T, K> {
   for (let key of keys) {
     delete object[key];
   }
@@ -50,19 +50,31 @@ export function deleteKeysUnsafely<T, K extends keyof T>(object: T, ...keys: K[]
 
 /**
  * Deep-clone an object and remove keys from the clone, effectively preventing
- * actual modifications on the original object. Beware that undefined properties
- * will be converted to null to allow JSON stringification.
+ * actual modifications on the original object.
  * @template T Generics parameter.
  * @template K Generics parameter.
  * @param {T} object An Object of type T.
  * @param {...K[]} keys Keys of the object.
  * @returns {Omit<T, K>} The remainder of the object.
  */
-export function deletingKeys<T, K extends keyof T>(object: T, ...keys: K[]): Omit<T, K> {
-  let clone = JSON.parse(JSON.stringify(object, (_k, v) => {
-    return v === undefined ? null : v;
-  }));
+export function deleteKeys<T extends {}, K extends keyof T>(object: T, ...keys: K[]): Omit<T, K> {
+  return deleteKeysUnsafely({ ...object as any }, ...keys);
+}
 
-  deleteKeysUnsafely(clone, ...keys);
-  return clone;
+/**
+ * Extract some keys from an object into a new object with only those keys.
+ * @template T Generics parameter.
+ * @template K Generics parameter.
+ * @param {T} object A T object.
+ * @param {...K[]} keys The keys to be extracted.
+ * @returns {Pick<T, K>} The resulting object.
+ */
+export function extractKeys<T, K extends keyof T>(object: T, ...keys: K[]): Pick<T, K> {
+  let newObject = {} as any;
+
+  for (let key of keys) {
+    newObject[key] = object[key];
+  }
+
+  return newObject;
 }
