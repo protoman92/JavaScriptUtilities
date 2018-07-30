@@ -20,6 +20,20 @@ describe('Object utils should be implemented correctly', () => {
     expect(map.keys()).toContain('d');
   });
 
+  it('Object values should work correctly', () => {
+    /// Setup
+    let object1 = { a: 'a', b: 'b', c: undefined };
+    let object2 = [1, 2, 3, 4];
+
+    /// When
+    let values1 = Objects.values(object1);
+    let values2 = Objects.values(object2);
+
+    /// Then
+    expect(values1).toEqual(['a', 'b', undefined]);
+    expect(values2).toEqual([1, 2, 3, 4]);
+  });
+
   it('Deleting object keys unsafely - should delete keys for original object', () => {
     /// Setup
     let object = { id: 1, name: 2, age: 3 };

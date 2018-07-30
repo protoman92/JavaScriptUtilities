@@ -2,18 +2,22 @@ import { JSObject, Nullable, Omit } from './../type';
 
 /**
  * Get all entries in a JS-compatible object.
- * @param {JSObject<T>} object A JS-compatible object.
+ * @param {JSObject<T> | T[]} object A JS-compatible/Array-like object.
  * @returns {[string, Nullable<T>][]} An Array of tuples.
  */
-export function entries<T>(object: JSObject<T>): [string, Nullable<T>][] {
+export function entries<T>(object: JSObject<T> | T[]): [string, Nullable<T>][] {
   let keys = Object.keys(object);
   let entryArray: [string, Nullable<T>][] = [];
 
   for (let key of keys) {
-    entryArray.push([key, object[key]]);
+    entryArray.push([key, (object as any)[key]]);
   }
 
   return entryArray;
+}
+
+export function values<T>(object: JSObject<T> | T[]): Nullable<T>[] {
+  return entries(object).map(([_i, v]) => v);
 }
 
 /**
