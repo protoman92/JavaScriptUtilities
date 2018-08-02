@@ -10,3 +10,5 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type JSObject<T> = { [key: string]: Nullable<T> };
 export type Return<T> = T | (() => T);
 export type TryResult<T> = Nullable<T> | MaybeConvertibleType<T> | TryConvertibleType<T>;
+export class Ignore { }
+export let IGNORE: Ignore = new Ignore();

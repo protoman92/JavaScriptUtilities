@@ -1,6 +1,8 @@
 import * as Types from './util';
 
 export {
+  IGNORE,
+  Ignore,
   Indeterminate,
   IndeterminateKV,
   JSObject,

@@ -18,6 +18,8 @@ export { Numbers } from './number';
 export { Objects } from './object';
 
 export {
+  IGNORE,
+  Ignore,
   Indeterminate,
   IndeterminateKV,
   JSObject,
