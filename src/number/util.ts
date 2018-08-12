@@ -1,4 +1,22 @@
-import { Nullable } from './../type';
+import { Indeterminate, Nullable } from './../type';
+
+/**
+ * Parse integer but ignore NaN.
+ * @param {*} object Any object.
+ * @param {Indeterminate<number>} [radix=undefined] Radix parameterm.
+ * @returns {Indeterminate<number>} A possibly undefined number.
+ */
+export function parseInteger(object: any, radix: Indeterminate<number> = undefined): Indeterminate<number> {
+  try {
+    let parsed = parseInt(object, radix);
+
+    if (!isNaN(parsed)) {
+      return parsed;
+    }
+  } catch { }
+
+  return undefined;
+}
 
 /**
  * Produce a range of numbers, not including the end value.

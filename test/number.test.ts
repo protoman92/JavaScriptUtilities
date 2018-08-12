@@ -1,6 +1,13 @@
 import { Collections, Numbers } from './../src';
 
 describe('Number utilities should work correctly', () => {
+  it('Parsing integer should work correctly', () => {
+    /// Setup && When && Then
+    expect(Numbers.parseInteger('abc')).toBeUndefined();
+    expect(Numbers.parseInteger('0')).toEqual(0);
+    expect(Numbers.parseInteger('1a')).toEqual(1);
+  });
+
   it('Number range should work correctly', () => {
     /// Setup
     let times = 1000;
