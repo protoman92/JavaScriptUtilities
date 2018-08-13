@@ -69,10 +69,10 @@ export abstract class Try<T> implements
   MonadType<T> {
   /**
    * Check if an object is convertible to a Try instance.
-   * @param {*} object Any object.
+   * @param {unknown} object Unknown object.
    * @returns {object is TryConvertibleType<T>} A boolean value.
    */
-  public static isTryConvertible<T>(object: any): object is TryConvertibleType<T> {
+  public static isTryConvertible<T>(object: unknown): object is TryConvertibleType<T> {
     return Types.isInstance<TryConvertibleType<T>>(object, 'asTry');
   }
 

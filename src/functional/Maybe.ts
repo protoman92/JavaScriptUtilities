@@ -62,10 +62,10 @@ export abstract class Maybe<T> implements
   MonadType<T> {
   /**
    * Check if an object is convertible to a Maybe instance.
-   * @param {*} object Any object.
+   * @param {unknown} object Unknown object.
    * @returns {object is MaybeConvertibleType<T>} A boolean value.
    */
-  public static isMaybeConvertible<T>(object: any): object is MaybeConvertibleType<T> {
+  public static isMaybeConvertible<T>(object: unknown): object is MaybeConvertibleType<T> {
     return Types.isInstance<MaybeConvertibleType<T>>(object, 'asMaybe');
   }
 

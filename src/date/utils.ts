@@ -26,7 +26,7 @@ export function random(start: Date | number, end: Date | number): Date {
  * @returns {Date} A Date instance.
  */
 export function parse(date: string): Date {
-  let result: any = Date.parse(date);
+  let result: unknown = Date.parse(date);
 
   if (result instanceof Date) {
     return result;

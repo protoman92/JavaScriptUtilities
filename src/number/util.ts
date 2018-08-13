@@ -2,11 +2,11 @@ import { Indeterminate, Nullable } from './../type';
 
 /**
  * Parse integer but ignore NaN.
- * @param {*} object Any object.
+ * @param {string} object A string value.
  * @param {Indeterminate<number>} [radix=undefined] Radix parameterm.
  * @returns {Indeterminate<number>} A possibly undefined number.
  */
-export function parseInteger(object: any, radix: Indeterminate<number> = undefined): Indeterminate<number> {
+export function parseInteger(object: string, radix: Indeterminate<number> = undefined): Indeterminate<number> {
   try {
     let parsed = parseInt(object, radix);
 
