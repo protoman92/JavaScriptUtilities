@@ -353,25 +353,17 @@ describe('Common functionalities', () => {
     let t1 = Try.success(1);
     let t2 = Try.success(true);
     let t3 = Try.success('');
+    let t4 = Try.success({ a: 1 });
+    let unsupported = Try.success<any>(undefined);
 
     /// When && Then
-    expect(t1.booleanOrFail('Error').error!.message).toEqual('Error');
-    expect(t1.booleanOrFail().error).toBeDefined();
-    expect(t1.numberOrFail('Error').value).toEqual(1);
     expect(t1.numberOrFail().value).toEqual(1);
-    expect(t1.stringOrFail('Error').error!.message).toEqual('Error');
-    expect(t1.stringOrFail().error).toBeDefined();
-    expect(t2.booleanOrFail('Error').value).toEqual(true);
     expect(t2.booleanOrFail().value).toEqual(true);
-    expect(t2.numberOrFail('Error').error!.message).toEqual('Error');
-    expect(t2.numberOrFail().error).toBeDefined();
-    expect(t2.stringOrFail('Error').error!.message).toEqual('Error');
-    expect(t2.stringOrFail().error).toBeDefined();
-    expect(t3.booleanOrFail('Error').error!.message).toEqual('Error');
-    expect(t3.booleanOrFail().error).toBeDefined();
-    expect(t3.numberOrFail('Error').error!.message).toEqual('Error');
-    expect(t3.numberOrFail().error).toBeDefined();
-    expect(t3.stringOrFail('Error').value).toEqual('');
     expect(t3.stringOrFail().value).toEqual('');
+    expect(t4.objectOrFail().value).toEqual({ a: 1 });
+    expect(unsupported.booleanOrFail('Error').error!.message).toEqual('Error');
+    expect(unsupported.numberOrFail('Error').error!.message).toEqual('Error');
+    expect(unsupported.objectOrFail('Error').error!.message).toEqual('Error');
+    expect(unsupported.stringOrFail('Error').error!.message).toEqual('Error');
   });
 });

@@ -78,6 +78,14 @@ export interface TryType<T> {
   numberOrFail(error?: Return<Error | string>): Try<number>;
 
   /**
+   * Force convert inner value to Object or fail.
+   * @param {(Return<Error | string>)} [error] The error to throw whe the cast
+   * fails.
+   * @returns {Try<Object>} A Try instance.
+   */
+  objectOrFail(error?: Return<Error | string>): Try<Object>;
+
+  /**
    * Force convert inner value to string or fail.
    * @param {(Return<Error | string>)} [error] The error to throw when the cast
    * fails.
@@ -321,6 +329,18 @@ export abstract class Try<T> implements
   public numberOrFail(error?: Return<Error | string>): Try<number> {
     return this.map(v => {
       if (typeof v === 'number') {
+        return v;
+      } else {
+        throw (error !== undefined && error !== null
+          ? Errors.parseError(error)
+          : new Error('No number found'));
+      }
+    });
+  }
+
+  public objectOrFail(error?: Return<Error | string>): Try<Object> {
+    return this.map(v => {
+      if (v instanceof Object) {
         return v;
       } else {
         throw (error !== undefined && error !== null
