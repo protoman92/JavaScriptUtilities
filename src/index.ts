@@ -1,3 +1,4 @@
+export { BuildableType, BuilderType } from './buildable';
 export { Booleans } from './boolean';
 export { Collections } from './collection';
 export { Dates } from './date';
