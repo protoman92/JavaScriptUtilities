@@ -81,9 +81,9 @@ export interface TryType<T> {
    * Force convert inner value to Object or fail.
    * @param {(Return<Error | string>)} [error] The error to throw whe the cast
    * fails.
-   * @returns {Try<Object>} A Try instance.
+   * @returns {Try<{}>} A Try instance.
    */
-  objectOrFail(error?: Return<Error | string>): Try<Object>;
+  objectOrFail(error?: Return<Error | string>): Try<{}>;
 
   /**
    * Force convert inner value to string or fail.
@@ -338,14 +338,14 @@ export abstract class Try<T> implements
     });
   }
 
-  public objectOrFail(error?: Return<Error | string>): Try<Object> {
+  public objectOrFail(error?: Return<Error | string>): Try<{}> {
     return this.map(v => {
       if (v instanceof Object) {
-        return v;
+        return v as {};
       } else {
         throw (error !== undefined && error !== null
           ? Errors.parseError(error)
-          : new Error('No number found'));
+          : new Error('No object found'));
       }
     });
   }
