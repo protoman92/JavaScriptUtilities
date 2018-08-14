@@ -1,7 +1,8 @@
-import FunctorType from './FunctorType';
-import MonadType from './MonadType';
-import { MaybeConvertibleType, Maybe } from './Maybe';
 import { Indeterminate, Nullable, Return, Throwable, TryResult, Types } from './../type';
+import FunctorType from './FunctorType';
+import { Maybe, MaybeConvertibleType } from './Maybe';
+import { Errors } from '../error';
+import MonadType from './MonadType';
 
 export type TryMap<T, R> = (value: T) => R;
 export type TryFlatMap<T, R> = (value: T) => TryConvertibleType<R>;
@@ -59,6 +60,30 @@ export interface TryType<T> {
    * @returns {Try<T>} A Try instance.
    */
   logErrorPrefix<R>(prefix: string, selector?: (e: Error) => R): Try<T>;
+
+  /**
+   * Force convert inner value to boolean or fail.
+   * @param {(Return<Error | string>)} [error] The error to throw when the cast
+   * fails.
+   * @returns {Try<boolean>} A Try instance.
+   */
+  booleanOrFail(error?: Return<Error | string>): Try<boolean>;
+
+  /**
+   * Force convert inner value to number or fail.
+   * @param {(Return<Error | string>)} [error] The error to throw when the cast
+   * fails.
+   * @returns {Try<number>} A Try instance.
+   */
+  numberOrFail(error?: Return<Error | string>): Try<number>;
+
+  /**
+   * Force convert inner value to string or fail.
+   * @param {(Return<Error | string>)} [error] The error to throw when the cast
+   * fails.
+   * @returns {Try<string>} A Try instance.
+   */
+  stringOrFail(error?: Return<Error | string>): Try<string>;
 }
 
 export abstract class Try<T> implements
@@ -279,6 +304,42 @@ export abstract class Try<T> implements
     } catch (e) {
       return Try.failure(e);
     }
+  }
+
+  public booleanOrFail(error?: Return<Error | string>): Try<boolean> {
+    return this.map(v => {
+      if (typeof v === 'boolean') {
+        return v;
+      } else {
+        throw (error !== undefined && error !== null
+          ? Errors.parseError(error)
+          : new Error('No boolean found'));
+      }
+    });
+  }
+
+  public numberOrFail(error?: Return<Error | string>): Try<number> {
+    return this.map(v => {
+      if (typeof v === 'number') {
+        return v;
+      } else {
+        throw (error !== undefined && error !== null
+          ? Errors.parseError(error)
+          : new Error('No number found'));
+      }
+    });
+  }
+
+  public stringOrFail(error?: Return<Error | string>): Try<string> {
+    return this.map(v => {
+      if (typeof v === 'string') {
+        return v;
+      } else {
+        throw (error !== undefined && error !== null
+          ? Errors.parseError(error)
+          : new Error('No string found'));
+      }
+    });
   }
 
   /**

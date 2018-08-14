@@ -1,12 +1,4 @@
-import {
-  Maybe,
-  MaybeMap,
-  MaybeFlatMap,
-  Try,
-  TryMap,
-  TryFlatMap,
-  Nullable,
-} from './../src';
+import { Maybe, MaybeFlatMap, MaybeMap, Nullable, Try, TryFlatMap, TryMap } from './../src';
 
 describe('Maybe should be implemented correctly', () => {
   it('Maybe getOrThrow and getOrElse should work correctly', () => {
@@ -354,5 +346,32 @@ describe('Common functionalities', () => {
     [[t1, t1sf], [t2, t2sf], [m1, m1sf], [m2, m2sf]].forEach(v => {
       expect(JSON.stringify(v[0])).toEqual(JSON.stringify(v[1]));
     });
+  });
+
+  it('Convenience access methods should work correctly', () => {
+    /// Setup
+    let t1 = Try.success(1);
+    let t2 = Try.success(true);
+    let t3 = Try.success('');
+
+    /// When && Then
+    expect(t1.booleanOrFail('Error').error!.message).toEqual('Error');
+    expect(t1.booleanOrFail().error).toBeDefined();
+    expect(t1.numberOrFail('Error').value).toEqual(1);
+    expect(t1.numberOrFail().value).toEqual(1);
+    expect(t1.stringOrFail('Error').error!.message).toEqual('Error');
+    expect(t1.stringOrFail().error).toBeDefined();
+    expect(t2.booleanOrFail('Error').value).toEqual(true);
+    expect(t2.booleanOrFail().value).toEqual(true);
+    expect(t2.numberOrFail('Error').error!.message).toEqual('Error');
+    expect(t2.numberOrFail().error).toBeDefined();
+    expect(t2.stringOrFail('Error').error!.message).toEqual('Error');
+    expect(t2.stringOrFail().error).toBeDefined();
+    expect(t3.booleanOrFail('Error').error!.message).toEqual('Error');
+    expect(t3.booleanOrFail().error).toBeDefined();
+    expect(t3.numberOrFail('Error').error!.message).toEqual('Error');
+    expect(t3.numberOrFail().error).toBeDefined();
+    expect(t3.stringOrFail('Error').value).toEqual('');
+    expect(t3.stringOrFail().value).toEqual('');
   });
 });
