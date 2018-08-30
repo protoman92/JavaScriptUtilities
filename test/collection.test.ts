@@ -1,4 +1,4 @@
-import { Collections, Maybe, Numbers, Try, TryResult } from './../src';
+import {Collections, Maybe, Numbers, Try, TryResult} from './../src';
 
 describe('Collection utils should work correctly', () => {
   it('Array first should work correctly', () => {
@@ -8,7 +8,7 @@ describe('Collection utils should work correctly', () => {
 
     /// When
     let first1 = Collections.first(a1);
-    let first2 = Collections.first(a2, (value) => value % 2 === 0);
+    let first2 = Collections.first(a2, value => value % 2 === 0);
 
     /// Then
     expect(first1.isFailure()).toBeTruthy();
@@ -22,7 +22,7 @@ describe('Collection utils should work correctly', () => {
 
     /// When
     let first1 = Collections.last(a1);
-    let first2 = Collections.last(a2, (value) => value % 2 === 0);
+    let first2 = Collections.last(a2, value => value % 2 === 0);
 
     /// Then
     expect(first1.isFailure()).toBeTruthy();
@@ -43,8 +43,8 @@ describe('Collection utils should work correctly', () => {
       Maybe.some(1),
       Maybe.nothing(),
       Try.failure('Error!'),
-      ...(Numbers.range(2, 10)),
-      Try.success(10)
+      ...Numbers.range(2, 10),
+      Try.success(10),
     ];
 
     /// When
@@ -144,12 +144,18 @@ describe('Collection utils should work correctly', () => {
 
     let selector: (v: number) => boolean = v => {
       switch (v) {
-        case 1: throw new Error('1 received!');
-        case 2: return true;
-        case 3: return false;
-        case 4: return true;
-        case 5: return false;
-        default: throw new Error('Unexpected');
+        case 1:
+          throw new Error('1 received!');
+        case 2:
+          return true;
+        case 3:
+          return false;
+        case 4:
+          return true;
+        case 5:
+          return false;
+        default:
+          throw new Error('Unexpected');
       }
     };
 

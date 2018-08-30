@@ -1,2 +1,2 @@
 import * as Strings from './util';
-export { Strings };
+export {Strings};

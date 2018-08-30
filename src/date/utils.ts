@@ -1,4 +1,4 @@
-import { Numbers } from './../number';
+import {Numbers} from './../number';
 
 function getNumericalTime(time: Date | number): number {
   if (time instanceof Date) {
@@ -30,7 +30,7 @@ export function parse(date: string): Date {
 
   if (result instanceof Date) {
     return result;
-  } else if (typeof (result) === 'number') {
+  } else if (typeof result === 'number') {
     return new Date(result);
   } else {
     return new Date();

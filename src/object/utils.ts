@@ -1,4 +1,4 @@
-import { JSObject, Nullable, Omit } from './../type';
+import {JSObject, Nullable, Omit} from './../type';
 
 /**
  * Get all entries in a JS-compatible object.
@@ -44,7 +44,10 @@ export function toMap<T>(object: JSObject<T>): Map<string, Nullable<T>> {
  * @param {...K[]} keys Keys of the object.
  * @returns {Omit<T, K>} The remainder of the object.
  */
-export function deleteKeysUnsafely<T extends {}, K extends keyof T>(object: T, ...keys: K[]): Omit<T, K> {
+export function deleteKeysUnsafely<T extends {}, K extends keyof T>(
+  object: T,
+  ...keys: K[]
+): Omit<T, K> {
   for (let key of keys) {
     delete object[key];
   }
@@ -61,8 +64,11 @@ export function deleteKeysUnsafely<T extends {}, K extends keyof T>(object: T, .
  * @param {...K[]} keys Keys of the object.
  * @returns {Omit<T, K>} The remainder of the object.
  */
-export function deleteKeys<T extends {}, K extends keyof T>(object: T, ...keys: K[]): Omit<T, K> {
-  return deleteKeysUnsafely({ ...object as any }, ...keys);
+export function deleteKeys<T extends {}, K extends keyof T>(
+  object: T,
+  ...keys: K[]
+): Omit<T, K> {
+  return deleteKeysUnsafely({...(object as any)}, ...keys);
 }
 
 /**
@@ -73,7 +79,10 @@ export function deleteKeys<T extends {}, K extends keyof T>(object: T, ...keys: 
  * @param {...K[]} keys The keys to be extracted.
  * @returns {Pick<T, K>} The resulting object.
  */
-export function extractKeys<T, K extends keyof T>(object: T, ...keys: K[]): Pick<T, K> {
+export function extractKeys<T, K extends keyof T>(
+  object: T,
+  ...keys: K[]
+): Pick<T, K> {
   let newObject = {} as any;
 
   for (let key of keys) {

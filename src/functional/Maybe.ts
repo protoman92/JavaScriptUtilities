@@ -1,13 +1,12 @@
 import FunctorType from './FunctorType';
 import MonadType from './MonadType';
-import { TryConvertibleType, Try } from './Try';
-import { Indeterminate, Nullable, Return, Types } from './../type';
+import {TryConvertibleType, Try} from './Try';
+import {Indeterminate, Nullable, Return, Types} from './../type';
 
 export type MaybeMap<T, R> = (value: T) => R;
 export type MaybeFlatMap<T, R> = (value: T) => MaybeConvertibleType<R>;
 
 export interface MaybeConvertibleType<T> {
-
   /**
    * Convert the current object to a Maybe instance.
    * @returns {Maybe} A Maybe instance.
@@ -54,18 +53,21 @@ export interface MaybeType<T> {
   logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Maybe<T>;
 }
 
-export abstract class Maybe<T> implements
-  MaybeType<T>,
-  MaybeConvertibleType<T>,
-  TryConvertibleType<T>,
-  FunctorType<T>,
-  MonadType<T> {
+export abstract class Maybe<T>
+  implements
+    MaybeType<T>,
+    MaybeConvertibleType<T>,
+    TryConvertibleType<T>,
+    FunctorType<T>,
+    MonadType<T> {
   /**
    * Check if an object is convertible to a Maybe instance.
    * @param {unknown} object Unknown object.
    * @returns {object is MaybeConvertibleType<T>} A boolean value.
    */
-  public static isMaybeConvertible<T>(object: unknown): object is MaybeConvertibleType<T> {
+  public static isMaybeConvertible<T>(
+    object: unknown
+  ): object is MaybeConvertibleType<T> {
     return Types.isInstance<MaybeConvertibleType<T>>(object, 'asMaybe');
   }
 
@@ -75,7 +77,9 @@ export abstract class Maybe<T> implements
    * ambiguous types.
    * @returns {Maybe<T>} A Maybe instance.
    */
-  public static unwrap<T>(value: Nullable<T> | MaybeConvertibleType<T>): Maybe<T> {
+  public static unwrap<T>(
+    value: Nullable<T> | MaybeConvertibleType<T>
+  ): Maybe<T> {
     if (Maybe.isMaybeConvertible(value)) {
       return Maybe.some(value).flatMap(v => v);
     } else if (value !== undefined && value !== null) {
@@ -212,7 +216,9 @@ export abstract class Maybe<T> implements
    * @returns {Maybe<R>} A Maybe instance.
    */
   public castWithProperties<R>(...members: (keyof R)[]): Maybe<R> {
-    return this.asTry().castWithProperties<R>(...members).asMaybe();
+    return this.asTry()
+      .castWithProperties<R>(...members)
+      .asMaybe();
   }
 
   /**
@@ -222,19 +228,27 @@ export abstract class Maybe<T> implements
    * @returns {Maybe<T>} A Maybe instance.
    */
   public filter(selector: (v: T) => boolean): Maybe<T> {
-    return this.asTry().filter(selector, Nothing.unavailableError).asMaybe();
+    return this.asTry()
+      .filter(selector, Nothing.unavailableError)
+      .asMaybe();
   }
 
   public doOnNext(selector: (v: T) => void): Maybe<T> {
-    return this.asTry().doOnNext(selector).asMaybe();
+    return this.asTry()
+      .doOnNext(selector)
+      .asMaybe();
   }
 
   public logNext<R>(selector?: (v: T) => R): Maybe<T> {
-    return this.asTry().logNext(selector).asMaybe();
+    return this.asTry()
+      .logNext(selector)
+      .asMaybe();
   }
 
   public logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Maybe<T> {
-    return this.asTry().logNextPrefix(prefix, selector).asMaybe();
+    return this.asTry()
+      .logNextPrefix(prefix, selector)
+      .asMaybe();
   }
 
   public abstract getOrThrow(): T;

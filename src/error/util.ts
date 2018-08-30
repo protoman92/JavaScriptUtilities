@@ -1,4 +1,4 @@
-import { Return } from '../type';
+import {Return} from '../type';
 
 /**
  * Parse a possible Error into an actual error.

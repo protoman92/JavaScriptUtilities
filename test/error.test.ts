@@ -1,4 +1,4 @@
-import { Errors } from '../src';
+import {Errors} from '../src';
 
 describe('Error utilities should work correctly', () => {
   it('Parsing errors should work correctly', () => {

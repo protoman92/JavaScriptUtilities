@@ -14,4 +14,4 @@ export {
   TryResult,
 } from './typealias';
 
-export { Types };
+export {Types};

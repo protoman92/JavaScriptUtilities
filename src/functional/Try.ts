@@ -1,14 +1,20 @@
-import { Indeterminate, Nullable, Return, Throwable, TryResult, Types } from './../type';
+import {
+  Indeterminate,
+  Nullable,
+  Return,
+  Throwable,
+  TryResult,
+  Types,
+} from './../type';
 import FunctorType from './FunctorType';
-import { Maybe, MaybeConvertibleType } from './Maybe';
-import { Errors } from '../error';
+import {Maybe, MaybeConvertibleType} from './Maybe';
+import {Errors} from '../error';
 import MonadType from './MonadType';
 
 export type TryMap<T, R> = (value: T) => R;
 export type TryFlatMap<T, R> = (value: T) => TryConvertibleType<R>;
 
 export interface TryConvertibleType<T> extends MaybeConvertibleType<T> {
-
   /**
    * Convert the current object into a Try.
    * @returns Try A Try instance.
@@ -94,18 +100,21 @@ export interface TryType<T> {
   stringOrFail(error?: Return<Error | string>): Try<string>;
 }
 
-export abstract class Try<T> implements
-  MaybeConvertibleType<T>,
-  TryConvertibleType<T>,
-  TryType<T>,
-  FunctorType<T>,
-  MonadType<T> {
+export abstract class Try<T>
+  implements
+    MaybeConvertibleType<T>,
+    TryConvertibleType<T>,
+    TryType<T>,
+    FunctorType<T>,
+    MonadType<T> {
   /**
    * Check if an object is convertible to a Try instance.
    * @param {unknown} object Unknown object.
    * @returns {object is TryConvertibleType<T>} A boolean value.
    */
-  public static isTryConvertible<T>(object: unknown): object is TryConvertibleType<T> {
+  public static isTryConvertible<T>(
+    object: unknown
+  ): object is TryConvertibleType<T> {
     return Types.isInstance<TryConvertibleType<T>>(object, 'asTry');
   }
 
@@ -129,7 +138,10 @@ export abstract class Try<T> implements
    * @param {Throwable} error A Throwable instance.
    * @returns {Try<T>} A Try instance.
    */
-  public static unwrap<T>(value: TryResult<T>, error: Nullable<Throwable> = undefined): Try<T> {
+  public static unwrap<T>(
+    value: TryResult<T>,
+    error: Nullable<Throwable> = undefined
+  ): Try<T> {
     if (Try.isTryConvertible(value)) {
       return Try.success(value).flatMap(v => v);
     } else if (Maybe.isMaybeConvertible(value)) {
@@ -170,7 +182,7 @@ export abstract class Try<T> implements
   public static zip<T, R, U>(
     try1: TryConvertibleType<T>,
     try2: TryConvertibleType<R>,
-    selector: (v1: T, v2: R) => U,
+    selector: (v1: T, v2: R) => U
   ): Try<U> {
     return try1.asTry().zipWith(try2, selector);
   }
@@ -183,11 +195,14 @@ export abstract class Try<T> implements
    * @param {TryConvertibleType<R>} try2 A TryConvertibleType instance.
    * @returns {Try<[T, R]>} A Try instance.
    */
-  public static zipDefault<T, R>(try1: TryConvertibleType<T>, try2: TryConvertibleType<R>): Try<[T, R]> {
+  public static zipDefault<T, R>(
+    try1: TryConvertibleType<T>,
+    try2: TryConvertibleType<R>
+  ): Try<[T, R]> {
     return this.zip(try1, try2, (v1, v2): [T, R] => [v1, v2]);
   }
 
-  protected constructor() { }
+  protected constructor() {}
 
   public get value(): Indeterminate<T> {
     try {
@@ -251,7 +266,9 @@ export abstract class Try<T> implements
    * error and returns a value.
    * @returns {Try<T>} A Try instance.
    */
-  public successOrElse(fallback: TryConvertibleType<T> | ((e: Error) => TryConvertibleType<T>)): Try<T> {
+  public successOrElse(
+    fallback: TryConvertibleType<T> | ((e: Error) => TryConvertibleType<T>)
+  ): Try<T> {
     try {
       this.getOrThrow();
       return this;
@@ -272,7 +289,9 @@ export abstract class Try<T> implements
    * error and returns a value.
    * @returns {Maybe<T>} A Try instance.
    */
-  public catchError(fallback: Nullable<T> | ((e: Error) => Nullable<T>)): Try<T> {
+  public catchError(
+    fallback: Nullable<T> | ((e: Error) => Nullable<T>)
+  ): Try<T> {
     if (fallback instanceof Function) {
       return this.successOrElse(e => Try.evaluate(() => fallback(e)));
     } else {
@@ -319,9 +338,9 @@ export abstract class Try<T> implements
       if (typeof v === 'boolean') {
         return v;
       } else {
-        throw (error !== undefined && error !== null
+        throw error !== undefined && error !== null
           ? Errors.parseError(error)
-          : new Error('No boolean found'));
+          : new Error('No boolean found');
       }
     });
   }
@@ -331,9 +350,9 @@ export abstract class Try<T> implements
       if (typeof v === 'number') {
         return v;
       } else {
-        throw (error !== undefined && error !== null
+        throw error !== undefined && error !== null
           ? Errors.parseError(error)
-          : new Error('No number found'));
+          : new Error('No number found');
       }
     });
   }
@@ -343,9 +362,9 @@ export abstract class Try<T> implements
       if (v instanceof Object) {
         return v as {};
       } else {
-        throw (error !== undefined && error !== null
+        throw error !== undefined && error !== null
           ? Errors.parseError(error)
-          : new Error('No object found'));
+          : new Error('No object found');
       }
     });
   }
@@ -355,9 +374,9 @@ export abstract class Try<T> implements
       if (typeof v === 'string') {
         return v;
       } else {
-        throw (error !== undefined && error !== null
+        throw error !== undefined && error !== null
           ? Errors.parseError(error)
-          : new Error('No string found'));
+          : new Error('No string found');
       }
     });
   }
@@ -372,7 +391,9 @@ export abstract class Try<T> implements
       if (Types.isInstance<R>(v, ...members)) {
         return Try.success(v);
       } else {
-        return Try.failure<R>(`Failed to cast ${v} to type with members ${members}`);
+        return Try.failure<R>(
+          `Failed to cast ${v} to type with members ${members}`
+        );
       }
     });
   }
@@ -384,7 +405,10 @@ export abstract class Try<T> implements
    * @param {(Throwable | ((v: T) => Throwable))} error Error (selector).
    * @returns {Try<T>} A Try instance.
    */
-  public filter(selector: (v: T) => boolean, error: Throwable | ((v: T) => Throwable)): Try<T> {
+  public filter(
+    selector: (v: T) => boolean,
+    error: Throwable | ((v: T) => Throwable)
+  ): Try<T> {
     return this.flatMap(v => {
       if (selector(v)) {
         return Try.success(v);
@@ -401,17 +425,21 @@ export abstract class Try<T> implements
   public doOnNext(selector: (v: T) => void): Try<T> {
     try {
       selector(this.getOrThrow());
-    } catch (e) { }
+    } catch (e) {}
 
     return this.map(v => v);
   }
 
   public logNext<R>(selector?: (v: T) => R): Try<T> {
-    return this.doOnNext(v => console.log(selector !== undefined ? selector(v) : v));
+    return this.doOnNext(v =>
+      console.log(selector !== undefined ? selector(v) : v)
+    );
   }
 
   public logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Try<T> {
-    return this.logNext(v => `${prefix}${selector !== undefined ? selector(v) : v}`);
+    return this.logNext(
+      v => `${prefix}${selector !== undefined ? selector(v) : v}`
+    );
   }
 
   public doOnError(selector: (e: Error) => void): Try<T> {
@@ -420,18 +448,22 @@ export abstract class Try<T> implements
     } catch (e) {
       try {
         selector(e);
-      } catch (e) { }
+      } catch (e) {}
     }
 
     return this.map(v => v);
   }
 
   public logError<R>(selector?: (e: Error) => R): Try<T> {
-    return this.doOnError(e => console.log(selector !== undefined ? selector(e) : e));
+    return this.doOnError(e =>
+      console.log(selector !== undefined ? selector(e) : e)
+    );
   }
 
   public logErrorPrefix<R>(prefix: string, selector?: (e: Error) => R): Try<T> {
-    return this.logError(e => `${prefix}${selector !== undefined ? selector(e) : e}`);
+    return this.logError(
+      e => `${prefix}${selector !== undefined ? selector(e) : e}`
+    );
   }
 
   /**
@@ -442,7 +474,10 @@ export abstract class Try<T> implements
    * @param {(v1: T, v2: R) => U} selector A selector function.
    * @returns {Try<U>} A Try instance.
    */
-  public zipWith<R, U>(try2: TryConvertibleType<R>, selector: (v1: T, v2: R) => U): Try<U> {
+  public zipWith<R, U>(
+    try2: TryConvertibleType<R>,
+    selector: (v1: T, v2: R) => U
+  ): Try<U> {
     return this.flatMap(v1 => try2.asTry().map(v2 => selector(v1, v2)));
   }
 

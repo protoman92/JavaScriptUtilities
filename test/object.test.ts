@@ -1,9 +1,9 @@
-import { Objects, JSObject } from './../src';
+import {Objects, JSObject} from './../src';
 
 describe('Object utils should be implemented correctly', () => {
   it('Object entries should work correctly', () => {
     /// Setup
-    let object: JSObject<string> = { a: 'a', b: 'b', c: 'c', d: undefined };
+    let object: JSObject<string> = {a: 'a', b: 'b', c: 'c', d: undefined};
 
     /// When
     let entries = Objects.entries(object);
@@ -22,7 +22,7 @@ describe('Object utils should be implemented correctly', () => {
 
   it('Object values should work correctly', () => {
     /// Setup
-    let object1 = { a: 'a', b: 'b', c: undefined };
+    let object1 = {a: 'a', b: 'b', c: undefined};
     let object2 = [1, 2, 3, 4];
 
     /// When
@@ -36,7 +36,7 @@ describe('Object utils should be implemented correctly', () => {
 
   it('Deleting object keys unsafely - should delete keys for original object', () => {
     /// Setup
-    let object = { id: 1, name: 2, age: 3 };
+    let object = {id: 1, name: 2, age: 3};
 
     /// When
     let resultingObject = Objects.deleteKeysUnsafely(object, 'id', 'name');
@@ -49,7 +49,7 @@ describe('Object utils should be implemented correctly', () => {
 
   it('Deleting object keys safely - should not delete keys for original', () => {
     /// Setup
-    let object = { id: 1, name: 2, age: 3 };
+    let object = {id: 1, name: 2, age: 3};
 
     /// When
     let resultingObject = Objects.deleteKeys(object, 'id', 'name');
@@ -62,7 +62,7 @@ describe('Object utils should be implemented correctly', () => {
 
   it('Extracting object keys - should create object with extracted keys', () => {
     /// Setup
-    let object = { id: 1, name: 2, age: 3 };
+    let object = {id: 1, name: 2, age: 3};
 
     /// When
     let resultingObject = Objects.extractKeys(object, 'name', 'age');

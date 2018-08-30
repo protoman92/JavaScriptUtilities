@@ -1,4 +1,4 @@
-import { Collections, Numbers } from './../src';
+import {Collections, Numbers} from './../src';
 
 describe('Number utilities should work correctly', () => {
   it('Parsing integer should work correctly', () => {
@@ -41,9 +41,9 @@ describe('Number utilities should work correctly', () => {
     let times = 10000;
 
     /// When
-    let randomized = Numbers
-      .range(0, times)
-      .map(() => Numbers.randomBetween(lower, upper));
+    let randomized = Numbers.range(0, times).map(() =>
+      Numbers.randomBetween(lower, upper)
+    );
 
     /// Then
     expect(randomized.every(value => value >= 10 && value <= 15)).toBeTruthy();

@@ -1,4 +1,4 @@
-import { Indeterminate, Nullable } from './../type';
+import {Indeterminate, Nullable} from './../type';
 
 /**
  * Parse integer but ignore NaN.
@@ -6,14 +6,17 @@ import { Indeterminate, Nullable } from './../type';
  * @param {Indeterminate<number>} [radix=undefined] Radix parameterm.
  * @returns {Indeterminate<number>} A possibly undefined number.
  */
-export function parseInteger(object: string, radix: Indeterminate<number> = undefined): Indeterminate<number> {
+export function parseInteger(
+  object: string,
+  radix: Indeterminate<number> = undefined
+): Indeterminate<number> {
   try {
     let parsed = parseInt(object, radix);
 
     if (!isNaN(parsed)) {
       return parsed;
     }
-  } catch { }
+  } catch {}
 
   return undefined;
 }
@@ -27,7 +30,7 @@ export function parseInteger(object: string, radix: Indeterminate<number> = unde
  */
 export function range(start: number, end: number, delta: number = 1): number[] {
   let length = Math.floor((end - start) / delta);
-  return Array.from<number, number>({ length }, (_, k) => k * delta + start);
+  return Array.from<number, number>({length}, (_, k) => k * delta + start);
 }
 
 /**
@@ -37,7 +40,11 @@ export function range(start: number, end: number, delta: number = 1): number[] {
  * @param {number} delta Value change magnitude.
  * @returns {number} An Array of number.
  */
-export function rangeInclusive(start: number, end: number, delta: number = 1): number[] {
+export function rangeInclusive(
+  start: number,
+  end: number,
+  delta: number = 1
+): number[] {
   return range(start, end + delta, delta);
 }
 

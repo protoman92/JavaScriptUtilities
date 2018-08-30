@@ -1,6 +1,6 @@
-import { Try } from './../functional';
-import { Nullable, TryResult } from './../type';
-import { Numbers } from './../number';
+import {Try} from './../functional';
+import {Nullable, TryResult} from './../type';
+import {Numbers} from './../number';
 
 /**
  * Get the element at an index in an Array.
@@ -23,7 +23,10 @@ export function elementAtIndex<T>(array: T[], index: number): Try<T> {
  * determines whether an item passes its check before being returned.
  * @returns {Try} A Try instance.
  */
-export function first<T>(array: T[], selector: Nullable<(value: T) => boolean> = undefined): Try<T> {
+export function first<T>(
+  array: T[],
+  selector: Nullable<(value: T) => boolean> = undefined
+): Try<T> {
   if (selector !== undefined && selector !== null) {
     for (let item of array) {
       if (selector(item)) {
@@ -44,7 +47,10 @@ export function first<T>(array: T[], selector: Nullable<(value: T) => boolean> =
  * determines whether an item passes its check before being returned.
  * @returns {Try} A Try instance.
  */
-export function last<T>(array: T[], selector: Nullable<(value: T) => boolean> = undefined): Try<T> {
+export function last<T>(
+  array: T[],
+  selector: Nullable<(value: T) => boolean> = undefined
+): Try<T> {
   return first(array.map(v => v).reverse(), selector);
 }
 
@@ -105,7 +111,10 @@ export function zipAll<T, R>(arrays: T[][], selector: (v: T[]) => R): Try<R[]> {
  * @param {...T[][]} arrays A varargs of Arrays.
  * @returns {Try<R[]>} A Try Array of R.
  */
-export function zipVarargs<T, R>(selector: (v: T[]) => R, ...arrays: T[][]): Try<R[]> {
+export function zipVarargs<T, R>(
+  selector: (v: T[]) => R,
+  ...arrays: T[][]
+): Try<R[]> {
   return zipAll(arrays, selector);
 }
 
@@ -120,7 +129,11 @@ export function zipVarargs<T, R>(selector: (v: T[]) => R, ...arrays: T[][]): Try
  * @param {(v1: T, v2: R) => U} selector Selector function.
  * @returns {Try<U[]>} A Try of U Array.
  */
-export function zip<T, R, U>(a1: T[], a2: R[], selector: (v1: T, v2: R) => U): Try<U[]> {
+export function zip<T, R, U>(
+  a1: T[],
+  a2: R[],
+  selector: (v1: T, v2: R) => U
+): Try<U[]> {
   let shorter = first([a1.length, a2.length].sort()).getOrElse(0);
   let indexRange = Numbers.range(0, shorter);
   let result: U[] = [];
@@ -146,7 +159,11 @@ export function zip<T, R, U>(a1: T[], a2: R[], selector: (v1: T, v2: R) => U): T
  * current element at a particular index.
  * @returns {Try<number>} A Try number instance.
  */
-export function indexOf<T>(array: T[], element: T, selector?: (element: T, v: T) => boolean): Try<number> {
+export function indexOf<T>(
+  array: T[],
+  element: T,
+  selector?: (element: T, v: T) => boolean
+): Try<number> {
   let errorFn = () => `No index found for ${element} in ${array}`;
 
   if (selector !== undefined) {
@@ -174,7 +191,11 @@ export function indexOf<T>(array: T[], element: T, selector?: (element: T, v: T)
  * current element at a particular index.
  * @returns {boolean} A boolean value.
  */
-export function contains<T>(array: T[], element: T, selector?: (element: T, v: T) => boolean): boolean {
+export function contains<T>(
+  array: T[],
+  element: T,
+  selector?: (element: T, v: T) => boolean
+): boolean {
   return indexOf(array, element, selector).isSuccess();
 }
 
@@ -187,9 +208,14 @@ export function contains<T>(array: T[], element: T, selector?: (element: T, v: T
  * be filtered out.
  * @returns {T[]} Array of T.
  */
-export function unique<T>(array: T[], selector?: (v1: T, v2: T) => boolean): T[] {
+export function unique<T>(
+  array: T[],
+  selector?: (v1: T, v2: T) => boolean
+): T[] {
   return array.filter((v, i, a) => {
-    return indexOf(a, v, selector).map(v1 => v1 === i).getOrElse(true);
+    return indexOf(a, v, selector)
+      .map(v1 => v1 === i)
+      .getOrElse(true);
   });
 }
 
@@ -201,7 +227,10 @@ export function unique<T>(array: T[], selector?: (v1: T, v2: T) => boolean): T[]
  * @param {(v: T) => Nullable<R>} selector Selector function.
  * @returns {[R[], T[]]} A tuple of R Array and T Array.
  */
-export function splitMap<T, R>(array: T[], selector: (v: T) => Nullable<R>): [R[], T[]] {
+export function splitMap<T, R>(
+  array: T[],
+  selector: (v: T) => Nullable<R>
+): [R[], T[]] {
   let array1: R[] = [];
   let array2: T[] = [];
 
@@ -213,7 +242,7 @@ export function splitMap<T, R>(array: T[], selector: (v: T) => Nullable<R>): [R[
         array1.push(item1);
         continue;
       }
-    } catch (e) { }
+    } catch (e) {}
 
     array2.push(item);
   }
@@ -231,6 +260,7 @@ export function splitMap<T, R>(array: T[], selector: (v: T) => Nullable<R>): [R[
  * @returns {[T[], T[]]} A tuple of T Arrays.
  */
 export function split<T>(array: T[], selector: (v: T) => boolean): [T[], T[]] {
-  let selector1: (v: T) => Nullable<T> = (v: T) => selector(v) ? v : undefined;
+  let selector1: (v: T) => Nullable<T> = (v: T) =>
+    selector(v) ? v : undefined;
   return splitMap<T, T>(array, selector1);
 }

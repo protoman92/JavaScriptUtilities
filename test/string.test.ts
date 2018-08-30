@@ -1,4 +1,4 @@
-import { Numbers, Strings } from './../src';
+import {Numbers, Strings} from './../src';
 
 describe('String utilities should work correctly', () => {
   it('String random should work correctly', () => {

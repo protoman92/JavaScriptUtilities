@@ -1,4 +1,4 @@
-import { BuildableType, BuilderType } from './../src';
+import {BuildableType, BuilderType} from './../src';
 
 export class Buildable implements BuildableType<Builder> {
   a?: string;
@@ -38,8 +38,7 @@ export class Builder implements BuilderType<Buildable> {
 
   withBuildable(buildable?: Buildable): this {
     if (buildable !== undefined && buildable !== null) {
-      return this
-        .withA(buildable.a)
+      return this.withA(buildable.a)
         .withB(buildable.b)
         .withC(buildable.c);
     } else {

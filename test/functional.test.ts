@@ -1,4 +1,12 @@
-import { Maybe, MaybeFlatMap, MaybeMap, Nullable, Try, TryFlatMap, TryMap } from './../src';
+import {
+  Maybe,
+  MaybeFlatMap,
+  MaybeMap,
+  Nullable,
+  Try,
+  TryFlatMap,
+  TryMap,
+} from './../src';
 
 describe('Maybe should be implemented correctly', () => {
   it('Maybe getOrThrow and getOrElse should work correctly', () => {
@@ -10,7 +18,7 @@ describe('Maybe should be implemented correctly', () => {
     try {
       mb1.getOrThrow();
       fail();
-    } catch (e) { }
+    } catch (e) {}
 
     expect(mb1.getOrElse(2)).toBe(2);
     expect(mb2.getOrThrow()).toBe(1);
@@ -40,7 +48,8 @@ describe('Maybe should be implemented correctly', () => {
     let mb1 = Maybe.nothing<number>();
     let mb2 = Maybe.some<number>(1);
     let f1: MaybeFlatMap<number, string> = value => Try.success('' + value);
-    let f2: MaybeFlatMap<string, number> = value => Try.success(Number.parseInt(value));
+    let f2: MaybeFlatMap<string, number> = value =>
+      Try.success(Number.parseInt(value));
 
     /// When
     let fMappedMB1 = mb1.flatMap(f1).flatMap(f2);
@@ -53,7 +62,9 @@ describe('Maybe should be implemented correctly', () => {
 
   it('Maybe flatMap nullable should work correctly', () => {
     /// Setup
-    let mockObject = class { id?: string; };
+    let mockObject = class {
+      id?: string;
+    };
 
     let mockObject1 = new mockObject();
     mockObject1.id = undefined;
@@ -62,8 +73,12 @@ describe('Maybe should be implemented correctly', () => {
     mockObject2.id = '123';
 
     /// When
-    let mb1 = Maybe.unwrap(mockObject1).flatMap(value => Maybe.unwrap(value.id));
-    let mb2 = Maybe.unwrap(mockObject2).flatMap(value => Maybe.unwrap(value.id));
+    let mb1 = Maybe.unwrap(mockObject1).flatMap(value =>
+      Maybe.unwrap(value.id)
+    );
+    let mb2 = Maybe.unwrap(mockObject2).flatMap(value =>
+      Maybe.unwrap(value.id)
+    );
 
     /// Then
     expect(mb1.isNothing()).toBeTruthy();
@@ -77,7 +92,7 @@ describe('Maybe should be implemented correctly', () => {
     expect(Maybe.unwrap(Maybe.some(1)).value).toBe(1);
   });
 
-  it('Maybe\'s asTry should work correctly', () => {
+  it("Maybe's asTry should work correctly", () => {
     /// Setup
     let mb1 = Maybe.nothing<number>();
     let mb2 = Maybe.some(1);
@@ -102,7 +117,9 @@ describe('Maybe should be implemented correctly', () => {
     let m3c = m1.catchNothing(() => 2);
     let m4c = m2.catchNothing(2);
     let m5c = m2.catchNothing(() => 2);
-    let m6c = m2.catchNothing(() => { throw Error(''); });
+    let m6c = m2.catchNothing(() => {
+      throw Error('');
+    });
 
     /// Then
     expect(m1s.value).toBe(1);
@@ -160,8 +177,9 @@ describe('Try should be implemented correctly', () => {
     /// Setup
     let t1 = Try.failure<number>('Error 1');
     let t2 = Try.success<number>(1);
-    let f1: TryFlatMap<number, string> = (value) => Maybe.some('' + value);
-    let f2: TryFlatMap<string, number> = (value) => Maybe.some(Number.parseInt(value));
+    let f1: TryFlatMap<number, string> = value => Maybe.some('' + value);
+    let f2: TryFlatMap<string, number> = value =>
+      Maybe.some(Number.parseInt(value));
 
     /// When
     t1.flatMap(f1).flatMap(f2);
@@ -236,7 +254,8 @@ describe('Try should be implemented correctly', () => {
     let zippedTries1 = Try.zipAll(tries1, () => undefined);
 
     let zippedTries2 = Try.zipAll(tries2, values =>
-      values.reduce((v1: number, v2: number) => v1 + v2, 0));
+      values.reduce((v1: number, v2: number) => v1 + v2, 0)
+    );
 
     /// Then
     try {
@@ -260,7 +279,9 @@ describe('Try should be implemented correctly', () => {
     let t3c = t1.catchError(2);
     let t4c = t2.catchError(() => 2);
     let t5c = t2.catchError(2);
-    let t6c = t2.catchError(() => { throw Error('Error!'); });
+    let t6c = t2.catchError(() => {
+      throw Error('Error!');
+    });
 
     /// Then
     expect(t1s.value).toBe(1);
@@ -335,8 +356,14 @@ describe('Common functionalities', () => {
     let m2 = Maybe.nothing();
 
     /// When
-    let t1sf = t1.doOnNext(doOnNext).logNext().logError();
-    let t2sf = t2.doOnNext(doOnNext).logNext().logError();
+    let t1sf = t1
+      .doOnNext(doOnNext)
+      .logNext()
+      .logError();
+    let t2sf = t2
+      .doOnNext(doOnNext)
+      .logNext()
+      .logError();
     let m1sf = m1.doOnNext(doOnNext).logNext();
     let m2sf = m2.doOnNext(doOnNext).logNext();
 
@@ -353,14 +380,14 @@ describe('Common functionalities', () => {
     let t1 = Try.success(1);
     let t2 = Try.success(true);
     let t3 = Try.success('');
-    let t4 = Try.success({ a: 1 });
+    let t4 = Try.success({a: 1});
     let unsupported = Try.success<any>(undefined);
 
     /// When && Then
     expect(t1.numberOrFail().value).toEqual(1);
     expect(t2.booleanOrFail().value).toEqual(true);
     expect(t3.stringOrFail().value).toEqual('');
-    expect(t4.objectOrFail().value).toEqual({ a: 1 });
+    expect(t4.objectOrFail().value).toEqual({a: 1});
     expect(unsupported.booleanOrFail('Error').error!.message).toEqual('Error');
     expect(unsupported.numberOrFail('Error').error!.message).toEqual('Error');
     expect(unsupported.objectOrFail('Error').error!.message).toEqual('Error');

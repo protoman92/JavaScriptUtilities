@@ -1,3 +1,3 @@
 import * as Objects from './utils';
 
-export { Objects };
+export {Objects};

@@ -1,4 +1,4 @@
-import { Nullable, Types } from './../src';
+import {Nullable, Types} from './../src';
 
 interface TestInterface {
   func1: () => boolean;
