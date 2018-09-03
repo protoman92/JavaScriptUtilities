@@ -1,4 +1,4 @@
-import {Nullable, Types} from './../src';
+import {Nullable, Types, CustomValueType} from './../src';
 
 interface TestInterface {
   func1: () => boolean;
@@ -51,5 +51,16 @@ describe('Types should be implemented correctly', () => {
     } else {
       fail();
     }
+  });
+
+  it('Custom value type should work correctly', () => {
+    /// Setup
+    type A = Readonly<{a: string; b: boolean; c: object}>;
+    let a: CustomValueType<A, number> = {a: 1, b: 2, c: 3};
+    let b: CustomValueType<A, number, 'b' | 'c'> = {a: '1', b: 2, c: 3};
+
+    /// When && Then
+    expect(a).toBeDefined();
+    expect(b).toBeDefined();
   });
 });

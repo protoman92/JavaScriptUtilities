@@ -8,7 +8,11 @@ export type NullableKV<T> = {[K in keyof T]: Nullable<T[K]>};
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type JSObject<T> = {[key: string]: Nullable<T>};
 export type Return<T> = T | (() => T);
-export type CustomValueType<Object, Value> = {[key in keyof Object]: Value};
+export type CustomValueType<
+  Object,
+  Value,
+  K extends keyof Object = keyof Object
+> = Omit<Object, K> & {[key in K]: Value};
 export type TryResult<T> =
   | Nullable<T>
   | MaybeConvertibleType<T>
