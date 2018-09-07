@@ -2,7 +2,7 @@ import {
   Maybe,
   MaybeFlatMap,
   MaybeMap,
-  Nullable,
+  Never,
   Try,
   TryFlatMap,
   TryMap,
@@ -194,7 +194,7 @@ describe('Try should be implemented correctly', () => {
     /// Setup
     let t1 = Try.success<number>(1);
 
-    let f: (value: number) => Nullable<number> = value => {
+    let f: (value: number) => Never<number> = value => {
       if (value % 2 === 0) {
         return value;
       } else {

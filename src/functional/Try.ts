@@ -1,11 +1,4 @@
-import {
-  Indeterminate,
-  Nullable,
-  Return,
-  Throwable,
-  TryResult,
-  Types,
-} from './../type';
+import {Undefined, Never, Return, Throwable, TryResult, Types} from './../type';
 import FunctorType from './FunctorType';
 import {Maybe, MaybeConvertibleType} from './Maybe';
 import {Errors} from '../error';
@@ -140,7 +133,7 @@ export abstract class Try<T>
    */
   public static unwrap<T>(
     value: TryResult<T>,
-    error: Nullable<Throwable> = undefined
+    error: Never<Throwable> = undefined
   ): Try<T> {
     if (Try.isTryConvertible(value)) {
       return Try.success(value).flatMap(v => v);
@@ -204,7 +197,7 @@ export abstract class Try<T>
 
   protected constructor() {}
 
-  public get value(): Indeterminate<T> {
+  public get value(): Undefined<T> {
     try {
       return this.getOrThrow();
     } catch {
@@ -212,7 +205,7 @@ export abstract class Try<T>
     }
   }
 
-  public get error(): Indeterminate<Error> {
+  public get error(): Undefined<Error> {
     try {
       this.getOrThrow();
       return undefined;
@@ -284,14 +277,12 @@ export abstract class Try<T>
   /**
    * Catch a failure Try and return a fallback value or a function producing
    * such a value.
-   * @param {(TryConvertibleType<T> | ((e: Error) => Nullable<T>))} fallback
+   * @param {(TryConvertibleType<T> | ((e: Error) => Never<T>))} fallback
    * A fallback strategy - either a direct value or a function that accepts the
    * error and returns a value.
    * @returns {Maybe<T>} A Try instance.
    */
-  public catchError(
-    fallback: Nullable<T> | ((e: Error) => Nullable<T>)
-  ): Try<T> {
+  public catchError(fallback: Never<T> | ((e: Error) => Never<T>)): Try<T> {
     if (fallback instanceof Function) {
       return this.successOrElse(e => Try.evaluate(() => fallback(e)));
     } else {

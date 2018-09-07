@@ -1,15 +1,15 @@
-import {Indeterminate, Nullable} from './../type';
+import {Undefined, Never} from './../type';
 
 /**
  * Parse integer but ignore NaN.
  * @param {string} object A string value.
- * @param {Indeterminate<number>} [radix=undefined] Radix parameterm.
- * @returns {Indeterminate<number>} A possibly undefined number.
+ * @param {Undefined<number>} [radix=undefined] Radix parameterm.
+ * @returns {Undefined<number>} A possibly undefined number.
  */
 export function parseInteger(
   object: string,
-  radix: Indeterminate<number> = undefined
-): Indeterminate<number> {
+  radix: Undefined<number> = undefined
+): Undefined<number> {
   try {
     let parsed = parseInt(object, radix);
 
@@ -50,11 +50,11 @@ export function rangeInclusive(
 
 /**
  * Get a random number between two numbers.
- * @param {Nullable<number>} lower An optional number that defaults to 0.
+ * @param {Never<number>} lower An optional number that defaults to 0.
  * @param {number} upper An exclusive number value.
  * @returns {number} A number value.
  */
-export function randomBetween(lower: Nullable<number>, upper: number): number {
+export function randomBetween(lower: Never<number>, upper: number): number {
   let lowerBound = lower || 0;
   let diff = upper - lowerBound;
   return Math.floor(diff * Math.random()) + lowerBound;

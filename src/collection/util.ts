@@ -1,5 +1,5 @@
 import {Try} from './../functional';
-import {Nullable, TryResult} from './../type';
+import {Never, TryResult} from './../type';
 import {Numbers} from './../number';
 
 /**
@@ -19,13 +19,13 @@ export function elementAtIndex<T>(array: T[], index: number): Try<T> {
 /**
  * Get the first element in an Array.
  * @param {T[]} array The Array to get the element from.
- * @param {Nullable<(value:T} selector An optional selector, which, if defined,
+ * @param {Never<(value:T} selector An optional selector, which, if defined,
  * determines whether an item passes its check before being returned.
  * @returns {Try} A Try instance.
  */
 export function first<T>(
   array: T[],
-  selector: Nullable<(value: T) => boolean> = undefined
+  selector: Never<(value: T) => boolean> = undefined
 ): Try<T> {
   if (selector !== undefined && selector !== null) {
     for (let item of array) {
@@ -43,13 +43,13 @@ export function first<T>(
 /**
  * Get the last element in an Array.
  * @param {T[]} array The Array to get the element from.
- * @param {Nullable<(value:T} selector An optional selector, which, if defined,
+ * @param {Never<(value:T} selector An optional selector, which, if defined,
  * determines whether an item passes its check before being returned.
  * @returns {Try} A Try instance.
  */
 export function last<T>(
   array: T[],
-  selector: Nullable<(value: T) => boolean> = undefined
+  selector: Never<(value: T) => boolean> = undefined
 ): Try<T> {
   return first(array.map(v => v).reverse(), selector);
 }
@@ -224,12 +224,12 @@ export function unique<T>(
  * @template T Generic parameter.
  * @template R Generic parameter.
  * @param {T[]} array Array of T.
- * @param {(v: T) => Nullable<R>} selector Selector function.
+ * @param {(v: T) => Never<R>} selector Selector function.
  * @returns {[R[], T[]]} A tuple of R Array and T Array.
  */
 export function splitMap<T, R>(
   array: T[],
-  selector: (v: T) => Nullable<R>
+  selector: (v: T) => Never<R>
 ): [R[], T[]] {
   let array1: R[] = [];
   let array2: T[] = [];
@@ -260,7 +260,6 @@ export function splitMap<T, R>(
  * @returns {[T[], T[]]} A tuple of T Arrays.
  */
 export function split<T>(array: T[], selector: (v: T) => boolean): [T[], T[]] {
-  let selector1: (v: T) => Nullable<T> = (v: T) =>
-    selector(v) ? v : undefined;
+  let selector1: (v: T) => Never<T> = (v: T) => (selector(v) ? v : undefined);
   return splitMap<T, T>(array, selector1);
 }

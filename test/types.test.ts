@@ -1,11 +1,11 @@
-import {Nullable, Types, CustomValueType} from './../src';
+import {Never, Types, CustomValueType} from './../src';
 
 interface TestInterface {
   func1: () => boolean;
   func2: () => number;
   func3: () => string;
-  value1: Nullable<string>;
-  value2: Nullable<string>;
+  value1: Never<string>;
+  value2: Never<string>;
 }
 
 class TestInterfaceImpl implements TestInterface {

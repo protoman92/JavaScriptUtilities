@@ -1,7 +1,7 @@
 import FunctorType from './FunctorType';
 import MonadType from './MonadType';
 import {TryConvertibleType, Try} from './Try';
-import {Indeterminate, Nullable, Return, Types} from './../type';
+import {Undefined, Never, Return, Types} from './../type';
 
 export type MaybeMap<T, R> = (value: T) => R;
 export type MaybeFlatMap<T, R> = (value: T) => MaybeConvertibleType<R>;
@@ -15,7 +15,7 @@ export interface MaybeConvertibleType<T> {
 }
 
 export interface MaybeType<T> {
-  value: Indeterminate<T>;
+  value: Undefined<T>;
 
   /**
    * Get the current value or throw an error if it is not available.
@@ -73,13 +73,11 @@ export abstract class Maybe<T>
 
   /**
    * Unwrap an object of ambiguous types in order to get its inner value.
-   * @param {(Nullable<T> | MaybeConvertibleType<T>)} value An object of
+   * @param {(Never<T> | MaybeConvertibleType<T>)} value An object of
    * ambiguous types.
    * @returns {Maybe<T>} A Maybe instance.
    */
-  public static unwrap<T>(
-    value: Nullable<T> | MaybeConvertibleType<T>
-  ): Maybe<T> {
+  public static unwrap<T>(value: Never<T> | MaybeConvertibleType<T>): Maybe<T> {
     if (Maybe.isMaybeConvertible(value)) {
       return Maybe.some(value).flatMap(v => v);
     } else if (value !== undefined && value !== null) {
@@ -92,10 +90,10 @@ export abstract class Maybe<T>
   /**
    * Evaluate a function that returns a Nullable and catch errors if needed.
    * @template T Generic parameter.
-   * @param {() => Nullable<T>} fn A Function instance.
+   * @param {() => Never<T>} fn A Function instance.
    * @returns {Try<T>} A Maybe instance.
    */
-  public static evaluate<T>(fn: () => Nullable<T>): Maybe<T> {
+  public static evaluate<T>(fn: () => Never<T>): Maybe<T> {
     try {
       return Maybe.unwrap(fn());
     } catch (e) {
@@ -111,7 +109,7 @@ export abstract class Maybe<T>
     return new Nothing();
   }
 
-  public get value(): Indeterminate<T> {
+  public get value(): Undefined<T> {
     try {
       return this.getOrThrow();
     } catch {
@@ -123,7 +121,7 @@ export abstract class Maybe<T>
     return this;
   }
 
-  public asTry(error: Nullable<Error | string> = undefined): Try<T> {
+  public asTry(error: Never<Error | string> = undefined): Try<T> {
     if (this.value !== undefined && this.value !== null) {
       return Try.success(this.value);
     } else if (error !== undefined && error !== null) {
