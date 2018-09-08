@@ -22,3 +22,11 @@ export type TryResult<T> =
   | TryConvertibleType<T>;
 export class Ignore {}
 export let IGNORE: Ignore = new Ignore();
+export type PartialProp<
+  Object,
+  Keys extends keyof Object = keyof Object
+> = Omit<Object, Keys> & Partial<Pick<Object, Keys>>;
+export type RequiredProp<
+  Object,
+  Keys extends keyof Object = keyof Object
+> = Omit<Object, Keys> & Required<Pick<Object, Keys>>;

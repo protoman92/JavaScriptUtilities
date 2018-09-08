@@ -1,4 +1,10 @@
-import {Never, Types, CustomValueType} from './../src';
+import {
+  Never,
+  Types,
+  CustomValueType,
+  PartialProp,
+  RequiredProp,
+} from './../src';
 
 interface TestInterface {
   func1: () => boolean;
@@ -62,5 +68,35 @@ describe('Types should be implemented correctly', () => {
     /// When && Then
     expect(a).toBeDefined();
     expect(b).toBeDefined();
+  });
+
+  it('Partial prop should work correctly', () => {
+    /// Setup
+    type A = Readonly<{a: string; b: boolean; c: number}>;
+    type SomePartial = PartialProp<A, 'a' | 'b'>;
+    type AllPartial = PartialProp<A>;
+    let a: SomePartial = {c: 2};
+    let b: AllPartial = {};
+
+    /// When && Then
+    expect(a.a).toBeUndefined();
+    expect(a.b).toBeUndefined();
+    expect(a.c).toBeDefined();
+    expect(Object.keys(b)).toHaveLength(0);
+  });
+
+  it('Required prop should work correctly', () => {
+    /// Setup
+    type A = Partial<Readonly<{a: string; b: boolean; c: number}>>;
+    type SomeRequired = RequiredProp<A, 'a' | 'b'>;
+    type AllRequired = RequiredProp<A>;
+    let a: SomeRequired = {a: '1', b: false};
+    let b: AllRequired = {a: '1', b: false, c: 2};
+
+    /// When && Then
+    expect(a.a).toBeDefined();
+    expect(a.b).toBeDefined();
+    expect(a.c).toBeUndefined();
+    expect(Object.keys(b)).toHaveLength(3);
   });
 });
