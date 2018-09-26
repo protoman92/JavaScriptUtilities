@@ -6,43 +6,43 @@ import {Undefined, Never, Return, Types} from './../type';
 export type MaybeMap<T, R> = (value: T) => R;
 export type MaybeFlatMap<T, R> = (value: T) => MaybeConvertibleType<R>;
 
-export interface MaybeConvertibleType<T> {
+export type MaybeConvertibleType<T> = Readonly<{
   /**
    * Convert the current object to a Maybe instance.
    * @returns {Maybe} A Maybe instance.
    */
-  asMaybe(): Maybe<T>;
-}
+  asMaybe: () => Maybe<T>;
+}>;
 
-export interface MaybeType<T> {
+export type MaybeType<T> = Readonly<{
   value: Undefined<T>;
 
   /**
    * Get the current value or throw an error if it is not available.
    * @returns {T} A T instance.
    */
-  getOrThrow(): T;
+  getOrThrow: () => T;
 
   /**
    * Get the current value or return a fallback if it is not available.
    * @param  {T} fallback A T instance.
    * @returns {T} A T instance.
    */
-  getOrElse(fallback: T): T;
+  getOrElse: (fallback: T) => T;
 
   /**
    * Perform some side effect on the wrapped value.
    * @param {(v: T) => void} selector Selector function.
    * @returns {Maybe<T>} A Maybe instance.
    */
-  doOnNext(selector: (v: T) => void): Maybe<T>;
+  doOnNext: (selector: (v: T) => void) => Maybe<T>;
 
   /**
    * Log the wrapped value.
    * @param {(v: T) => R} [selector] Selector function.
    * @returns {Maybe<T>} A Maybe instance.
    */
-  logNext<R>(selector?: (v: T) => R): Maybe<T>;
+  logNext: <R>(selector?: (v: T) => R) => Maybe<T>;
 
   /**
    * Log the wrapped value with some prefix.
@@ -50,8 +50,8 @@ export interface MaybeType<T> {
    * @param {(v: T) => R} [selector] Selector function.
    * @returns {Maybe<T>} A Maybe instance.
    */
-  logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Maybe<T>;
-}
+  logNextPrefix: <R>(prefix: string, selector?: (v: T) => R) => Maybe<T>;
+}>;
 
 export abstract class Maybe<T>
   implements
@@ -253,11 +253,8 @@ export abstract class Maybe<T>
 }
 
 class Some<T> extends Maybe<T> {
-  private some: T;
-
-  constructor(some: T) {
+  constructor(private readonly some: T) {
     super();
-    this.some = some;
   }
 
   public getOrThrow(): T {

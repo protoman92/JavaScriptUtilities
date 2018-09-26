@@ -1,97 +1,96 @@
-import {Undefined, Never, Return, Throwable, TryResult, Types} from './../type';
+import {Errors} from '../error';
+import {Never, Return, Throwable, TryResult, Types, Undefined} from './../type';
 import FunctorType from './FunctorType';
 import {Maybe, MaybeConvertibleType} from './Maybe';
-import {Errors} from '../error';
 import MonadType from './MonadType';
 
 export type TryMap<T, R> = (value: T) => R;
 export type TryFlatMap<T, R> = (value: T) => TryConvertibleType<R>;
 
-export interface TryConvertibleType<T> extends MaybeConvertibleType<T> {
-  /**
-   * Convert the current object into a Try.
-   * @returns Try A Try instance.
-   */
-  asTry(): Try<T>;
-}
+export type TryConvertibleType<T> = MaybeConvertibleType<T> &
+  Readonly<{
+    /**
+     * Convert the current object into a Try.
+     * @returns Try A Try instance.
+     */
+    asTry: () => Try<T>;
+  }>;
 
-export interface TryType<T> {
+export type TryType<T> = Readonly<{
+  /**
+   * Map error to another error type.
+   * @template E Error generics.
+   * @param {(e: Error) => E} fn Error mapper function.
+   * @returns {Try<T>} A Try instance.
+   */
+  mapError: <E extends Error = Error>(fn: (e: Error) => E) => Try<T>;
   /**
    * Perform some side effect on the wrapped value.
    * @param {(v: T) => void} selector Selector function.
    * @returns {Try<T>} A Try instance.
    */
-  doOnNext(selector: (v: T) => void): Try<T>;
-
+  doOnNext: (selector: (v: T) => void) => Try<T>;
   /**
    * Log the wrapped value.
    * @param {(v: T) => R} [selector] Selector function.
    * @returns {Try<T>} A Maybe instance.
    */
-  logNext<R>(selector?: (v: T) => R): Try<T>;
-
+  logNext: <R>(selector?: (v: T) => R) => Try<T>;
   /**
    * Log the wrapped value with some prefix.
    * @param {string} prefix A string value.
    * @param {(v: T) => R} [selector] Selector function.
    * @returns {Try<T>} A Try instance.
    */
-  logNextPrefix<R>(prefix: string, selector?: (v: T) => R): Try<T>;
-
+  logNextPrefix: <R>(prefix: string, selector?: (v: T) => R) => Try<T>;
   /**
    * Perform some side effects on the wrapped error.
    * @param {(e: Error) => void} selector Selector function.
    * @returns {Try<T>} A Try instance.
    */
-  doOnError(selector: (e: Error) => void): Try<T>;
-
+  doOnError: (selector: (e: Error) => void) => Try<T>;
   /**
    * Log the wrapped error.
    * @param {(e: Error) => R} [selector] Selector function.
    * @returns {Try<T>} A Try instance.
    */
-  logError<R>(selector?: (e: Error) => R): Try<T>;
-
+  logError: <R>(selector?: (e: Error) => R) => Try<T>;
   /**
    * Log the wrapped error with some prefix.
    * @param {string} prefix A string value.
    * @param {(e: Error) => R} [selector] Selector function.
    * @returns {Try<T>} A Try instance.
    */
-  logErrorPrefix<R>(prefix: string, selector?: (e: Error) => R): Try<T>;
-
+  logErrorPrefix: <R>(prefix: string, selector?: (e: Error) => R) => Try<T>;
   /**
    * Force convert inner value to boolean or fail.
-   * @param {(Return<Error | string>)} [error] The error to throw when the cast
+   * @param {(Return<Throwable>)} [error] The error to throw when the cast
    * fails.
    * @returns {Try<boolean>} A Try instance.
    */
-  booleanOrFail(error?: Return<Error | string>): Try<boolean>;
-
+  booleanOrFail: (error?: Return<Throwable>) => Try<boolean>;
   /**
    * Force convert inner value to number or fail.
-   * @param {(Return<Error | string>)} [error] The error to throw when the cast
+   * @param {(Return<Throwable>)} [error] The error to throw when the cast
    * fails.
    * @returns {Try<number>} A Try instance.
    */
-  numberOrFail(error?: Return<Error | string>): Try<number>;
-
+  numberOrFail: (error?: Return<Throwable>) => Try<number>;
   /**
    * Force convert inner value to Object or fail.
-   * @param {(Return<Error | string>)} [error] The error to throw whe the cast
+   * @param {(Return<Throwable>)} [error] The error to throw whe the cast
    * fails.
    * @returns {Try<{}>} A Try instance.
    */
-  objectOrFail(error?: Return<Error | string>): Try<{}>;
-
+  objectOrFail: (error?: Return<Throwable>) => Try<{}>;
   /**
    * Force convert inner value to string or fail.
-   * @param {(Return<Error | string>)} [error] The error to throw when the cast
+   * @param {(Return<Throwable>)} [error] The error to throw when the cast
    * fails.
    * @returns {Try<string>} A Try instance.
    */
-  stringOrFail(error?: Return<Error | string>): Try<string>;
-}
+  stringOrFail: (error?: Return<Throwable>) => Try<string>;
+}>;
 
 export abstract class Try<T>
   implements
@@ -324,7 +323,7 @@ export abstract class Try<T>
     }
   }
 
-  public booleanOrFail(error?: Return<Error | string>): Try<boolean> {
+  public booleanOrFail(error?: Return<Throwable>): Try<boolean> {
     return this.map(v => {
       if (typeof v === 'boolean') {
         return v;
@@ -336,7 +335,7 @@ export abstract class Try<T>
     });
   }
 
-  public numberOrFail(error?: Return<Error | string>): Try<number> {
+  public numberOrFail(error?: Return<Throwable>): Try<number> {
     return this.map(v => {
       if (typeof v === 'number') {
         return v;
@@ -348,7 +347,7 @@ export abstract class Try<T>
     });
   }
 
-  public objectOrFail(error?: Return<Error | string>): Try<{}> {
+  public objectOrFail(error?: Return<Throwable>): Try<{}> {
     return this.map(v => {
       if (v instanceof Object) {
         return v as {};
@@ -360,7 +359,7 @@ export abstract class Try<T>
     });
   }
 
-  public stringOrFail(error?: Return<Error | string>): Try<string> {
+  public stringOrFail(error?: Return<Throwable>): Try<string> {
     return this.map(v => {
       if (typeof v === 'string') {
         return v;
@@ -486,11 +485,8 @@ export abstract class Try<T>
 }
 
 class Failure<T> extends Try<T> {
-  private failure: Error;
-
-  constructor(failure: Error) {
+  constructor(private readonly failure: Error) {
     super();
-    this.failure = failure;
   }
 
   public getOrThrow(): T {
@@ -499,11 +495,8 @@ class Failure<T> extends Try<T> {
 }
 
 class Success<T> extends Try<T> {
-  private success: T;
-
-  constructor(success: T) {
+  constructor(private readonly success: T) {
     super();
-    this.success = success;
   }
 
   public getOrThrow(): T {
