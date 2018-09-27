@@ -7,16 +7,35 @@ import MonadType from './MonadType';
 export type TryMap<T, R> = (value: T) => R;
 export type TryFlatMap<T, R> = (value: T) => TryConvertibleType<R>;
 
-export type TryConvertibleType<T> = MaybeConvertibleType<T> &
-  Readonly<{
-    /**
-     * Convert the current object into a Try.
-     * @returns Try A Try instance.
-     */
-    asTry: () => Try<T>;
-  }>;
+export interface TryConvertibleType<T> extends MaybeConvertibleType<T> {
+  /**
+   * Convert the current object into a Try.
+   * @returns Try A Try instance.
+   */
+  readonly asTry: () => Try<T>;
+}
 
 export type TryType<T> = Readonly<{
+  /**
+   * Map error to another error type.
+   * @template E Error generics.
+   * @param {(e: Error) => E | string} fn Error mapper function.
+   * @returns {Try<T>} A Try instance.
+   */
+  mapError: <E extends Error = Error>(fn: (e: Error) => E | string) => Try<T>;
+
+  /**
+   * Map error to another error type with a constructor.
+   * @template E Error generic.
+   * @param {{new (error: Error): E}} ctor Error constructor function.
+   * @returns {Try<T>} A Try instance.
+   */
+  mapErrorCtor: <E extends Error = Error>(
+    ctor: {
+      new (error: Error): E;
+    }
+  ) => Try<T>;
+
   /**
    * Perform some side effect on the wrapped value.
    * @param {(v: T) => void} selector Selector function.
@@ -329,12 +348,6 @@ export abstract class Try<T>
     }
   }
 
-  /**
-   * Map error to another error type with a constructor.
-   * @template E Error generic.
-   * @param {{new (error: Error): E}} ctor Error constructor function.
-   * @returns {Try<T>} A Try instance.
-   */
   public mapErrorCtor<E extends Error = Error>(ctor: {
     new (error: Error): E;
   }): Try<T> {

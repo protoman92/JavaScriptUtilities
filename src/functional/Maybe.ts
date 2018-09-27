@@ -6,13 +6,13 @@ import {Undefined, Never, Return, Types} from './../type';
 export type MaybeMap<T, R> = (value: T) => R;
 export type MaybeFlatMap<T, R> = (value: T) => MaybeConvertibleType<R>;
 
-export type MaybeConvertibleType<T> = Readonly<{
+export interface MaybeConvertibleType<T> {
   /**
    * Convert the current object to a Maybe instance.
    * @returns {Maybe} A Maybe instance.
    */
-  asMaybe: () => Maybe<T>;
-}>;
+  readonly asMaybe: () => Maybe<T>;
+}
 
 export type MaybeType<T> = Readonly<{
   value: Undefined<T>;
