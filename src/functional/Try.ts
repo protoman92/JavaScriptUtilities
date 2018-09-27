@@ -20,10 +20,19 @@ export type TryType<T> = Readonly<{
   /**
    * Map error to another error type.
    * @template E Error generics.
-   * @param {(e: Error) => E} fn Error mapper function.
+   * @param {(e: Error) => E | string} fn Error mapper function.
    * @returns {Try<T>} A Try instance.
    */
-  mapError: <E extends Error = Error>(fn: (e: Error) => E) => Try<T>;
+  mapError: <E extends Error = Error>(fn: (e: Error) => E | string) => Try<T>;
+  /**
+   * Map error to another error type with a constructor.
+   * @template E Error generic.
+   * @param {{new (error: Error): E}} ctor Error constructor function.
+   * @returns {Try<T>} A Try instance.
+   */
+  mapErrorCtor: <E extends Error = Error>(
+    ctor: {new (error: Error): E}
+  ) => Try<T>;
   /**
    * Perform some side effect on the wrapped value.
    * @param {(v: T) => void} selector Selector function.
@@ -154,10 +163,10 @@ export abstract class Try<T>
   }
 
   public static failure<T>(error: Throwable): Try<T> {
-    if (error instanceof Error) {
-      return new Failure(error);
-    } else {
+    if (typeof error === 'string') {
       return new Failure(new Error(error));
+    } else {
+      return new Failure(error);
     }
   }
 
@@ -298,15 +307,26 @@ export abstract class Try<T>
     }
   }
 
-  /**
-   * Map an error to another error if available.
-   * @param {((e: Error) => Throwable)} f Transform function.
-   * @returns {Try<T>} A Try instance.
-   */
-  public mapError(f: (e: Error) => Throwable): Try<T> {
+  public mapError<E extends Error = Error>(
+    fn: (e: Error) => E | string
+  ): Try<T> {
     if (this.error !== undefined && this.error !== null) {
       try {
-        return Try.failure(f(this.error));
+        return Try.failure(fn(this.error));
+      } catch (e) {
+        return Try.failure(e);
+      }
+    } else {
+      return this;
+    }
+  }
+
+  public mapErrorCtor<E extends Error = Error>(ctor: {
+    new (error: Error): E;
+  }): Try<T> {
+    if (this.error !== undefined && this.error !== null) {
+      try {
+        return Try.failure(new ctor(this.error));
       } catch (e) {
         return Try.failure(e);
       }

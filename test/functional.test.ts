@@ -292,19 +292,33 @@ describe('Try should be implemented correctly', () => {
     expect(t6c.error!.message).toBe('Error!');
   });
 
-  it('Try mapError should work correctly', () => {
+  it.only('Try mapError should work correctly', () => {
     /// Setup
+    class CustomError implements Error {
+      constructor(public readonly error: Error) {}
+
+      public get message() {
+        return this.error.message;
+      }
+
+      public get name() {
+        return this.error.name;
+      }
+    }
+
     let t1 = Try.success(1);
     let t2 = Try.failure('Error 1');
 
     /// When
     let t1f = t1.mapError(() => 'Error 2');
     let t2f = t2.mapError(() => 'Error 2');
+    let t3f = t2.mapErrorCtor(CustomError);
 
     /// Then
     expect(t1f.value).toBe(1);
     expect(t2f.isFailure()).toBeTruthy();
     expect(Try.unwrap(t2f.error).getOrThrow().message).toBe('Error 2');
+    expect(t3f.error).toBeInstanceOf(CustomError);
   });
 
   it('Try unwrap with function should work correctly', () => {
