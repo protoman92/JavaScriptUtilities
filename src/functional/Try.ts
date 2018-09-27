@@ -18,22 +18,6 @@ export type TryConvertibleType<T> = MaybeConvertibleType<T> &
 
 export type TryType<T> = Readonly<{
   /**
-   * Map error to another error type.
-   * @template E Error generics.
-   * @param {(e: Error) => E | string} fn Error mapper function.
-   * @returns {Try<T>} A Try instance.
-   */
-  mapError: <E extends Error = Error>(fn: (e: Error) => E | string) => Try<T>;
-  /**
-   * Map error to another error type with a constructor.
-   * @template E Error generic.
-   * @param {{new (error: Error): E}} ctor Error constructor function.
-   * @returns {Try<T>} A Try instance.
-   */
-  mapErrorCtor: <E extends Error = Error>(
-    ctor: {new (error: Error): E}
-  ) => Try<T>;
-  /**
    * Perform some side effect on the wrapped value.
    * @param {(v: T) => void} selector Selector function.
    * @returns {Try<T>} A Try instance.
@@ -203,6 +187,24 @@ export abstract class Try<T>
     return this.zip(try1, try2, (v1, v2): [T, R] => [v1, v2]);
   }
 
+  /**
+   * Zip all TryConvertibleType in an Array.
+   * @template T Generics parameter.
+   * @template TC Generics parameter.
+   * @template U Generics parameter.
+   * @param {TC[]} tries An Array of TryConvertibleType.
+   * @param {(values: T[]) => U} selector A Selector function.
+   * @returns {Try<U>} A Try instance.
+   */
+  public static zipAll<T, TC extends TryConvertibleType<T>, U>(
+    tries: TC[],
+    selector: (values: T[]) => U
+  ): Try<U> {
+    return Try.evaluate(() =>
+      selector(tries.map(tc => tc.asTry().getOrThrow()))
+    );
+  }
+
   protected constructor() {}
 
   public get value(): Undefined<T> {
@@ -307,6 +309,12 @@ export abstract class Try<T>
     }
   }
 
+  /**
+   * Map error to another error type.
+   * @template E Error generics.
+   * @param {(e: Error) => E | string} fn Error mapper function.
+   * @returns {Try<T>} A Try instance.
+   */
   public mapError<E extends Error = Error>(
     fn: (e: Error) => E | string
   ): Try<T> {
@@ -321,6 +329,12 @@ export abstract class Try<T>
     }
   }
 
+  /**
+   * Map error to another error type with a constructor.
+   * @template E Error generic.
+   * @param {{new (error: Error): E}} ctor Error constructor function.
+   * @returns {Try<T>} A Try instance.
+   */
   public mapErrorCtor<E extends Error = Error>(ctor: {
     new (error: Error): E;
   }): Try<T> {
