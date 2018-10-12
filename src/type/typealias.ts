@@ -30,3 +30,8 @@ export type RequiredProp<
   Object,
   Keys extends keyof Object = keyof Object
 > = Omit<Object, Keys> & Required<Pick<Object, Keys>>;
+export type ArgumentType<F extends Function> = F extends (
+  ...args: infer A
+) => any
+  ? A
+  : never;

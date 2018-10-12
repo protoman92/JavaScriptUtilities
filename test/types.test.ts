@@ -4,6 +4,7 @@ import {
   CustomValueType,
   PartialProp,
   RequiredProp,
+  ArgumentType,
 } from './../src';
 
 interface TestInterface {
@@ -98,5 +99,19 @@ describe('Types should be implemented correctly', () => {
     expect(a.b).toBeDefined();
     expect(a.c).toBeUndefined();
     expect(Object.keys(b)).toHaveLength(3);
+  });
+
+  it('Argument types should work correctly', () => {
+    /// Setup
+    type Func = (a: number, b: boolean, c?: string) => void;
+    type FuncArg = ArgumentType<Func>;
+    let a: FuncArg[0] = 2;
+    let b: FuncArg[1] = true;
+    let c: FuncArg[2] = '1';
+
+    /// When && Then
+    expect(typeof a === 'number').toBeTruthy();
+    expect(typeof b === 'boolean').toBeTruthy();
+    expect(typeof c === 'string').toBeTruthy();
   });
 });
