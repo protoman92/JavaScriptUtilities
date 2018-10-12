@@ -1,10 +1,11 @@
 import {
-  Never,
-  Types,
+  ArgumentType,
+  CtorArgumentType,
   CustomValueType,
+  Never,
   PartialProp,
   RequiredProp,
-  ArgumentType,
+  Types,
 } from './../src';
 
 interface TestInterface {
@@ -108,6 +109,23 @@ describe('Types should be implemented correctly', () => {
     let a: FuncArg[0] = 2;
     let b: FuncArg[1] = true;
     let c: FuncArg[2] = '1';
+
+    /// When && Then
+    expect(typeof a === 'number').toBeTruthy();
+    expect(typeof b === 'boolean').toBeTruthy();
+    expect(typeof c === 'string').toBeTruthy();
+  });
+
+  it('Constructor argument types should work correctly', () => {
+    /// Setup
+    class CtorObject {
+      constructor(_a: number, _b: boolean, _c?: string) {}
+    }
+
+    type CtorArg = CtorArgumentType<typeof CtorObject>;
+    let a: CtorArg[0] = 2;
+    let b: CtorArg[1] = true;
+    let c: CtorArg[2] = '1';
 
     /// When && Then
     expect(typeof a === 'number').toBeTruthy();

@@ -1,5 +1,4 @@
 import {MaybeConvertibleType, TryConvertibleType} from './../functional';
-
 export type Throwable = Error | string;
 export type Undefined<T> = T | undefined;
 export type UndefinedProp<T> = {[K in keyof T]: Undefined<T[K]>};
@@ -33,5 +32,10 @@ export type RequiredProp<
 export type ArgumentType<F extends Function> = F extends (
   ...args: infer A
 ) => any
+  ? A
+  : never;
+export type CtorArgumentType<F> = F extends {
+  new (...arg: infer A): any;
+}
   ? A
   : never;
