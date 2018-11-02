@@ -1,12 +1,4 @@
-import {
-  ArgumentType,
-  CtorArgumentType,
-  CustomValueType,
-  Never,
-  PartialProp,
-  RequiredProp,
-  Types,
-} from './../src';
+import {Never, PartialProp, RequiredProp, Types, Unpacked} from './../src';
 
 interface TestInterface {
   func1: () => boolean;
@@ -61,17 +53,6 @@ describe('Types should be implemented correctly', () => {
     }
   });
 
-  it('Custom value type should work correctly', () => {
-    /// Setup
-    type A = Readonly<{a: string; b: boolean; c: object}>;
-    let a: CustomValueType<A, number> = {a: 1, b: 2, c: 3};
-    let b: CustomValueType<A, number, 'b' | 'c'> = {a: '1', b: 2, c: 3};
-
-    /// When && Then
-    expect(a).toBeDefined();
-    expect(b).toBeDefined();
-  });
-
   it('Partial prop should work correctly', () => {
     /// Setup
     type A = Readonly<{a: string; b: boolean; c: number}>;
@@ -102,34 +83,17 @@ describe('Types should be implemented correctly', () => {
     expect(Object.keys(b)).toHaveLength(3);
   });
 
-  it('Argument types should work correctly', () => {
+  it('Unpacked types should work correctly', () => {
     /// Setup
-    type Func = (a: number, b: boolean, c?: string) => void;
-    type FuncArg = ArgumentType<Func>;
-    let a: FuncArg[0] = 2;
-    let b: FuncArg[1] = true;
-    let c: FuncArg[2] = '1';
+    const u1: Unpacked<Promise<number>> = 1;
+    const u2: Unpacked<number[]> = 1;
+    const u3: Unpacked<{[K: string]: number}> = 1;
+    const u4: Unpacked<() => number> = 1;
 
     /// When && Then
-    expect(typeof a === 'number').toBeTruthy();
-    expect(typeof b === 'boolean').toBeTruthy();
-    expect(typeof c === 'string').toBeTruthy();
-  });
-
-  it('Constructor argument types should work correctly', () => {
-    /// Setup
-    class CtorObject {
-      constructor(_a: number, _b: boolean, _c?: string) {}
-    }
-
-    type CtorArg = CtorArgumentType<typeof CtorObject>;
-    let a: CtorArg[0] = 2;
-    let b: CtorArg[1] = true;
-    let c: CtorArg[2] = '1';
-
-    /// When && Then
-    expect(typeof a === 'number').toBeTruthy();
-    expect(typeof b === 'boolean').toBeTruthy();
-    expect(typeof c === 'string').toBeTruthy();
+    expect(u1).toEqual(1);
+    expect(u2).toEqual(1);
+    expect(u3).toEqual(1);
+    expect(u4).toEqual(1);
   });
 });
