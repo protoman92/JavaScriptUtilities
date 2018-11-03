@@ -89,11 +89,13 @@ describe('Types should be implemented correctly', () => {
     const u2: Unpacked<number[]> = 1;
     const u3: Unpacked<{[K: string]: number}> = 1;
     const u4: Unpacked<() => number> = 1;
+    const u5: Unpacked<Never<number>> = 1;
 
     /// When && Then
     expect(u1).toEqual(1);
     expect(u2).toEqual(1);
     expect(u3).toEqual(1);
     expect(u4).toEqual(1);
+    expect(u5).toEqual(1);
   });
 });

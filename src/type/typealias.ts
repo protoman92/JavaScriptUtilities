@@ -28,10 +28,12 @@ export type RequiredProp<
   Keys extends keyof Object = keyof Object
 > = Omit<Object, Keys> & Required<Pick<Object, Keys>>;
 
-export type Unpacked<T> = T extends (infer U1)[]
-  ? U1
-  : T extends JSObject<infer U2>
-    ? U2
-    : T extends PromiseLike<infer U3>
-      ? U3
-      : T extends (...args: any[]) => infer U4 ? U4 : T;
+export type Unpacked<T> = T extends (infer ArrayElement)[]
+  ? ArrayElement
+  : T extends JSObject<infer KVElement>
+    ? KVElement
+    : T extends PromiseLike<infer PromiseElement>
+      ? PromiseElement
+      : T extends (...args: any[]) => infer ReturnElement
+        ? ReturnElement
+        : NonNullable<T>;
