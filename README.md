@@ -7,3 +7,7 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 A collection of utility functions, functional data types and convenient typealiases.
+
+Check out <https://github.com/protoman92/JavaScriptUtilities/tree/master/src/functional> for implementations of **Maybe** and **Try** functional data structures.
+
+Check out <https://github.com/protoman92/JavaScriptUtilities/blob/master/src/type/typealias.ts> for some convenience types.
